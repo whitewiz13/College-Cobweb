@@ -47,12 +47,12 @@ public class FragmentDeptAddEvent extends DialogFragment {
                 evname = ename.getText().toString();
                 evdetail = edetail.getText().toString();
                 if (TextUtils.isEmpty(evname)) {
-                    listner.makeSnackB("Enter Event Name!");
+                    listner.makeSnackB("Enter Dept Event Name!");
                     return;
                 }
 
                 if (TextUtils.isEmpty(evdetail)) {
-                    listner.makeSnackB("Enter Event Detail!");
+                    listner.makeSnackB("Enter Dept Event Detail!");
                     return;
                 }
                 saveEventData(evname,evdetail);
