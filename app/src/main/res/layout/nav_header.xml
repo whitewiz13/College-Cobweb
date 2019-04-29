@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="192dp"
+    android:background="@drawable/nav_back"
+    android:padding="16dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:orientation="vertical"
+    android:gravity="bottom">
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/peerProfileImage"
+        android:layout_width="59dp"
+        android:layout_height="61dp"
+        android:src="@drawable/defaultpic"
+        app:civ_border_color="@color/colorWhite"
+        app:civ_border_width="1dp" />
+    <TextView
+        android:id = "@+id/suname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ravenscroft"
+        android:textSize="30dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:id="@+id/surno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ravenscroft"
+        android:text="CUHP00IT00"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/sudept"
+        android:layout_width="match_parent"
+        android:fontFamily="@font/ravenscroft"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_height="wrap_content"
+        android:text="MSC OO" />
+
+</LinearLayout>

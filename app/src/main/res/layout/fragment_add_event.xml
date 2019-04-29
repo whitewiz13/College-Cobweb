@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/add_event"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="315dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/background_border"
+        android:elevation="5dp">
+
+        <EditText
+            android:id="@+id/evname"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:backgroundTint="@color/colorWhite"
+            android:ems="10"
+            android:fontFamily="@font/ravenscroft"
+            android:hint="Enter Event Name"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/evdetail"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/colorWhite"
+            android:fontFamily="@font/ravenscroft"
+            android:hint="Enter Event Detail"
+            android:maxLines="3"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/enter"
+            android:layout_width="209dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="53dp"
+            android:background="#22313F"
+            android:fontFamily="@font/ravenscroft"
+            android:text="Add Event"
+            android:textColor="#FFFFFF"
+            android:textSize="25dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

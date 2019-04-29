@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">University Project</string>
+    <string name="title_activity_main">University Project</string>
+    <string name="minimun_length">Less than minimun</string>
+    <string name="auth_failed">Failed to login</string>
+    <string name="show_more">Show More</string>
+    <string name="show_less">Show Less</string>
+
+    <string-array name="dept_names">
+        <item>MSC IT</item>
+        <item>MSC MATH</item>
+        <item>MSC PHYSICS</item>
+        <item>MSC CHEMISTRY</item>
+        <item>MSC ZOOLOGY</item>
+    </string-array>
+</resources>
+

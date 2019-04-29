@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:elevation="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/background_border"
+            android:elevation="5dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/peerAuthorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/peerDept"
+                android:layout_alignTop="@+id/peerProfileImage"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Author Text"
+                android:textColor="@color/colorBlack"
+                android:textSize="60px" />
+
+            <TextView
+                android:id="@+id/peerAuthorRno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/peerAuthorText"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/peerProfileImage"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Author Rno"
+                android:textColor="@color/colorBlack"
+                android:textSize="60px" />
+
+            <TextView
+                android:id="@+id/peerDept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/peerAuthorRno"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/peerProfileImage"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Author Dept"
+                android:textColor="@color/colorBlack"
+                android:textSize="60px" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/peerProfileImage"
+                android:layout_width="73dp"
+                android:layout_height="86dp"
+                android:layout_below="@id/justaline"
+                android:layout_centerVertical="true"
+                android:src="@drawable/here"
+                app:civ_border_color="@color/colorWhite"
+                app:civ_border_width="3dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

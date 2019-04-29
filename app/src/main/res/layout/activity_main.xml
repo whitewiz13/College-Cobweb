@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colorYes"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:context=".MainActivity">
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="-200dp"
+            android:src="@drawable/here"/>
+            <TextView
+                android:id="@+id/welcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50px"
+                android:fontFamily="@font/ravenscroft"
+                android:text="CUHP"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/welcome"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Central University of Himachal Pradesh!"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="@dimen/cap_subsize" />
+
+            <TextView
+                android:id="@+id/lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="151dp"
+                android:fontFamily="@font/ravenscroft"
+                android:text="LOGIN TO CONTINUE"
+                android:textColor="#000000"
+                android:textSize="@dimen/big_cap" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="100px"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/lg">
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="288dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:ems="10"
+                android:fontFamily="@font/ravenscroft"
+                android:hint="Enter Email"
+                android:inputType="textEmailAddress"
+                android:textColor="#FFFFFF"
+                android:textColorLink="@android:color/black"
+                android:textCursorDrawable="@null"
+                android:textSize="25sp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100px"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/text_input_layout">
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="288dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:ems="10"
+                android:fontFamily="@font/ravenscroft"
+                android:hint="Enter Password"
+                android:textColor="#FFFFFF"
+                android:textColorLink="@color/colorBlack"
+                android:textCursorDrawable="@null"
+                android:textSize="25sp" />
+        </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/submit"
+                android:layout_below="@id/text_input_layout2"
+                android:layout_marginTop="100px"
+                android:layout_width="209dp"
+                android:layout_height="wrap_content"
+                android:background="#22313F"
+                android:textColor="#FFFFFF"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Submit"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/forgotpass"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/submit"
+                android:layout_marginTop="30dp"
+                android:text="Forgot Password"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/bottom_text"
+                android:fontFamily="@font/spaceage"/>
+
+        <TextView
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/forgotpass"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:transitionName="robot"
+            android:clickable="true"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/spaceage"
+            android:text="Register"
+            android:textSize="@dimen/bottom_text" />
+
+        <ProgressBar
+            android:id="@+id/progressBBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTintMode="src_atop"
+            android:layout_centerHorizontal="true"
+            android:indeterminateTint="@color/colorPrimaryDark"
+            android:layout_below="@+id/register"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+ </ScrollView>

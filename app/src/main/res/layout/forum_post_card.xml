@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/background_border"
+    android:elevation="3dp"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/fname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Fname"
+        android:textColor="@color/colorBlack"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/fdetail"
+        android:textIsSelectable="true"
+        android:autoLink="web"
+        android:layout_marginTop="10sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/fname"
+        android:text="fdetail" />
+
+    <TextView
+        android:id="@+id/fdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fdetail"
+        android:layout_alignParentStart="true"
+        android:text="fdate"
+        android:layout_marginTop="20sp"
+        android:textColor="@android:color/darker_gray" />
+
+    <View
+        android:id="@+id/justaline"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_below="@+id/fdate"
+        android:background="#d3d3d3" />
+
+    <TextView
+        android:id="@+id/fUpvotes"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/justaline"
+        android:textColor="@color/colorBlack"
+        android:layout_centerVertical="true"
+        android:textStyle="bold"
+        android:text="Fupvotes" />
+
+    <TextView
+        android:id="@+id/fcomments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:layout_alignTop="@+id/fUpvotes"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:text="fcomments" />
+
+    <TextView
+        android:id="@+id/commentButton"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fcomments"
+        android:layout_toEndOf="@+id/fcomments"
+        android:gravity="right"
+        android:text="Comments" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_alignTop="@+id/fcomments"
+        android:layout_toEndOf="@+id/fUpvotes"
+        android:text="Upvotes" />
+
+    <Button
+        android:id="@+id/deletePost"
+        android:textAlignment="center"
+        android:layout_marginTop="15sp"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fUpvotes"
+        android:gravity="center"
+        android:text="Delete" />
+
+    <Button
+        android:id="@+id/upVoteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fUpvotes"
+        android:textStyle="normal"
+        android:layout_marginTop="15sp"
+        android:layout_toEndOf="@+id/deletePost"
+        android:text="UPVOTE"
+        />
+
+</RelativeLayout>

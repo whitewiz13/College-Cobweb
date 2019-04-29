@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:background="@color/colorYes"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:transitionName="robot"
+        android:layout_height="match_parent"
+        android:background="#551a8b"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="-200dp"
+            android:src="@drawable/here"/>
+
+        <TextView
+            android:id="@+id/rwelcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:fontFamily="@font/ravenscroft"
+            android:text="Registration"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="70sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/peerProfileImage"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="#FFFFFF"
+            android:ems="10"
+            android:fontFamily="@font/ravenscroft"
+            android:hint="Enter Full Name"
+            android:inputType="text"
+            android:textColor="#FFFFFF"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/rollno"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="#FFFFFF"
+            android:ems="10"
+            android:fontFamily="@font/ravenscroft"
+            android:hint="Enter Roll Number"
+            android:inputType="text"
+            android:textColor="#FFFFFF"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+
+        <Spinner
+            android:id="@+id/dept"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"
+            android:layout_below="@+id/rollno"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="#FFFFFF"
+            android:ems="10"
+            android:fontFamily="@font/ravenscroft"
+            android:hint="Select Department"
+            android:inputType="text"
+            android:textColor="#FFFFFF"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/rname"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dept"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="#FFFFFF"
+            android:ems="10"
+            android:fontFamily="@font/ravenscroft"
+            android:hint="Enter Email"
+            android:inputType="textEmailAddress"
+            android:textColor="#FFFFFF"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/rpass"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rname"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="#FFFFFF"
+            android:ems="10"
+            android:fontFamily="@font/ravenscroft"
+            android:hint="Enter Password"
+            android:inputType="textPassword"
+            android:textColor="#FFFFFF"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/reg"
+            android:layout_below="@id/rpass"
+            android:layout_marginTop="100px"
+            android:layout_width="209dp"
+            android:layout_height="wrap_content"
+            android:background="#22313F"
+            android:textColor="#FFFFFF"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/ravenscroft"
+            android:text="Register"
+            android:textSize="25dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTintMode="src_atop"
+            android:layout_centerHorizontal="true"
+            android:indeterminateTint="@color/colorPrimaryDark"
+            android:layout_below="@+id/reg"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/peerProfileImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/rwelcome"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/defaultpic"
+            app:civ_border_color="@color/colorWhite"
+            app:civ_border_width="3dp" />
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:elevation="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/background_border"
+            android:elevation="5dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/ename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Event Heading!"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/eventtext" />
+
+            <TextView
+                android:id="@+id/edetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ename"
+                android:fontFamily="serif"
+                android:maxLines="2"
+                android:text="Details about even heading!"
+                android:textSize="@dimen/edetailtext" />
+
+            <View
+                android:id="@+id/justaline"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/edetail"
+                android:layout_gravity="center"
+                android:layout_marginTop="20sp"
+                android:background="#d3d3d3" />
+
+            <View
+                android:id="@+id/justaline2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/peerAuthorRno"
+                android:layout_gravity="center"
+                android:background="#d3d3d3" />
+
+            <TextView
+                android:id="@+id/edate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ename"
+                android:layout_below="@+id/peerAuthorRno"
+                android:fontFamily="@font/ravenscroft"
+                android:gravity="right"
+                android:text="Event Date!"
+                android:textColor="@color/colorBlack"
+                android:textSize="60px" />
+
+            <TextView
+                android:id="@+id/peerAuthorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ename"
+                android:layout_below="@+id/justaline"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Author Text"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="60px" />
+
+            <TextView
+                android:id="@+id/peerAuthorRno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ename"
+                android:layout_below="@+id/peerAuthorText"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Author Rno"
+                android:textColor="@color/colorPrimary"
+                android:textSize="60px" />
+            <TextView
+                android:id="@+id/showmore"
+                android:layout_width="47dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/edate"
+                android:layout_alignStart="@+id/ename"
+                android:clickable="true"
+                android:fontFamily="@font/ravenscroft"
+                android:gravity="center_vertical"
+                android:text="'Show More'"
+                android:textAlignment="center"
+                android:textSize="@dimen/showmore" />
+            <TextView
+                android:id="@+id/delete"
+                android:layout_width="47dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/edate"
+                android:textAlignment="center"
+                android:layout_toEndOf="@+id/showmore"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Delete"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/showmore" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/peerProfileImage"
+                android:layout_width="35dp"
+                android:layout_height="42dp"
+                android:layout_centerVertical="true"
+                android:layout_below="@id/justaline"
+                android:src="@drawable/here"
+                app:civ_border_color="@color/colorWhite"
+                app:civ_border_width="3dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

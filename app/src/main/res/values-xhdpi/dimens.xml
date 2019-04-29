@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size">100px</dimen>
+    <dimen name="cap_subsize">40px</dimen>
+    <dimen name="big_cap">90px</dimen>
+    <dimen name="bottom_text">30px</dimen>
+    <dimen name="eventtext">60px</dimen>
+    <dimen name="edetailtext">40px</dimen>
+    <dimen name="showmore">36px</dimen>
+</resources>

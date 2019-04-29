@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "663422514903",
+    "firebase_url": "https://makingit-318e9.firebaseio.com",
+    "project_id": "makingit-318e9",
+    "storage_bucket": "makingit-318e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663422514903:android:5a0528d97bcd5b94",
+        "android_client_info": {
+          "package_name": "com.example.root.makingit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663422514903-1h6i269s8biass367l2l7pln64m0u9eu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPKp2BdYpJmPlActV5Hv8h9lODZcXidbc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
