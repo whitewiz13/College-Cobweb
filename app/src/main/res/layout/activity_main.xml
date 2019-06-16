@@ -66,15 +66,15 @@
                 android:id="@+id/editText"
                 android:layout_width="288dp"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/dept"
+                android:layout_centerHorizontal="true"
                 android:backgroundTint="#FFFFFF"
                 android:ems="10"
-                android:fontFamily="@font/ravenscroft"
                 android:hint="Enter Email"
                 android:inputType="textEmailAddress"
                 android:textColor="#FFFFFF"
-                android:textColorLink="@android:color/black"
                 android:textCursorDrawable="@null"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -89,14 +89,16 @@
                 android:id="@+id/editText2"
                 android:layout_width="288dp"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/rname"
+                android:layout_centerHorizontal="true"
                 android:backgroundTint="#FFFFFF"
                 android:ems="10"
                 android:fontFamily="@font/ravenscroft"
                 android:hint="Enter Password"
+                android:inputType="textPassword"
                 android:textColor="#FFFFFF"
-                android:textColorLink="@color/colorBlack"
                 android:textCursorDrawable="@null"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
         </android.support.design.widget.TextInputLayout>
 
             <Button
