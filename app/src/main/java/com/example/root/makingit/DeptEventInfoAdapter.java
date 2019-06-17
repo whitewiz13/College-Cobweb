@@ -14,6 +14,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -30,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo, DeptEventInfoAdapter.MyViewHolder> {
     private OnActionListener mListener;
     private Context mContext;
-
+    private FirebaseAuth auth;
     public DeptEventInfoAdapter(@NonNull FirestoreRecyclerOptions<DeptEventInfo> options, Context mContext, DeptEventInfoAdapter.OnActionListener mListener) {
         super(options);
         this.mListener = mListener;
@@ -55,6 +56,7 @@ public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo
             delete = view.findViewById(R.id.delete);
             eauthor = view.findViewById(R.id.peerAuthorText);
             eRollno = view.findViewById(R.id.peerAuthorRno);
+            auth = FirebaseAuth.getInstance();
         }
     }
     @NonNull
@@ -78,6 +80,18 @@ public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo
         holder.edetail.setText(model.getEdetail());
         holder.edate.setText(creationDate);
         getUserInfo(holder, model.getEauthor());
+        checkForUserPost(model,holder);
+    }
+    public void checkForUserPost(DeptEventInfo model, DeptEventInfoAdapter.MyViewHolder holder)
+    {
+        if(Objects.requireNonNull(auth.getCurrentUser()).getUid().equals(model.getEauthor()) && model.getEauthor()!=null)
+        {
+            holder.delete.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.delete.setVisibility(View.GONE);
+        }
     }
     public void getUserInfo(final MyViewHolder holder, String eauthor)
     {

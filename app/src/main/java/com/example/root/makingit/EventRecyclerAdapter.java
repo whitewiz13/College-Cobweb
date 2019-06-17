@@ -14,6 +14,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -22,12 +23,14 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,EventRecyclerAdapter.MyViewHolder> {
     private OnActionListener mListener;
     private Context mContext;
+    public FirebaseAuth auth;
     public EventRecyclerAdapter(@NonNull FirestoreRecyclerOptions<EventInfo> options,Context mContext,OnActionListener mListener) {
         super(options);
         this.mListener = mListener;
@@ -52,6 +55,7 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
             delete = view.findViewById(R.id.delete);
             eauthor = view.findViewById(R.id.peerAuthorText);
             eRollno = view.findViewById(R.id.peerAuthorRno);
+            auth = FirebaseAuth.getInstance();
         }
     }
     @NonNull
@@ -76,8 +80,19 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
         holder.edetail.setText(model.getEdetail());
         holder.edate.setText(creationDate);
         getUserInfo(holder, model.getEauthor());
+        checkForUserPost(model,holder);
     }
-
+    public void checkForUserPost(EventInfo model, EventRecyclerAdapter.MyViewHolder holder)
+    {
+        if(Objects.requireNonNull(auth.getCurrentUser()).getUid().equals(model.getEauthor()) && model.getEauthor()!=null)
+        {
+            holder.delete.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.delete.setVisibility(View.GONE);
+        }
+    }
     public void doButton(final MyViewHolder holder)
     {
         holder.edetail.setMaxLines(2);
