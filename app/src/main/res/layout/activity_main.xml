@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/colorYes"
+    android:background="@color/colorWhite"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
         tools:context=".MainActivity">
         <ImageView
+            android:contentDescription="@string/backGround"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:scaleType="fitStart"
@@ -23,9 +24,9 @@
                 android:id="@+id/welcome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50px"
+                android:layout_marginTop="50dp"
                 android:fontFamily="@font/ravenscroft"
-                android:text="CUHP"
+                android:text="@string/cuhp"
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textSize="@dimen/text_size"
@@ -35,10 +36,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/welcome"
                 android:fontFamily="@font/ravenscroft"
-                android:text="Central University of Himachal Pradesh!"
+                android:text="@string/cuhpfull"
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textSize="@dimen/cap_subsize" />
@@ -51,13 +51,13 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="151dp"
                 android:fontFamily="@font/ravenscroft"
-                android:text="LOGIN TO CONTINUE"
+                android:text="@string/logintocontinue"
                 android:textColor="#000000"
                 android:textSize="@dimen/big_cap" />
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout"
             android:layout_width="wrap_content"
-            android:layout_marginTop="100px"
+            android:layout_marginTop="30dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/lg">
@@ -68,11 +68,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dept"
                 android:layout_centerHorizontal="true"
-                android:backgroundTint="#FFFFFF"
+                android:backgroundTint="@color/colorBlack"
                 android:ems="10"
-                android:hint="Enter Email"
+                android:hint="@string/enteremail"
                 android:inputType="textEmailAddress"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/colorBlack"
                 android:textCursorDrawable="@null"
                 android:textSize="20sp" />
         </android.support.design.widget.TextInputLayout>
@@ -81,7 +81,7 @@
             android:id="@+id/text_input_layout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100px"
+            android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/text_input_layout">
 
@@ -91,12 +91,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rname"
                 android:layout_centerHorizontal="true"
-                android:backgroundTint="#FFFFFF"
+                android:backgroundTint="@color/colorBlack"
                 android:ems="10"
                 android:fontFamily="@font/ravenscroft"
                 android:hint="Enter Password"
                 android:inputType="textPassword"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/colorBlack"
                 android:textCursorDrawable="@null"
                 android:textSize="20sp" />
         </android.support.design.widget.TextInputLayout>
@@ -104,7 +104,7 @@
             <Button
                 android:id="@+id/submit"
                 android:layout_below="@id/text_input_layout2"
-                android:layout_marginTop="100px"
+                android:layout_marginTop="40dp"
                 android:layout_width="209dp"
                 android:layout_height="wrap_content"
                 android:background="#22313F"
@@ -112,7 +112,7 @@
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/ravenscroft"
                 android:text="Submit"
-                android:textSize="25dp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/forgotpass"
@@ -122,7 +122,7 @@
                 android:layout_below="@id/submit"
                 android:layout_marginTop="30dp"
                 android:text="Forgot Password"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/colorBlack"
                 android:textSize="@dimen/bottom_text"
                 android:fontFamily="@font/spaceage"/>
 
@@ -135,7 +135,8 @@
             android:layout_marginTop="20dp"
             android:transitionName="robot"
             android:clickable="true"
-            android:textColor="#FFFFFF"
+            android:focusable="true"
+            android:textColor="@color/colorBlack"
             android:fontFamily="@font/spaceage"
             android:text="Register"
             android:textSize="@dimen/bottom_text" />
@@ -146,7 +147,7 @@
             android:layout_height="wrap_content"
             android:indeterminateTintMode="src_atop"
             android:layout_centerHorizontal="true"
-            android:indeterminateTint="@color/colorPrimaryDark"
+            android:indeterminateTint="@color/colorBlack"
             android:layout_below="@+id/register"
             android:layout_gravity="center"
             android:visibility="gone"

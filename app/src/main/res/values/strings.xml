@@ -5,6 +5,11 @@
     <string name="auth_failed">Failed to login</string>
     <string name="show_more">Show More</string>
     <string name="show_less">Show Less</string>
+    <string name="backGround">Background Image</string>
+    <string name="cuhp">CUHP</string>
+    <string name="cuhpfull">Central University of Himachal Pradesh!</string>
+    <string name="logintocontinue">LOGIN TO CONTINUE</string>
+    <string name="enteremail">Enter Email</string>
 
     <string-array name="dept_names">
         <item>MSC IT</item>

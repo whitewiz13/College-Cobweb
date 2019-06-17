@@ -131,7 +131,7 @@
             android:layout_height="wrap_content"
             android:indeterminateTintMode="src_atop"
             android:layout_centerHorizontal="true"
-            android:indeterminateTint="@color/colorPrimaryDark"
+            android:indeterminateTint="@color/colorBlack"
             android:layout_below="@+id/reg"
             android:layout_marginTop="20dp"
             android:layout_gravity="center"

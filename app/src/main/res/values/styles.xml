@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -17,12 +17,13 @@
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@color/colorYes</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
         <item name="colorPrimary">@color/colorYes</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
-        <item name="android:statusBarColor">@color/colorMine</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:statusBarColor">@color/colorWhite</item>
     </style>
 
     <style name="AppTheme.MyNoActionBar">
