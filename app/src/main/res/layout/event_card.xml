@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ename"
-                android:fontFamily="serif"
+                android:fontFamily="@font/maliregular"
                 android:maxLines="2"
                 android:text="Details about even heading!"
                 android:textSize="@dimen/edetailtext" />

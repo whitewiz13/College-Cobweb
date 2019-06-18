@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:layout_width="match_parent">
-        <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:id="@+id/scrollview"
-            xmlns:android="http://schemas.android.com/apk/res/android">
             <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
@@ -35,7 +28,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_toEndOf="@+id/myImageView"
                         android:fontFamily="@font/ravenscroft"
                         android:text="Your Subject : MSC IT"
                         android:textAlignment="center"
@@ -52,20 +44,73 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="88dp"
                     android:background="@color/colorPrimaryDark" />
-
-                <TextView
-                    android:id="@+id/sem1"
+        <TextView
+            android:id="@+id/sem1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/justaline"
+            android:fontFamily="@font/ravenscroft"
+            android:text="Semester One"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/cap_subsize" />
+        <TextView
+            android:id="@+id/sem2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/sem1"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/justaline"
+            android:fontFamily="@font/ravenscroft"
+            android:text="Semester Two"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/cap_subsize" />
+        <TextView
+            android:id="@+id/sem3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_below="@+id/sem1"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/ravenscroft"
+            android:text="Semester Three"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/cap_subsize" />
+        <TextView
+            android:id="@+id/sem4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/sem3"
+            android:layout_below="@+id/sem2"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/ravenscroft"
+            android:text="Semester Four"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/cap_subsize" />
+                <View
+                    android:id="@+id/justaline2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="112dp"
-                    android:fontFamily="@font/ravenscroft"
-                    android:text="Semester One"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/cap_subsize" />
-
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/sem4"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20sp"
+                    android:background="@color/colorPurple" />
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/justaline2"
+                    android:layout_marginTop="0dp">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/subjectList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </android.support.v7.widget.RecyclerView>
+                </android.support.v4.widget.NestedScrollView>
             </RelativeLayout>
-        </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

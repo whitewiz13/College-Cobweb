@@ -41,7 +41,7 @@ public class FragmentDeptOther extends Fragment{
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         Query query = userRef.whereEqualTo("dept", Objects.requireNonNull(documentSnapshot).getString("dept"));
                         FirestoreRecyclerOptions<UserInfo> options = new FirestoreRecyclerOptions.Builder<UserInfo>()
-                                .setQuery(query,UserInfo.class)
+                                .setQuery(query,UserInfo.class).setLifecycleOwner(getActivity())
                                 .build();
                         adapter = new PeerInfoRecyclerAdapter(options,getContext());
                         adapter.startListening();
@@ -60,10 +60,5 @@ public class FragmentDeptOther extends Fragment{
                     }
                 });
         return view;
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        adapter.stopListening();
     }
 }

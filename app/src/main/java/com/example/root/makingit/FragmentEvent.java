@@ -47,7 +47,8 @@ public class FragmentEvent extends Fragment{
         recyclerView = view.findViewById(R.id.recycler_view);
         Query query = eventRef.orderBy("edate", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<EventInfo> options = new FirestoreRecyclerOptions.Builder<EventInfo>()
-                .setQuery(query,EventInfo.class).build();
+                .setQuery(query,EventInfo.class).setLifecycleOwner(this)
+                .build();
         adapter = new EventRecyclerAdapter(options, getActivity(), new EventRecyclerAdapter.OnActionListener() {
             @Override
             public void showSnackBar(String msg) {
@@ -68,12 +69,10 @@ public class FragmentEvent extends Fragment{
     }
     @Override
     public void onStart() {
-        adapter.startListening();
         super.onStart();
     }
     @Override
     public void onStop() {
-        adapter.stopListening();
         super.onStop();
     }
     public void onPrepareOptionsMenu(Menu menu)
