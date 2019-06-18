@@ -93,7 +93,6 @@
                 android:layout_centerHorizontal="true"
                 android:backgroundTint="@color/colorBlack"
                 android:ems="10"
-                android:fontFamily="@font/ravenscroft"
                 android:hint="Enter Password"
                 android:inputType="textPassword"
                 android:textColor="@color/colorBlack"

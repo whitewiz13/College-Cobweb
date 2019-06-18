@@ -148,7 +148,6 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
                 if (e != null) {
                     return;
                 }
-
                 if (snapshot != null && snapshot.exists()) {
                     holder.eauthor.setText(snapshot.getString("name"));
                     holder.eRollno.setText(snapshot.getString("rno"));

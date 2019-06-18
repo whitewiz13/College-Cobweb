@@ -168,7 +168,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                     uname.setText(snapshot.getString("name"));
                     rno.setText(snapshot.getString("rno"));
                     dept.setText(snapshot.getString("dept"));
-                    GlideApp.with(Home.this)
+                    GlideApp.with(getApplicationContext())
                             .load(snapshot.getString("uimage"))
                             .placeholder(R.drawable.defaultpic)
                             .into(profileImage);

@@ -3,7 +3,6 @@
     android:id="@+id/profileScroll"
     android:layout_width="wrap_content">
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
@@ -16,8 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:background="@drawable/background_border"
-        android:elevation="5dp"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:elevation="5dp">
         </include>
     <include
         android:id="@+id/contact_info"
@@ -27,8 +25,7 @@
         android:layout_below="@+id/basic_profile"
         android:layout_margin="10dp"
         android:background="@drawable/background_border"
-        android:elevation="5dp"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:elevation="5dp">
     </include>
 </RelativeLayout>
 </ScrollView>

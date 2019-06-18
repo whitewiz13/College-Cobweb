@@ -1,6 +1,7 @@
 package com.example.root.makingit;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -69,6 +70,7 @@ public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo
 
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull DeptEventInfo model) {
+        doButton(holder);
         Date date = model.getEdate();
         doDeleteButton(holder,model);
         String creationDate = "Loading..";
@@ -81,6 +83,27 @@ public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo
         holder.edate.setText(creationDate);
         getUserInfo(holder, model.getEauthor());
         checkForUserPost(model,holder);
+    }
+    public void doButton(final MyViewHolder holder)
+    {
+        holder.edetail.setMaxLines(2);
+        holder.showmore.setText("'Show More'");
+        holder.showmore.setTextColor(Color.GRAY);
+        holder.showmore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.edetail.getMaxLines() == 2) {
+                    holder.edetail.setMaxLines(Integer.MAX_VALUE);
+                    holder.showmore.setText("'Show Less'");
+                    holder.showmore.setTextColor(Color.BLACK);
+                }
+                else {
+                    holder.edetail.setMaxLines(2);
+                    holder.showmore.setText("'Show More'");
+                    holder.showmore.setTextColor(Color.GRAY);
+                }
+            }
+        });
     }
     public void checkForUserPost(DeptEventInfo model, DeptEventInfoAdapter.MyViewHolder holder)
     {

@@ -14,6 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:text="Fname"
+        android:fontFamily="@font/malir"
         android:textColor="@color/colorBlack"
         android:textSize="20dp"
         android:textStyle="bold" />

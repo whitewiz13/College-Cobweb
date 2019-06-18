@@ -49,7 +49,7 @@ public class FragmentEvent extends Fragment{
         FirestoreRecyclerOptions<EventInfo> options = new FirestoreRecyclerOptions.Builder<EventInfo>()
                 .setQuery(query,EventInfo.class).setLifecycleOwner(this)
                 .build();
-        adapter = new EventRecyclerAdapter(options, getActivity(), new EventRecyclerAdapter.OnActionListener() {
+        adapter = new EventRecyclerAdapter(options, getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
             @Override
             public void showSnackBar(String msg) {
                 doStuffListener.makeSnackB(msg);

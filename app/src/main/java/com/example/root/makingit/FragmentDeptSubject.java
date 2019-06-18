@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 
+import org.w3c.dom.Text;
+
 import java.net.CookieHandler;
 import java.util.Objects;
 
@@ -28,17 +31,24 @@ import javax.annotation.Nullable;
 public class FragmentDeptSubject extends Fragment {
     RecyclerView subList;
     String dept;
-    String sem;
+    String sem="sem1";
     SubjectInfoAdapter adapter;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    TextView sem1,sem2,sem3,sem4;
+    FirebaseAuth auth;
+    FirebaseFirestore mydb;
     private CollectionReference subjectRef;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dept_subject, viewGroup, false);
-
         subList = view.findViewById(R.id.subjectList);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseFirestore mydb = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        mydb = FirebaseFirestore.getInstance();
+        setListners(view);
+        loadsubjects();
+        return view;
+    }
+    public void loadsubjects()
+    {
         mydb.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid())
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @SuppressLint("SetTextI18n")
@@ -46,11 +56,65 @@ public class FragmentDeptSubject extends Fragment {
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         assert documentSnapshot != null;
                         dept = documentSnapshot.getString("dept");
-                        subjectRef = db.collection(dept).document("subjects").collection("sem1");
+                        subjectRef = mydb.collection(dept).document("subjects").collection(sem);
                         okayDoNow();
                     }
                 });
-        return view;
+    }
+    public void setListners(View view)
+    {
+        sem1 = view.findViewById(R.id.sem1);
+        sem2 = view.findViewById(R.id.sem2);
+        sem3 = view.findViewById(R.id.sem3);
+        sem4 = view.findViewById(R.id.sem4);
+        sem1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sem = "sem1";
+                sem1.setTextColor(getResources().getColor(R.color.colorPrimary));
+                sem2.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem3.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem4.setTextColor(getResources().getColor(R.color.colorBlack));
+                loadsubjects();
+            }
+        });
+        sem2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sem = "sem2";
+                sem1.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem2.setTextColor(getResources().getColor(R.color.colorPrimary));
+                sem3.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem4.setTextColor(getResources().getColor(R.color.colorBlack));
+                loadsubjects();
+            }
+        });
+        sem3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sem = "sem3";
+                sem1.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem2.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem3.setTextColor(getResources().getColor(R.color.colorPrimary));
+                sem4.setTextColor(getResources().getColor(R.color.colorBlack));
+                loadsubjects();
+            }
+        });
+        sem4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sem = "sem4";
+                sem1.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem2.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem3.setTextColor(getResources().getColor(R.color.colorBlack));
+                sem4.setTextColor(getResources().getColor(R.color.colorPrimary));
+                loadsubjects();
+            }
+        });
+    }
+    public void setMain(TextView sem1)
+    {
+
     }
     public void okayDoNow()
     {

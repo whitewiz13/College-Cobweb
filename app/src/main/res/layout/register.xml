@@ -7,7 +7,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:transitionName="robot"
         android:layout_height="match_parent"
@@ -41,12 +40,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/peerProfileImage"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="#FFFFFF"
             android:ems="10"
             android:fontFamily="@font/ravenscroft"
             android:hint="Enter Full Name"
             android:inputType="text"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"
             android:textSize="25sp" />
 
@@ -56,12 +54,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/name"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="#FFFFFF"
             android:ems="10"
             android:fontFamily="@font/ravenscroft"
             android:hint="Enter Roll Number"
             android:inputType="text"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"
             android:textSize="25sp" />
 
@@ -88,12 +85,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/dept"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="#FFFFFF"
             android:ems="10"
             android:fontFamily="@font/ravenscroft"
             android:hint="Enter Email"
             android:inputType="textEmailAddress"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"
             android:textSize="25sp" />
 
@@ -103,12 +99,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rname"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="#FFFFFF"
             android:ems="10"
             android:fontFamily="@font/ravenscroft"
             android:hint="Enter Password"
             android:inputType="textPassword"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"
             android:textSize="25sp" />
 
@@ -137,7 +132,7 @@
             android:layout_gravity="center"
             android:visibility="gone"
             />
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/peerProfileImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -146,7 +141,5 @@
             android:src="@drawable/defaultpic"
             app:civ_border_color="@color/colorWhite"
             app:civ_border_width="3dp" />
-
     </RelativeLayout>
-
 </ScrollView>
