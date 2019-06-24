@@ -40,6 +40,7 @@
         android:layout_marginTop="20sp"
         android:textColor="@android:color/darker_gray" />
 
+
     <View
         android:id="@+id/justaline"
         android:layout_width="match_parent"
@@ -47,14 +48,39 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_below="@+id/fdate"
-        android:background="#d3d3d3" />
+        android:background="@color/colorPrimary" />
+    <TextView
+        android:id="@+id/forumAuthor"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:text="Author Name"
+        android:layout_below="@+id/justaline"/>
+    <TextView
+        android:id="@+id/authorRno"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:text="Roll No"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/forumAuthor"/>
+    <View
+        android:id="@+id/justaline2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_below="@+id/authorRno"
+        android:background="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/fUpvotes"
         android:layout_width="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/justaline"
+        android:layout_below="@id/justaline2"
         android:textColor="@color/colorBlack"
         android:layout_centerVertical="true"
         android:textStyle="bold"
@@ -90,24 +116,26 @@
 
     <Button
         android:id="@+id/deletePost"
-        android:textAlignment="center"
-        android:layout_marginTop="15sp"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/fUpvotes"
+        android:visibility="gone"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/ic_delete"
         android:gravity="center"
-        android:text="Delete" />
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/upVoteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_below="@id/fUpvotes"
         android:textStyle="normal"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="15sp"
         android:layout_toEndOf="@+id/deletePost"
-        android:text="UPVOTE"
+        android:background="@drawable/ic_upvote"
+        android:hapticFeedbackEnabled="true"
         />
 
 </RelativeLayout>

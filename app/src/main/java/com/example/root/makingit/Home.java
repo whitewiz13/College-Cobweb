@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -70,8 +71,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         rno = headerview.findViewById(R.id.surno);
         dept = headerview.findViewById(R.id.sudept);
         profileImage = headerview.findViewById(R.id.peerProfileImage);
-        //Get current user
         checkIfReal();
+        //checkVerifiedEmail();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -132,6 +133,19 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                 }
             }
         });
+    }
+    public void checkVerifiedEmail()
+    {
+        FirebaseUser user = auth.getCurrentUser();
+        Snackbar sbView = Snackbar.make(findViewById(R.id.drawer_layout), "Email not verified!", Snackbar.LENGTH_INDEFINITE);
+        if(!user.isEmailVerified())
+        {
+            sbView.getView().setBackgroundColor(Color.RED);
+            sbView.show();
+        }
+        else {
+            sbView.dismiss();
+        }
     }
     public void checkIfReal()
     {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/commentDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorBlack"
+        android:textSize="25sp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/commentAuthor"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorBlack"
+        android:layout_below="@id/commentDetail"
+        android:textSize="25sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+</RelativeLayout>

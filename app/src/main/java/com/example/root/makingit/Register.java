@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -164,6 +165,21 @@ public class Register extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+    public void sendVerificationEmail()
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful())
+                    {
+                        showToast("Email Sent for verification!");
+                    }
+                }
+            });
+        }
+    }
     private void uploadImageAndSave(final String fname,final String rollnumber)
     {
         if(filePath != null)
@@ -187,6 +203,7 @@ public class Register extends AppCompatActivity {
                                     db.collection("taken_rno").document(rollnumber).set(myMap);
                                     showToast("Account Created Successfully!");
                                     progressBar.setVisibility(View.GONE);
+                                    //sendVerificationEmail();
                                     startActivity(new Intent(Register.this, Home.class));
                                     finish();
                                 }

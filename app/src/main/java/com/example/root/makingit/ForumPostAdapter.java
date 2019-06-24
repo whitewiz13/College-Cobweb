@@ -2,6 +2,7 @@ package com.example.root.makingit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +21,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +32,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,ForumPostAdapter.MyViewHolder> {
 
@@ -64,6 +69,17 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
         doUpVoteButton(holder,model);
         checkForUserPost(model,holder);
         trackUpVotes(model);
+        loadAuthorInfo(holder,model);
+    }
+    public void loadAuthorInfo(final MyViewHolder holder, ForumPostInfo model)
+    {
+        db.collection("users").document(model.getFauthor()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                holder.authorName.setText(documentSnapshot.getString("name"));
+                holder.authorRno.setText(documentSnapshot.getString("rno"));
+            }
+        });
     }
     public void trackUpVotes(final ForumPostInfo model)
     {
@@ -93,10 +109,10 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot docSnap = task.getResult();
                 if(docSnap.exists()) {
-                    holder.upVote.setTextColor(Color.BLUE);
+                    holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLUE));
                 }
                 else {
-                    holder.upVote.setTextColor(Color.BLACK);
+                    holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
                 }
             }
         });
@@ -160,7 +176,7 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
         });
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView fname,fdetail,fdate,fupvotes,fcomments,commentButton;
+        public TextView fname,fdetail,fdate,fupvotes,fcomments,commentButton,authorName,authorRno;
         public Button deletePost,upVote;
         public MyViewHolder(View view) {
             super(view);
@@ -172,6 +188,8 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
             fdate = view.findViewById(R.id.fdate);
             fupvotes = view.findViewById(R.id.fUpvotes);
             fcomments = view.findViewById(R.id.fcomments);
+            authorName = view.findViewById(R.id.forumAuthor);
+            authorRno=view.findViewById(R.id.authorRno);
         }
     }
     @NonNull

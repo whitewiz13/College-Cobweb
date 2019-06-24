@@ -1,13 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/forumPostToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+        <RelativeLayout
+            android:id="@+id/mainForumElements"
+            android:layout_margin="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/forumPostToolbar">
+            <TextView
+                android:id="@+id/postName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PostName"
+                android:fontFamily="@font/malir"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/postDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PostDetail"
+                android:layout_below="@+id/postName"
+                android:fontFamily="@font/malir"
+                android:layout_marginTop="5sp"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <View
+                android:id="@+id/justaline"
+                android:layout_width="300sp"
+                android:layout_height="2dp"
+                android:layout_marginTop="5sp"
+                android:layout_gravity="center"
+                android:layout_below="@+id/postDetail"
+                android:background="@color/colorPrimary" />
+            <TextView
+                android:id="@+id/postUpvotes"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/justaline"
+                android:textColor="@color/colorBlack"
+                android:layout_centerVertical="true"
+                android:textStyle="bold"
+                android:text="Fupvotes" />
 
-    <TextView
-        android:id="@+id/postID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="TextView"
-        android:textSize="40sp" />
+            <TextView
+                android:id="@+id/postComments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorBlack"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/justaline"
+                android:textStyle="bold"
+                android:text="fcomments" />
+
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/postComments">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/postCommentsSection"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+
+            </android.support.v4.widget.NestedScrollView>
+        </RelativeLayout>
 </RelativeLayout>
