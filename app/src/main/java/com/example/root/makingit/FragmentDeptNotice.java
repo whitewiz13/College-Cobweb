@@ -71,7 +71,7 @@ public class FragmentDeptNotice extends Fragment {
     {
         Query query = eventRef.orderBy("edate", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<DeptEventInfo> options = new FirestoreRecyclerOptions.Builder<DeptEventInfo>()
-                .setQuery(query,DeptEventInfo.class).setLifecycleOwner(this)
+                .setQuery(query,DeptEventInfo.class)
                 .build();
         adapter = new DeptEventInfoAdapter(options, getActivity(), new DeptEventInfoAdapter.OnActionListener() {
             @Override
@@ -81,5 +81,17 @@ public class FragmentDeptNotice extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter.startListening();
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        adapter.stopListening();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @android.support.annotation.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //adapter.startListening();
     }
 }

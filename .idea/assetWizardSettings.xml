@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/file/ic_file_upload_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_account_balance_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,8 +33,11 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_upvote" />
+                            <entry key="height" value="50" />
+                            <entry key="outputName" value="ic_noti" />
+                            <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\Deadpool" />
+                            <entry key="width" value="50" />
                           </map>
                         </option>
                       </PersistentState>

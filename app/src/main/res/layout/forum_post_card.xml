@@ -84,7 +84,7 @@
         android:textColor="@color/colorBlack"
         android:layout_centerVertical="true"
         android:textStyle="bold"
-        android:text="Fupvotes" />
+        android:text="0" />
 
     <TextView
         android:id="@+id/fcomments"
@@ -94,7 +94,7 @@
         android:layout_alignTop="@+id/fUpvotes"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:text="fcomments" />
+        android:text="0" />
 
     <TextView
         android:id="@+id/commentButton"

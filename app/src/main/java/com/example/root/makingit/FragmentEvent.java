@@ -3,6 +3,7 @@ package com.example.root.makingit;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
@@ -47,7 +48,7 @@ public class FragmentEvent extends Fragment{
         recyclerView = view.findViewById(R.id.recycler_view);
         Query query = eventRef.orderBy("edate", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<EventInfo> options = new FirestoreRecyclerOptions.Builder<EventInfo>()
-                .setQuery(query,EventInfo.class).setLifecycleOwner(this)
+                .setQuery(query,EventInfo.class)
                 .build();
         adapter = new EventRecyclerAdapter(options, getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
             @Override
@@ -65,15 +66,19 @@ public class FragmentEvent extends Fragment{
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter.startListening();
         return view;
     }
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onDestroyView() {
+        super.onDestroyView();
+        adapter.stopListening();
     }
+
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //adapter.startListening();
     }
     public void onPrepareOptionsMenu(Menu menu)
     {

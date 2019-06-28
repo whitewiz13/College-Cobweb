@@ -1,5 +1,7 @@
 package com.example.root.makingit;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -52,9 +55,12 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseMessaging.getInstance().subscribeToTopic("pushEvent");
         auth = FirebaseAuth.getInstance();
         checkIfReal();
         setContentView(R.layout.home);
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
         final NavigationView navigationView = findViewById(R.id.nav_view);
         final View headerview = navigationView.getHeaderView(0);
         mDrawerLayout = findViewById(R.id.drawer_layout);
