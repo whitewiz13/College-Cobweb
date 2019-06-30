@@ -133,7 +133,6 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
                             public void onFailure(@NonNull Exception e) {
                             }
                         });
-
             }
         });
     }

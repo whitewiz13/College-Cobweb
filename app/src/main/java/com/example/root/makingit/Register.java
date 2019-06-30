@@ -24,10 +24,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -165,6 +165,7 @@ public class Register extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+    /*
     public void sendVerificationEmail()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -179,7 +180,7 @@ public class Register extends AppCompatActivity {
                 }
             });
         }
-    }
+    }*/
     private void uploadImageAndSave(final String fname,final String rollnumber)
     {
         if(filePath != null)
@@ -193,7 +194,7 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String eemail = email.getText().toString().trim();
-                                    String dept = deptSpinner.getSelectedItem().toString();
+                                    String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");
                                     Map<String,Object> myMap = new HashMap<>();
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     DocumentReference docRef = db.collection("users").document(auth.getCurrentUser().getUid());
@@ -202,6 +203,7 @@ public class Register extends AppCompatActivity {
                                     docRef.set(user);
                                     db.collection("taken_rno").document(rollnumber).set(myMap);
                                     showToast("Account Created Successfully!");
+                                    FirebaseMessaging.getInstance().subscribeToTopic("push"+dept+"Event");
                                     progressBar.setVisibility(View.GONE);
                                     //sendVerificationEmail();
                                     startActivity(new Intent(Register.this, Home.class));
@@ -220,7 +222,7 @@ public class Register extends AppCompatActivity {
         else
         {
             String eemail = email.getText().toString().trim();
-            String dept = deptSpinner.getSelectedItem().toString();
+            String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");;
             Map<String,Object> myMap = new HashMap<>();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
@@ -229,6 +231,7 @@ public class Register extends AppCompatActivity {
             docRef.set(user);
             db.collection("taken_rno").document(rollnumber).set(myMap);
             showToast("Account Created Successfully!");
+            FirebaseMessaging.getInstance().subscribeToTopic("push"+dept+"Event");
             progressBar.setVisibility(View.GONE);
             startActivity(new Intent(Register.this, Home.class));
             finish();

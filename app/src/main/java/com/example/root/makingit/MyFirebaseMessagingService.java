@@ -3,43 +3,20 @@ package com.example.root.makingit;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
+import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.RingtoneManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "FirebaseMessagingServce";
-    UserInfo myUinfo;
-
+    int count=0;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -48,39 +25,146 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String title = data.get("title");
         String message = data.get("body");
         String author = data.get("author");
-        sendEventNotification(title,message);
-
+        String dept = data.get("dept");
+        count++;
+        checkCreator(author,title,message,dept);
     }
-    public void sendEventNotification(String title,String message)
+    public void checkCreator(String author,String title, String message,String dept)
     {
-        //Create Channel for Android Oreo and above
-        String GROUP_KEY_GLOBAL_EVENTS = "com.android.example.WORK_EMAIL";
-        NotificationCompat.Builder notification;
-        String CHANNEL_ID = "my_channel_01";// The id of the channel.
-        CharSequence name = "CH01";// The user-visible name of the channel.
-        int importance = NotificationManager.IMPORTANCE_HIGH;
-        NotificationChannel mChannel = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            mChannel.setShowBadge(true);
+        if(!author.equals(FirebaseAuth.getInstance().getUid()))
+        {
+            if(dept == null) {
+                sendEventNotification(title, message);
+            }
+            else
+            {
+                sendDeptNotification(title,message);
+            }
+
         }
-        notification = new NotificationCompat.Builder(getApplicationContext())
+    }
+
+    public void sendEventNotification(String title, String message) {
+        // Create an explicit intent for an Activity in your app
+        int SUMMARY_ID = 0;
+        String EVENT_GROUP_KEY = "EVENT_GROUP";
+        Intent intent = new Intent(this, Home.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+            CharSequence name = "CH01";
+            String CHANNEL_ID = "CHID";
+            String description = "Base Channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationManager notificationManager;
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_noti)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setGroup(EVENT_GROUP_KEY)
+                    .setColor(getResources().getColor(R.color.colorPrimaryDark))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    // Set the intent that will fire when the user taps the notification
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            Notification summaryNotification =
+                    new NotificationCompat.Builder(this, CHANNEL_ID)
+                            .setContentTitle("New Events!")
+                            //set content text to support devices running API level < 24
+                            .setContentText("You've got new events")
+                            .setSmallIcon(R.drawable.ic_noti)
+                            .setColor(getResources().getColor(R.color.colorPrimaryDark))
+                            //build summary info into InboxStyle template
+                            .setStyle(new NotificationCompat.InboxStyle()
+                                    .addLine(title + " " + message)
+                                    .addLine("....")
+                                    .setBigContentTitle(title)
+                                    .setSummaryText("You've got new events"))
+                            //specify which group this notification belongs to
+                            .setGroup(EVENT_GROUP_KEY)
+                            //set this notification as the summary for the group
+                            .setGroupSummary(true)
+                            .setContentIntent(pendingIntent)
+                            .build();
+            int num = (int) System.currentTimeMillis();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+                channel.setDescription(description);
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+                notificationManager.notify(num, builder.build());
+                notificationManager.notify(SUMMARY_ID,summaryNotification);
+            }
+            else
+            {
+                notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(num, builder.build());
+                notificationManager.notify(SUMMARY_ID,summaryNotification);
+            }
+    }
+    public void sendDeptNotification(String title, String message) {
+        // Create an explicit intent for an Activity in your app
+        int SUMMARY_ID = 1;
+        String DEPT_EVENT_GROUP_KEY = "DEPT_EVENT_GROUP";
+        Intent intent = new Intent(this, Home.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        CharSequence name = "CH01";
+        String CHANNEL_ID = "CHID";
+        String description = "Base Channel";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationManager notificationManager;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_noti)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setSmallIcon(R.drawable.ic_noti)
-                .setGroupSummary(true)
-                .setGroup(GROUP_KEY_GLOBAL_EVENTS)
-                .setChannelId(CHANNEL_ID)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(message))
-                .setColor(getResources().getColor(R.color.colorPrimaryDark));
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(mChannel);
-        }
+                .setGroup(DEPT_EVENT_GROUP_KEY)
+                .setColor(getResources().getColor(R.color.colorPrimaryDark))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        Notification summaryNotification =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle("New Events!")
+                        //set content text to support devices running API level < 24
+                        .setContentText("You've got new events")
+                        .setSmallIcon(R.drawable.ic_noti)
+                        .setColor(getResources().getColor(R.color.colorPrimaryDark))
+                        //build summary info into InboxStyle template
+                        .setStyle(new NotificationCompat.InboxStyle()
+                                .addLine(title + " " + message)
+                                .addLine("....")
+                                .setBigContentTitle(title)
+                                .setSummaryText("You've got new dept events"))
+                        //specify which group this notification belongs to
+                        .setGroup(DEPT_EVENT_GROUP_KEY)
+                        //set this notification as the summary for the group
+                        .setGroupSummary(true)
+                        .setContentIntent(pendingIntent)
+                        .build();
         int num = (int) System.currentTimeMillis();
-        notificationManager.notify("App Name",num ,notification.build());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            notificationManager.notify(num, builder.build());
+            notificationManager.notify(SUMMARY_ID,summaryNotification);
+        }
+        else
+        {
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(num, builder.build());
+            notificationManager.notify(SUMMARY_ID,summaryNotification);
+        }
     }
     /*public void getUserInfo(String eauthor, final String title, final String message)
     {
