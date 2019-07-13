@@ -50,9 +50,10 @@ public class FragmentDeptSubject extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        assert documentSnapshot != null;
-                        dept = documentSnapshot.getString("dept");
-                        subjectRef = mydb.collection(dept).document("subjects").collection(sem);
+                        if(documentSnapshot!=null)
+                            dept = documentSnapshot.getString("dept");
+                        if(dept!=null)
+                            subjectRef = mydb.collection(dept).document("subjects").collection(sem);
                         okayDoNow();
                     }
                 });
@@ -107,10 +108,6 @@ public class FragmentDeptSubject extends Fragment {
                 loadsubjects();
             }
         });
-    }
-    public void setMain(TextView sem1)
-    {
-
     }
     public void okayDoNow()
     {

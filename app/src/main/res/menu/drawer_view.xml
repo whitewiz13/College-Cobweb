@@ -19,6 +19,10 @@
             android:icon="@drawable/ic_forum"
             android:id="@+id/nav_forum"
             android:title="Forum" />
+        <item
+            android:icon="@drawable/ic_chat"
+            android:id="@+id/nav_chat"
+            android:title="Chats" />
     </group>
     <group android:checkableBehavior="single" android:id="@+id/group2">
         <item

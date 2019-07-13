@@ -41,6 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class Register extends AppCompatActivity {
+    FirebaseMessaging firebaseMessagingService;
     private ProgressBar progressBar;
     private EditText email, password;
     private Spinner deptSpinner;
@@ -203,7 +204,7 @@ public class Register extends AppCompatActivity {
                                     docRef.set(user);
                                     db.collection("taken_rno").document(rollnumber).set(myMap);
                                     showToast("Account Created Successfully!");
-                                    FirebaseMessaging.getInstance().subscribeToTopic("push"+dept+"Event");
+                                    performSubscription(dept);
                                     progressBar.setVisibility(View.GONE);
                                     //sendVerificationEmail();
                                     startActivity(new Intent(Register.this, Home.class));
@@ -222,7 +223,7 @@ public class Register extends AppCompatActivity {
         else
         {
             String eemail = email.getText().toString().trim();
-            String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");;
+            String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");
             Map<String,Object> myMap = new HashMap<>();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
@@ -231,11 +232,22 @@ public class Register extends AppCompatActivity {
             docRef.set(user);
             db.collection("taken_rno").document(rollnumber).set(myMap);
             showToast("Account Created Successfully!");
-            FirebaseMessaging.getInstance().subscribeToTopic("push"+dept+"Event");
+            performSubscription(dept);
             progressBar.setVisibility(View.GONE);
             startActivity(new Intent(Register.this, Home.class));
             finish();
         }
+    }
+    public void performSubscription(String dept)
+    {
+        firebaseMessagingService = FirebaseMessaging.getInstance();
+        firebaseMessagingService.subscribeToTopic("pushEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCITEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCMATHEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCPHYSICSEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCCHEMISTRYEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCZOOLOGYEvent");
+        firebaseMessagingService.subscribeToTopic("push"+dept+"Event");
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

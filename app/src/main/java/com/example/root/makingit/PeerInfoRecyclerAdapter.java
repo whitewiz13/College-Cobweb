@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -25,13 +26,13 @@ public class PeerInfoRecyclerAdapter extends FirestoreRecyclerAdapter<UserInfo,P
 
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull UserInfo model) {
-        holder.authorName.setText(model.getName());
-        holder.authorRno.setText(model.getRno());
-        holder.authorDept.setText(model.getDept());
-        GlideApp.with(mContext)
-                .load(model.getUimage())
-                .placeholder(R.drawable.loadme)
-                .into(holder.profileImage);
+            holder.authorName.setText(model.getName());
+            holder.authorRno.setText(model.getRno());
+            holder.authorDept.setText(model.getDept());
+            GlideApp.with(mContext)
+                    .load(model.getUimage())
+                    .placeholder(R.drawable.loadme)
+                    .into(holder.profileImage);
     }
     @NonNull
     @Override

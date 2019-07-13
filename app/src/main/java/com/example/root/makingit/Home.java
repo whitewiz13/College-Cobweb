@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -55,12 +54,12 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseMessaging.getInstance().subscribeToTopic("pushEvent");
+        Bundle extras = getIntent().getExtras();
+        FirebaseMessaging.getInstance().subscribeToTopic("pushChatNotification");
         auth = FirebaseAuth.getInstance();
         checkIfReal();
         setContentView(R.layout.home);
-        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
+        dismissNotifications();
         final NavigationView navigationView = findViewById(R.id.nav_view);
         final View headerview = navigationView.getHeaderView(0);
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -116,9 +115,13 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                             case R.id.nav_forum:
                                 fragment = new FragmentForum();
                                 break;
+                            case R.id.nav_chat:
+                                fragment = new FragmentChat();
+                                break;
                             case R.id.nav_signout:
                                 auth.signOut();
                                 break;
+
                         }
                         return true;
                     }
@@ -139,8 +142,30 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                 }
             }
         });
+        if(extras!=null) {
+            String chatOpen = extras.getString("fragmentChat");
+            checkToOpenChat(chatOpen);
+        }
     }
-    public void checkVerifiedEmail()
+    public void checkToOpenChat(String chatOpen)
+    {
+        if(chatOpen!=null)
+        {
+            fragment = new FragmentChat();
+            setFragment(fragment);
+        }
+    }
+    public void dismissNotifications()
+    {
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if(notificationManager!=null) {
+            notificationManager.cancelAll();
+            MyFirebaseMessagingService.count = 0;
+            MyFirebaseMessagingService.deptcount = 0;
+            MyFirebaseMessagingService.chatcount =0;
+        }
+    }
+    /*public void checkVerifiedEmail()
     {
         FirebaseUser user = auth.getCurrentUser();
         Snackbar sbView = Snackbar.make(findViewById(R.id.drawer_layout), "Email not verified!", Snackbar.LENGTH_INDEFINITE);
@@ -152,7 +177,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         else {
             sbView.dismiss();
         }
-    }
+    }*/
     public void checkIfReal()
     {
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();

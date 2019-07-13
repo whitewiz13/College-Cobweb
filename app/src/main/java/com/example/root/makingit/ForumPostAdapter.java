@@ -76,8 +76,10 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
         db.collection("users").document(model.getFauthor()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                holder.authorName.setText(documentSnapshot.getString("name"));
-                holder.authorRno.setText(documentSnapshot.getString("rno"));
+                if(documentSnapshot!=null) {
+                    holder.authorName.setText(documentSnapshot.getString("name"));
+                    holder.authorRno.setText(documentSnapshot.getString("rno"));
+                }
             }
         });
     }
@@ -103,19 +105,21 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
     }
     public void doUpVoteButton(final MyViewHolder holder, final ForumPostInfo model)
     {
-        db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot docSnap = task.getResult();
-                if(docSnap.exists()) {
-                    holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLUE));
+        if(auth.getCurrentUser()!=null) {
+            db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid())
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    DocumentSnapshot docSnap = task.getResult();
+                    if (docSnap != null)
+                        if (docSnap.exists()) {
+                            holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLUE));
+                        } else {
+                            holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
+                        }
                 }
-                else {
-                    holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
-                }
-            }
-        });
+            });
+        }
     }
     public void checkAlreadyUpvoted(final ForumPostInfo model,final MyViewHolder holder)
     {

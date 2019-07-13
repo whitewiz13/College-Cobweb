@@ -33,7 +33,7 @@ public class FragmentDeptOther extends Fragment{
         View view = inflater.inflate(R.layout.fragment_dept_other,viewGroup, false);
         final RecyclerView peerRecycler;
         peerRecycler = view.findViewById(R.id.peer_recyler);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore mydb = FirebaseFirestore.getInstance();
         mydb.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid())
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {

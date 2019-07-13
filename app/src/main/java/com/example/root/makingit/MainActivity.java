@@ -18,10 +18,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    FirebaseMessaging firebaseMessagingService;
     private EditText email,pass;
     Button login;
     private ProgressBar progressBar;
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                     Toast.makeText(getApplicationContext(), "Successfully Logged In!", Toast.LENGTH_SHORT).show();
+                                    performSubscription();
                                 }
                             }
                         });
@@ -96,6 +101,32 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,Register.class);
                 startActivity(intent);
+            }
+        });
+
+    }
+    public void performSubscription()
+    {
+        String currentUser =FirebaseAuth.getInstance().getUid();
+        FirebaseFirestore db  =FirebaseFirestore.getInstance();
+        firebaseMessagingService = FirebaseMessaging.getInstance();
+        firebaseMessagingService.subscribeToTopic("pushEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCITEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCMATHEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCPHYSICSEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCCHEMISTRYEvent");
+        firebaseMessagingService.unsubscribeFromTopic("pushMSCZOOLOGYEvent");
+        if(currentUser!= null)
+        db.collection("users").document(currentUser)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                String dept = "";
+                DocumentSnapshot snapshot = task.getResult();
+                if (snapshot != null) {
+                    dept = snapshot.getString("dept");
+                }
+                firebaseMessagingService.subscribeToTopic("push"+dept+"Event");
             }
         });
     }

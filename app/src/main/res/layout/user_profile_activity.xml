@@ -131,11 +131,19 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/postsTextview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="Posts" />
-
+            <Button
+                android:id="@+id/sendFirstMessage"
+                android:layout_below="@+id/postsTextview"
+                android:layout_marginTop="20sp"
+                android:text="Message"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

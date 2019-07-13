@@ -22,8 +22,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-
+        <receiver android:name=".NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled"/>
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
@@ -48,6 +51,9 @@
             android:label="@string/title_activity_main"/>
 
         <activity android:name=".ForumPostCommentActivity"
+            android:theme="@style/AppTheme.MyNoActionBar"
+            android:label="@string/title_activity_main"/>
+        <activity android:name=".ChatScreenActivity"
             android:theme="@style/AppTheme.MyNoActionBar"
             android:label="@string/title_activity_main"/>
     </application>

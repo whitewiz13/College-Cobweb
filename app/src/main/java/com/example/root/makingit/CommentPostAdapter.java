@@ -35,7 +35,8 @@ public class CommentPostAdapter extends FirestoreRecyclerAdapter<CommentPostInfo
         colref.document(authorId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                holder.commentAuthor.setText(documentSnapshot.getString("name"));
+                if(documentSnapshot!=null)
+                    holder.commentAuthor.setText(documentSnapshot.getString("name"));
             }
         });
     }

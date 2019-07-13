@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatReceiverLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_margin="10sp"
+        android:layout_height="wrap_content"
+        android:elevation="3sp"
+        android:orientation="vertical"
+        android:background="@drawable/background_border_black">
+
+        <TextView
+            android:id="@+id/chatMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/malir"
+            android:paddingStart="15sp"
+            android:paddingEnd="15sp"
+            android:text="Message Content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/chatTime"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/chatMessage"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:paddingStart="10sp"
+            android:paddingEnd="10sp"
+            android:paddingBottom="5sp"
+            android:text="12:00" />
+
+    </RelativeLayout>
+</RelativeLayout>
