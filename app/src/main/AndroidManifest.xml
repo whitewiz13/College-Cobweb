@@ -51,6 +51,7 @@
             android:label="@string/title_activity_main"/>
 
         <activity android:name=".ForumPostCommentActivity"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.MyNoActionBar"
             android:label="@string/title_activity_main"/>
         <activity android:name=".ChatScreenActivity"

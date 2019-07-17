@@ -37,14 +37,18 @@ import javax.annotation.Nullable;
 
 public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,ForumPostAdapter.MyViewHolder> {
 
+    private OnActionListener mListener;
     private Context mContext;
     public FirebaseAuth auth;
     public FirebaseFirestore db= FirebaseFirestore.getInstance();
-    public ForumPostAdapter(@NonNull FirestoreRecyclerOptions<ForumPostInfo> options,Context mContext) {
+    public ForumPostAdapter(@NonNull FirestoreRecyclerOptions<ForumPostInfo> options,Context mContext, OnActionListener mListener) {
         super(options);
+        this.mListener = mListener;
         this.mContext = mContext;
     }
-
+    interface OnActionListener{
+        void showSnackBar(String msg);
+    }
     @Override
     protected void onBindViewHolder(@NonNull final ForumPostAdapter.MyViewHolder holder, int position, @NonNull final ForumPostInfo model) {
         Date date = model.getFdate();
@@ -133,11 +137,13 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
                             assert document != null;
                             if(document.exists())
                             {
+                                mListener.showSnackBar("You removed your vote!");
                                 db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).delete();
                                 trackUpVotes(model);
                             }
                             else
                             {
+                                mListener.showSnackBar("You upvoted this post!");
                                 Map<String,Object> myMap = new HashMap<>();
                                 myMap.put("more_stuff","blank");
                                 db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).set(myMap);

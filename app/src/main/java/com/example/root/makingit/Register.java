@@ -207,7 +207,7 @@ public class Register extends AppCompatActivity {
                                     performSubscription(dept);
                                     progressBar.setVisibility(View.GONE);
                                     //sendVerificationEmail();
-                                    startActivity(new Intent(Register.this, Home.class));
+                                    startActivity(new Intent(Register.this, Home.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                                     finish();
                                 }
                             });
@@ -234,7 +234,7 @@ public class Register extends AppCompatActivity {
             showToast("Account Created Successfully!");
             performSubscription(dept);
             progressBar.setVisibility(View.GONE);
-            startActivity(new Intent(Register.this, Home.class));
+            startActivity(new Intent(Register.this, Home.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
         }
     }

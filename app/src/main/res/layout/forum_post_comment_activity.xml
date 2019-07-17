@@ -10,33 +10,31 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
         <RelativeLayout
             android:id="@+id/mainForumElements"
-            android:layout_margin="10sp"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/forumPostToolbar">
-            <TextView
-                android:id="@+id/postName"
+            <RelativeLayout
+                android:id="@+id/forumElementView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PostName"
-                android:fontFamily="@font/malir"
-                android:textColor="@color/colorBlack"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_margin="5sp"
+                android:padding="10sp"
+                android:elevation="3sp"
+                android:background="@drawable/background_border"
+                android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/postDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PostDetail"
-                android:layout_below="@+id/postName"
-                android:fontFamily="@font/malir"
+                android:fontFamily="@font/ravenscroft"
                 android:layout_marginTop="5sp"
                 android:textColor="@color/colorBlack"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="30sp" />
             <View
+                android:layout_marginBottom="5sp"
                 android:id="@+id/justaline"
-                android:layout_width="300sp"
+                android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="5sp"
                 android:layout_gravity="center"
@@ -45,29 +43,47 @@
             <TextView
                 android:id="@+id/postUpvotes"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/justaline"
                 android:textColor="@color/colorBlack"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:text="Fupvotes" />
+                android:text="0" />
 
             <TextView
                 android:id="@+id/postComments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:textColor="@color/colorBlack"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/justaline"
+                android:layout_centerHorizontal="true"
                 android:textStyle="bold"
-                android:text="fcomments" />
+                android:text="0" />
 
+            <TextView
+                android:id="@+id/commentTextView"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/postComments"
+                android:layout_toEndOf="@+id/postComments"
+                android:gravity="right"
+                android:text="Comments" />
+
+            <TextView
+                android:id="@+id/upvotesTextView"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_alignTop="@+id/postComments"
+                android:layout_toEndOf="@+id/postUpvotes"
+                android:text="Upvotes" />
+            </RelativeLayout>
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
+                android:layout_marginTop="-5sp"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/postComments">
+                android:layout_marginBottom="40sp"
+                android:layout_below="@+id/forumElementView">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/postCommentsSection"
@@ -78,4 +94,30 @@
 
             </android.support.v4.widget.NestedScrollView>
         </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/someCommentView"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:elevation="3sp"
+        android:background="@drawable/background_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/commentTypeBox"
+            android:layout_width="250dp"
+            android:background="@drawable/background_border"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10sp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/malir"
+            android:hint="Enter comment to post" />
+        <Button
+            android:id="@+id/postCommentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:layout_alignParentRight="true"
+            android:layout_alignEnd="@+id/chatTypeBox"/>
+    </RelativeLayout>
 </RelativeLayout>

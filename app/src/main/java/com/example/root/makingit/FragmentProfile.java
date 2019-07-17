@@ -58,13 +58,15 @@ public class FragmentProfile extends Fragment {
         void setActionBarTitle(String title);
         void disableDrawer(boolean enabled);
         void refreshData();
-    }
+        void makeSnackBar(String msg);
+    };
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, viewGroup, false);
         profileScroll = view.findViewById(R.id.profileScroll);
         name = view.findViewById(R.id.myBasicName);
+        myListener = (profileListener) getActivity();
         rno= view.findViewById(R.id.myBasicRoll);
         dept= view.findViewById(R.id.myBasicDept);
         editButton= view.findViewById(R.id.Editbutton);
@@ -85,23 +87,19 @@ public class FragmentProfile extends Fragment {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(editMode ==1)
-                {
-                    editMode = 0;
-                    updateUserDate();
-                    disableAll();
+                    if (editMode == 1) {
+                        editMode = 0;
+                        updateUserDate();
+                        disableAll();
+                    } else {
+                        editMode = 1;
+                        myListener.makeSnackBar("Editing Mode Enabled!");
+                        myDbList.remove();
+                        enableAll();
+                    }
                 }
-                else
-                {
-                    editMode = 1;
-                    makeSnackBar("Editing Mode Enabled!");
-                    myDbList.remove();
-                    enableAll();
-                }
-            }
         });
         setHasOptionsMenu(true);
-        myListener = (profileListener) getActivity();
         assert myListener != null;
         myListener.setActionBarTitle("My Profile");
         return view;
@@ -156,7 +154,7 @@ public class FragmentProfile extends Fragment {
             imageChanged=false;
         }
         else
-            makeSnackBar("(Data Saved) Editing Mode Disabled!");
+            myListener.makeSnackBar("(Data Saved) Editing Mode Disabled!");
         DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
         docRef.update(newData);
     }
@@ -184,7 +182,7 @@ public class FragmentProfile extends Fragment {
                                     myMap.put("uimage",uri.toString());
                                     docRef.update(myMap);
                                     sb.dismiss();
-                                    makeSnackBar("(Data Saved) Editing Mode Disabled!");
+                                    myListener.makeSnackBar("(Data Saved) Editing Mode Disabled!");
                                     myListener.disableDrawer(true);
                                     editButton.setEnabled(true);
                                     myListener.refreshData();
@@ -195,7 +193,7 @@ public class FragmentProfile extends Fragment {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            makeSnackBar("Error Try Again!");
+                            myListener.makeSnackBar("Error Try Again!");
                             myListener.disableDrawer(true);
                             Toast.makeText(getActivity(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -228,10 +226,6 @@ public class FragmentProfile extends Fragment {
         about.setEnabled(true);
         name.requestFocus();
         profileImage.setOnClickListener(imagelistener);
-    }
-    public void makeSnackBar(String msg) {
-        Snackbar sb = Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(R.id.drawer_layout), msg, Snackbar.LENGTH_LONG);
-        sb.show();
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

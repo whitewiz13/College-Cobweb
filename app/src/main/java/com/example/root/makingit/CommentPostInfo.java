@@ -1,30 +1,53 @@
 package com.example.root.makingit;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
 public class CommentPostInfo {
-    String cdetail,cauthor;
+    @ServerTimestamp
+    Date commenttime;
+    String commenterid,commentid;
+    String commenttext;
     public CommentPostInfo()
     {
 
     }
-   public CommentPostInfo(String cdetail,String cauthor)
-   {
-       this.cdetail = cdetail;
-       this.cauthor = cauthor;
-   }
-
-   public String getcdetail() {
-        return cdetail;
+    public CommentPostInfo(String commenterid,String commenttext)
+    {
+        this.commenterid = commenterid;
+        this.commenttext = commenttext;
     }
-    public void setcdetail(String cdetail) {
-        this.cdetail = cdetail;
+    public String getCommenterid() {
+        return commenterid;
     }
 
-    public String getcauthor() {
-        return cauthor;
+    public void setCommenterid(String commenterid) {
+        this.commenterid = commenterid;
     }
 
-    public void setcauthor(String cauthor) {
-        this.cauthor = cauthor;
+    public String getCommentid() {
+        return commentid;
     }
+
+    public void setCommentid(String commentid) {
+        this.commentid = commentid;
+    }
+
+    public String getCommenttext() {
+        return commenttext;
+    }
+
+    public void setCommenttext(String commenttext) {
+        this.commenttext = commenttext;
+    }
+    public Date getCommenttime() {
+        return commenttime;
+    }
+
+    public void setCommenttime(Date commenttime) {
+        this.commenttime = commenttime;
+    }
+
 
 }

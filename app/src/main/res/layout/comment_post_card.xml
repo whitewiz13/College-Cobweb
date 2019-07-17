@@ -1,24 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
-android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="20sp">
 
-    <TextView
-        android:id="@+id/commentDetail"
+    <RelativeLayout
+        android:id="@+id/commentPostCardCont"
+        android:layout_margin="10sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/colorBlack"
-        android:textSize="25sp"
-        android:text="TextView" />
-
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/commentProfilePic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/defaultpic"
+            app:civ_border_color="@color/colorWhite"
+            app:civ_border_width="3dp"
+            tools:ignore="NotSibling" />
     <TextView
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="5sp"
         android:id="@+id/commentAuthor"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/colorBlack"
-        android:layout_below="@id/commentDetail"
-        android:textSize="25sp"
+        android:layout_toEndOf="@+id/commentProfilePic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:textSize="12sp"
+        android:text="User Name" />
+        <TextView
+
+            android:layout_toEndOf="@+id/commentAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/colorBlack"
+            android:layout_marginStart="5sp"
+            android:text="."/>
+    <TextView
+        android:layout_marginTop="5sp"
+        android:id="@+id/commentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/commentAuthor"
+        android:layout_marginStart="10sp"
+        android:textSize="12sp"
+        android:text="Comment Time"/>
+    <TextView
+        android:layout_marginStart="10sp"
+        android:id="@+id/commentDetail"
+        android:layout_toEndOf="@+id/commentProfilePic"
+        android:textColor="@color/colorBlack"
+        android:layout_below="@id/commentAuthor"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comment Text" />
+
+    </RelativeLayout>
+    <View
+        android:id="@+id/justaline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/commentPostCardCont"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorBlack" />
 </RelativeLayout>

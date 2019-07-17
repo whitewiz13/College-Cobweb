@@ -1,9 +1,13 @@
 package com.example.root.makingit;
 
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,8 +44,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffForActivity,FragmentAddEvent.onActionListener
 ,FragmentDept.departmentListener,FragmentProfile.profileListener,FragmentDeptAddEvent.onActionListener
-,FragmentForum.onDoStuffForActivity{
+,FragmentForum.onDoStuffForActivity {
 
+    Snackbar sbView;
     private DrawerLayout mDrawerLayout;
     private TextView uname,rno,dept;
     Toolbar tb;
@@ -50,7 +55,6 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     CircleImageView profileImage;
     private FirebaseAuth auth;
     ActionBar actionbar;
-    private FirebaseAuth.AuthStateListener authListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +63,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         auth = FirebaseAuth.getInstance();
         checkIfReal();
         setContentView(R.layout.home);
+        checkInternetConnection();
         dismissNotifications();
         final NavigationView navigationView = findViewById(R.id.nav_view);
         final View headerview = navigationView.getHeaderView(0);
@@ -67,92 +72,130 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         setSupportActionBar(tb);
         tb.setTitleTextColor(Color.WHITE);
         actionbar = getSupportActionBar();
-        if (actionbar != null) {
-            actionbar.setTitle("Home");
-            actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        }
+        setUpActionBar(actionbar);
         uname = headerview.findViewById(R.id.suname);
         rno = headerview.findViewById(R.id.surno);
         dept = headerview.findViewById(R.id.sudept);
         profileImage = headerview.findViewById(R.id.peerProfileImage);
         checkIfReal();
         //checkVerifiedEmail();
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    // user auth state is changed - user is null
-                    // launch login activity
-                    startActivity(new Intent(Home.this, MainActivity.class));
-                    finish();
-                    Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
         loadUserData();
         fragment = new FragmentEvent();
         setFragment(fragment);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        int id= menuItem.getItemId();
-                        switch (id)
-                        {
-                            case R.id.nav_myprofile:
-                                fragment= new FragmentProfile();
-                                break;
-                            case R.id.nav_events:
-                                fragment = new FragmentEvent();
-                                break;
-                            case R.id.nav_dept:
-                                fragment = new FragmentDept();
-                                break;
-                            case R.id.nav_forum:
-                                fragment = new FragmentForum();
-                                break;
-                            case R.id.nav_chat:
-                                fragment = new FragmentChat();
-                                break;
-                            case R.id.nav_signout:
-                                auth.signOut();
-                                break;
-
-                        }
-                        return true;
-                    }
-                });
-        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) { }
-            @Override
-            public void onDrawerStateChanged(int newState) { }
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-            }
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-                if (fragment != null) {
-                   setFragment(fragment);
-                   fragment=null;
-                }
-            }
-        });
-        if(extras!=null) {
-            String chatOpen = extras.getString("fragmentChat");
-            checkToOpenChat(chatOpen);
+        navigationView.setNavigationItemSelectedListener(drawerItemSelect);
+        mDrawerLayout.addDrawerListener(drawerStateListener);
+        checkToOpenChat(extras);
+    }
+    //Setup Actionbar
+    public void setUpActionBar(ActionBar actionbar)
+    {
+        if (actionbar != null) {
+            actionbar.setTitle("Home");
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
     }
-    public void checkToOpenChat(String chatOpen)
-    {
-        if(chatOpen!=null)
+    //Listeners for navigation drawers
+    DrawerLayout.DrawerListener drawerStateListener = new DrawerLayout.DrawerListener() {
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) { }
+        @Override
+        public void onDrawerStateChanged(int newState) { }
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+        }
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+            if (fragment != null) {
+                setFragment(fragment);
+                fragment=null;
+            }
+        }
+    };
+    NavigationView.OnNavigationItemSelectedListener drawerItemSelect = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            menuItem.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            int id= menuItem.getItemId();
+            switch (id)
+            {
+                case R.id.nav_myprofile:
+                    fragment= new FragmentProfile();
+                    break;
+                case R.id.nav_events:
+                    fragment = new FragmentEvent();
+                    break;
+                case R.id.nav_dept:
+                    fragment = new FragmentDept();
+                    break;
+                case R.id.nav_forum:
+                    fragment = new FragmentForum();
+                    break;
+                case R.id.nav_chat:
+                    fragment = new FragmentChat();
+                    break;
+                case R.id.nav_signout:
+                    auth.signOut();
+                    break;
+
+            }
+            return true;
+        }
+    };
+    //Checking for user authentication!
+    private FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user == null) {
+                // user auth state is changed - user is null
+                // launch login activity
+                startActivity(new Intent(Home.this, MainActivity.class));
+                finish();
+                Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+    private void checkInternetConnection() {
+        sbView = Snackbar.make(findViewById(R.id.drawer_layout), "No internet connection!", Snackbar.LENGTH_INDEFINITE);
+        if(haveNetworkConnection())
         {
-            fragment = new FragmentChat();
-            setFragment(fragment);
+            sbView.dismiss();
+        }
+        else
+        {
+            sbView.getView().setBackgroundColor(Color.RED);
+            sbView.show();
+        }
+    }
+    public boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = new NetworkInfo[0];
+        if (cm != null) {
+            netInfo = cm.getAllNetworkInfo();
+        }
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    public void checkToOpenChat(Bundle extras) {
+        if (extras != null) {
+            String chatOpen = extras.getString("fragmentChat");
+            if (chatOpen != null) {
+                fragment = new FragmentChat();
+                setFragment(fragment);
+            }
         }
     }
     public void dismissNotifications()
@@ -165,19 +208,6 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             MyFirebaseMessagingService.chatcount =0;
         }
     }
-    /*public void checkVerifiedEmail()
-    {
-        FirebaseUser user = auth.getCurrentUser();
-        Snackbar sbView = Snackbar.make(findViewById(R.id.drawer_layout), "Email not verified!", Snackbar.LENGTH_INDEFINITE);
-        if(!user.isEmailVerified())
-        {
-            sbView.getView().setBackgroundColor(Color.RED);
-            sbView.show();
-        }
-        else {
-            sbView.dismiss();
-        }
-    }*/
     public void checkIfReal()
     {
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
@@ -279,6 +309,27 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         }
         return super.onOptionsItemSelected(item);
     }
+    public void makeSnackBar(String msg) {
+        if(haveNetworkConnection()) {
+            Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), msg, Snackbar.LENGTH_LONG);
+            sb.show();
+        }
+    }
+    private BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getExtras()!=null) {
+                NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
+                if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED) {
+                    sbView.dismiss();
+                }
+                else{
+                    sbView.getView().setBackgroundColor(Color.RED);
+                    sbView.show();
+                }
+            }
+        }
+    };
     public void onBackPressed()
     {
         if(mDrawerLayout.isDrawerOpen(GravityCompat.START))
@@ -286,35 +337,41 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         else
             finish();
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-        auth.addAuthStateListener(authListener);
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (authListener != null) {
-            auth.removeAuthStateListener(authListener);
+    /*public void checkVerifiedEmail()
+   {
+        FirebaseUser user = auth.getCurrentUser();
+        Snackbar sbView = Snackbar.make(findViewById(R.id.drawer_layout), "Email not verified!", Snackbar.LENGTH_INDEFINITE);
+        if(!user.isEmailVerified())
+        {
+            sbView.getView().setBackgroundColor(Color.RED);
+            sbView.show();
         }
-    }
-    public void makeSnackBar(String msg) {
-        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), msg, Snackbar.LENGTH_LONG);
-        sb.show();
-    }
+        else {
+            sbView.dismiss();
+        }
+   }*/
+    //Override methods for different phases in the activity
+    @Override
+    public void dismissMe(DialogFragment frag)
+    { dismissDialogFragment(frag); }
+    @Override
+    public void makeSnackB(String msg)
+    { makeSnackBar(msg); }
+    @Override
+    public void onStart() { super.onStart();
+        auth.addAuthStateListener(authListener); }
+    @Override
+    public void onStop() { super.onStop();
+        if (authListener != null) { auth.removeAuthStateListener(authListener); } }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+        return super.onCreateOptionsMenu(menu); }
     @Override
-    public void dismissMe(DialogFragment frag)
-    {
-        dismissDialogFragment(frag);
-    }
+    protected void onPause() { super.onPause();
+        unregisterReceiver(networkReceiver); }
     @Override
-    public void makeSnackB(String msg)
-    {
-        makeSnackBar(msg);
-    }
+    protected void onResume() { super.onResume();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkReceiver, filter); }
 }

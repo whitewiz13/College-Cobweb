@@ -27,7 +27,7 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
 
     private Context mContext;
     private OnItemClickListener listener;
-    ChatMainAdapter(@NonNull FirestoreRecyclerOptions<ChatMainModel> options,Context mContext) {
+    public ChatMainAdapter(@NonNull FirestoreRecyclerOptions<ChatMainModel> options,Context mContext) {
         super(options);
         this.mContext = mContext;
     }
@@ -68,11 +68,11 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
         return new MyViewHolder(itemView);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder
+    public class MyViewHolder extends RecyclerView.ViewHolder
     {
         TextView uname,lastmessage,chattime;
         CircleImageView chatImage;
-        private MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {
             super(itemView);
             uname = itemView.findViewById(R.id.chatUserName);
             lastmessage = itemView.findViewById(R.id.chatLastMessage);
@@ -93,7 +93,7 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
         void onItemClick(DocumentSnapshot documentSnapshot, int position);
     }
 
-    void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 }

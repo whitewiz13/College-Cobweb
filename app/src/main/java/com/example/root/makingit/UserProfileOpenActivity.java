@@ -1,9 +1,15 @@
 package com.example.root.makingit;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,9 +36,11 @@ public class UserProfileOpenActivity extends AppCompatActivity {
     CircleImageView uImageAct;
     Toolbar tb;
     Button sendFirstMessage;
+    Snackbar sbView;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile_activity);
+        sbView = Snackbar.make(findViewById(R.id.userprofileinfolayout), "No internet connection!", Snackbar.LENGTH_INDEFINITE);
         tb = findViewById(R.id.userProfileToolbar);
         setSupportActionBar(tb);
         tb.setTitleTextColor(Color.WHITE);
@@ -123,5 +131,31 @@ public class UserProfileOpenActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getExtras()!=null) {
+                NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
+                if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED) {
+                    sbView.dismiss();
+                }
+                else{
+                    sbView.getView().setBackgroundColor(Color.RED);
+                    sbView.show();
+                }
+            }
+        }
+    };
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(networkReceiver);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkReceiver, filter);
     }
 }

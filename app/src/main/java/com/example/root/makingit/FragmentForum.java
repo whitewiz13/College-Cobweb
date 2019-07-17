@@ -19,6 +19,7 @@ import com.google.firebase.firestore.Query;
 public class FragmentForum extends Fragment {
     interface onDoStuffForActivity {
         void setActionBarTitle(String title);
+        void makeSnackB(String msg);
     }
     LinearLayoutManager mLayoutManager;
     public onDoStuffForActivity doStuffListener;
@@ -42,7 +43,12 @@ public class FragmentForum extends Fragment {
         Query query = eventRef.orderBy("fdate", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<ForumPostInfo> options = new FirestoreRecyclerOptions.Builder<ForumPostInfo>()
                 .setQuery(query, ForumPostInfo.class).build();
-        adapter = new ForumPostAdapter(options, getActivity());
+        adapter = new ForumPostAdapter(options, getActivity(), new ForumPostAdapter.OnActionListener() {
+            @Override
+            public void showSnackBar(String msg) {
+                doStuffListener.makeSnackB(msg);
+            }
+        });
         forumRecycler.setAdapter(adapter);
         forumRecycler.setHasFixedSize(false);
         mLayoutManager = new LinearLayoutManager(getActivity());
