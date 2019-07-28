@@ -44,8 +44,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffForActivity,FragmentAddEvent.onActionListener
 ,FragmentDept.departmentListener,FragmentProfile.profileListener,FragmentDeptAddEvent.onActionListener
-,FragmentForum.onDoStuffForActivity {
+,FragmentForum.onDoStuffForActivity,FragmentDeptNotice.departmentListener {
 
+    String fTag="fEvent";
+    Snackbar loadingSnack;
     Snackbar sbView;
     private DrawerLayout mDrawerLayout;
     private TextView uname,rno,dept;
@@ -81,7 +83,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         //checkVerifiedEmail();
         loadUserData();
         fragment = new FragmentEvent();
-        setFragment(fragment);
+        setFragment(fragment,"fEvent");
         navigationView.setNavigationItemSelectedListener(drawerItemSelect);
         mDrawerLayout.addDrawerListener(drawerStateListener);
         checkToOpenChat(extras);
@@ -107,7 +109,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         @Override
         public void onDrawerClosed(@NonNull View drawerView) {
             if (fragment != null) {
-                setFragment(fragment);
+                setFragment(fragment,fTag);
                 fragment=null;
             }
         }
@@ -122,18 +124,23 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             {
                 case R.id.nav_myprofile:
                     fragment= new FragmentProfile();
+                    fTag = "fProfile";
                     break;
                 case R.id.nav_events:
                     fragment = new FragmentEvent();
+                    fTag = "fEvent";
                     break;
                 case R.id.nav_dept:
                     fragment = new FragmentDept();
+                    fTag = "fDept";
                     break;
                 case R.id.nav_forum:
                     fragment = new FragmentForum();
+                    fTag = "fForum";
                     break;
                 case R.id.nav_chat:
                     fragment = new FragmentChat();
+                    fTag = "fChat";
                     break;
                 case R.id.nav_signout:
                     auth.signOut();
@@ -194,7 +201,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             String chatOpen = extras.getString("fragmentChat");
             if (chatOpen != null) {
                 fragment = new FragmentChat();
-                setFragment(fragment);
+                setFragment(fragment,"fChat");
             }
         }
     }
@@ -251,10 +258,11 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             }
         });
     }
-    public void setFragment(Fragment fragment)
+    public void setFragment(Fragment fragment,String tag)
     {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in,R.anim.slide_out);
+        transaction.add(fragment,tag);
         transaction.replace(R.id.fragmentMain,fragment);
         transaction.commit();
     }
@@ -275,6 +283,21 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     }
 
     @Override
+    public void makeLoadingSnackBar(String msg) {
+        if(haveNetworkConnection()) {
+            loadingSnack = Snackbar.make(findViewById(R.id.drawer_layout), msg, Snackbar.LENGTH_INDEFINITE);
+            loadingSnack.show();
+        }
+    }
+
+    @Override
+    public void dismissSnackBar() {
+        if(haveNetworkConnection()) {
+            loadingSnack.dismiss();
+        }
+    }
+
+    @Override
     public void disableDrawer(boolean enabled) {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
                 DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
@@ -285,6 +308,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     @Override
     public void refreshData() {
         loadUserData();
+
     }
 
     @Override
@@ -351,6 +375,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         }
    }*/
     //Override methods for different phases in the activity
+
     @Override
     public void dismissMe(DialogFragment frag)
     { dismissDialogFragment(frag); }

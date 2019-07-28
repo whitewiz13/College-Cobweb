@@ -2,6 +2,7 @@ package com.example.root.makingit;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
 
 public class ForumPostCommentActivity extends AppCompatActivity {
 
+    Snackbar loadingSnack;
     Button postComment;
     EditText commentTypeBox;
     String id;
@@ -44,6 +46,7 @@ public class ForumPostCommentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forum_post_comment_activity);
+        makeLoadingSnackBar("Loading Comments...");
         postComment = findViewById(R.id.postCommentButton);
         postUpvotes = findViewById(R.id.postUpvotes);
         commentTypeBox = findViewById(R.id.commentTypeBox);
@@ -75,7 +78,14 @@ public class ForumPostCommentActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<CommentPostInfo> options = new FirestoreRecyclerOptions.Builder<CommentPostInfo>()
                 .setQuery(colRef,CommentPostInfo.class)
                 .build();
-        adapter = new CommentPostAdapter(options,getApplicationContext());
+        adapter = new CommentPostAdapter(options,getApplicationContext(),id)
+        {
+            @Override
+            public void onDataChanged()
+            {
+                dismissSnackBar();
+            }
+        };
         postCommentRec.setAdapter(adapter);
         postCommentRec.setHasFixedSize(false);
         postCommentRec.setLayoutManager(new LinearLayoutManager(this));
@@ -102,5 +112,13 @@ public class ForumPostCommentActivity extends AppCompatActivity {
                         .document(commentID).update("commentid",commentID);
             }
         });
+    }
+    public void makeLoadingSnackBar(String msg) {
+            loadingSnack = Snackbar.make(findViewById(R.id.commentPostScreen), msg, Snackbar.LENGTH_INDEFINITE);
+            loadingSnack.show();
+    }
+
+    public void dismissSnackBar() {
+            loadingSnack.dismiss();
     }
 }

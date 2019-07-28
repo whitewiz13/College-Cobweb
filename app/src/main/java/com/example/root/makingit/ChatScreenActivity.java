@@ -1,8 +1,10 @@
 package com.example.root.makingit;
 
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ public class ChatScreenActivity extends AppCompatActivity {
 
     String authUid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     String uname;
+    Snackbar loadingSnack;
     Toolbar tb;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     RecyclerView messageList;
@@ -40,6 +43,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         final String id = Objects.requireNonNull(extras).getString("userId");
         setContentView(R.layout.activity_chat_screen);
+        makeLoadingSnackBar("Loading...");
         tb = findViewById(R.id.chatScreenToolbar);
         setSupportActionBar(tb);
         tb.setTitleTextColor(Color.WHITE);
@@ -97,16 +101,20 @@ public class ChatScreenActivity extends AppCompatActivity {
         db.collection("users").document(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                db.collection("users").document(Objects.requireNonNull(authUid)).collection("chats")
-                        .document(id).set(new ChatMainModel(messsage,chatsModel.getChattime(),id,documentSnapshot.getString("name")));
+                if (documentSnapshot != null) {
+                    db.collection("users").document(Objects.requireNonNull(authUid)).collection("chats")
+                            .document(id).set(new ChatMainModel(messsage,chatsModel.getChattime(),id,documentSnapshot.getString("name")));
+                }
             }
         });
 
         db.collection("users").document(Objects.requireNonNull(authUid)).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                db.collection("users").document(id).collection("chats")
-                        .document(authUid).set(new ChatMainModel(messsage,chatsModel.getChattime(),authUid,documentSnapshot.getString("name")));
+                if (documentSnapshot != null) {
+                    db.collection("users").document(id).collection("chats")
+                            .document(authUid).set(new ChatMainModel(messsage,chatsModel.getChattime(),authUid,documentSnapshot.getString("name")));
+                }
             }
         });
     }
@@ -120,8 +128,17 @@ public class ChatScreenActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<ChatsModel> options = new FirestoreRecyclerOptions.Builder<ChatsModel>()
                 .setQuery(query,ChatsModel.class)
                 .build();
-        adapter = new ChatsAdapter(options);
+        adapter = new ChatsAdapter(options)
+        {
+          @Override
+          public void onDataChanged(){
+              dismissSnackBar();
+          }
+        };
         messageList.setAdapter(adapter);
+        messageList.setItemViewCacheSize(20);
+        messageList.setDrawingCacheEnabled(true);
+        messageList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         messageList.setLayoutManager(linearLayoutManager);
         adapter.startListening();
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -149,5 +166,13 @@ public class ChatScreenActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void makeLoadingSnackBar(String msg) {
+            loadingSnack = Snackbar.make(findViewById(R.id.chatScreenLayout), msg, Snackbar.LENGTH_INDEFINITE);
+            loadingSnack.show();
+    }
+
+    public void dismissSnackBar() {
+            loadingSnack.dismiss();
     }
 }

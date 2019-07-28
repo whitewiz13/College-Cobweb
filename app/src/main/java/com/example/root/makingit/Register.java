@@ -32,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +85,6 @@ public class Register extends AppCompatActivity {
             public void onClick(View view) {
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
-
                 assert inputManager != null;
                 inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
@@ -124,7 +124,7 @@ public class Register extends AppCompatActivity {
                     assert document != null;
                     if(document.exists())
                     {
-                        showToast("Roll Number Already Exists!");
+                        showToast("Username Already Exists!");
                         progressBar.setVisibility(View.GONE);
                         btnreg.setEnabled(true);
                     }
@@ -137,7 +137,11 @@ public class Register extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 fn = fname.getText().toString().trim();
                                                 rno = rollnumber.getText().toString().trim();
-                                                uploadImageAndSave(fn, rno);
+                                                try {
+                                                    uploadImageAndSave(fn, rno);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
                                             } else if (!task.isSuccessful()) {
                                                 showToast(Objects.requireNonNull(task.getException()).getMessage());
                                                 progressBar.setVisibility(View.GONE);
@@ -182,12 +186,15 @@ public class Register extends AppCompatActivity {
             });
         }
     }*/
-    private void uploadImageAndSave(final String fname,final String rollnumber)
-    {
+    private void uploadImageAndSave(final String fname,final String rollnumber) throws IOException {
         if(filePath != null)
         {
+            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            byte[] data = baos.toByteArray();
             final StorageReference ref = storageReference.child("user_profile_pic/"+ Objects.requireNonNull(auth.getCurrentUser()).getUid());
-            ref.putFile(filePath)
+            ref.putBytes(data)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

@@ -2,6 +2,7 @@ package com.example.root.makingit;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +19,10 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +65,9 @@ public class FragmentProfile extends Fragment {
         void disableDrawer(boolean enabled);
         void refreshData();
         void makeSnackBar(String msg);
-    };
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
@@ -67,6 +75,9 @@ public class FragmentProfile extends Fragment {
         profileScroll = view.findViewById(R.id.profileScroll);
         name = view.findViewById(R.id.myBasicName);
         myListener = (profileListener) getActivity();
+        if (myListener != null) {
+            myListener.makeLoadingSnackBar("Loading Profile..");
+        }
         rno= view.findViewById(R.id.myBasicRoll);
         dept= view.findViewById(R.id.myBasicDept);
         editButton= view.findViewById(R.id.Editbutton);
@@ -122,6 +133,19 @@ public class FragmentProfile extends Fragment {
                                 if (isAdded()) {
                                     GlideApp.with(FragmentProfile.this)
                                             .load(uinfo.getUimage())
+                                            .listener(new RequestListener<Drawable>() {
+                                                @Override
+                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                    myListener.makeSnackBar("Failed to load image (Network Error)");
+                                                    return false;
+                                                }
+
+                                                @Override
+                                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                    myListener.dismissSnackBar();
+                                                    return false;
+                                                }
+                                            })
                                             .placeholder(R.drawable.defaultpic)
                                             .into(profileImage);
                                 }
@@ -150,7 +174,11 @@ public class FragmentProfile extends Fragment {
         newData.put("phone",phone.getText().toString());
         if(imageChanged)
         {
-            uploadAndSaveImage();
+            try {
+                uploadAndSaveImage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             imageChanged=false;
         }
         else
@@ -158,8 +186,7 @@ public class FragmentProfile extends Fragment {
         DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
         docRef.update(newData);
     }
-    public void uploadAndSaveImage()
-    {
+    public void uploadAndSaveImage() throws IOException {
         FirebaseStorage storage=FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
         if(filePath != null)
@@ -168,8 +195,12 @@ public class FragmentProfile extends Fragment {
             myListener.disableDrawer(false);
             final Snackbar sb = Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(R.id.drawer_layout), "Uploading Image Please Wait", Snackbar.LENGTH_INDEFINITE);
             sb.show();
+            Bitmap bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            byte[] data = baos.toByteArray();
             final StorageReference ref = storageReference.child("user_profile_pic/"+ Objects.requireNonNull(auth.getCurrentUser()).getUid());
-            ref.putFile(filePath)
+            ref.putBytes(data)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

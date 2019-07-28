@@ -17,6 +17,8 @@ public class FragmentDept extends Fragment {
 
     interface departmentListener{
         void setActionBarTitle(String title);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState)

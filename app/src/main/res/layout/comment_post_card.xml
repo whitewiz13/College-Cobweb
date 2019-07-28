@@ -66,5 +66,5 @@
         android:layout_below="@+id/commentPostCardCont"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:background="@color/colorBlack" />
+        android:background="@color/colorGrey" />
 </RelativeLayout>

@@ -28,6 +28,11 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 public class FragmentDeptNotice extends Fragment {
+    departmentListener myListener;
+    interface departmentListener{
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
+    }
     RecyclerView recyclerView;
     String dept;
     DeptEventInfoAdapter adapter;
@@ -39,6 +44,10 @@ public class FragmentDeptNotice extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dept_notice,viewGroup, false);
+        myListener = (departmentListener) getActivity();
+        if (myListener != null) {
+            myListener.makeLoadingSnackBar("Loading Department...");
+        }
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore mydb = FirebaseFirestore.getInstance();
         mainHeading = view.findViewById(R.id.theMainHeading);
@@ -77,7 +86,14 @@ public class FragmentDeptNotice extends Fragment {
             @Override
             public void showSnackBar(String msg) {
             }
-        });
+        })
+        {
+            @Override
+            public void onDataChanged()
+            {
+                myListener.dismissSnackBar();
+            }
+        };
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

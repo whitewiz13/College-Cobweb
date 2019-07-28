@@ -73,15 +73,6 @@
                     android:layout_marginTop="185dp"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"/>
-                <Button
-                    android:id="@+id/showALl"
-                    android:layout_below="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:textSize="@dimen/bottom_text"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/ravenscroft"
-                    android:background="@drawable/background_border"
-                    android:text="Show More"/>
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>

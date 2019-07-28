@@ -28,8 +28,10 @@ public class FragmentChat extends FragmentDept {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat,container,false);
         myListener = (departmentListener) getActivity();
-        if(myListener!=null)
+        if(myListener!=null) {
             myListener.setActionBarTitle("Chats");
+            myListener.makeLoadingSnackBar("Loading Chats...");
+        }
         chatList = view.findViewById(R.id.chatListRecycler);
         assert auth.getUid()!=null;
         eventRef = db.collection("users").document(auth.getUid())
@@ -38,8 +40,14 @@ public class FragmentChat extends FragmentDept {
         FirestoreRecyclerOptions<ChatMainModel> options = new FirestoreRecyclerOptions.Builder<ChatMainModel>()
                 .setQuery(query,ChatMainModel.class)
                 .build();
-
-        chatsAdapter = new ChatMainAdapter(options,getActivity());
+        chatsAdapter = new ChatMainAdapter(options,getActivity())
+        {
+            @Override
+            public void onDataChanged()
+            {
+                myListener.dismissSnackBar();
+            }
+        };
         chatList.setAdapter(chatsAdapter);
         chatList.setLayoutManager(new LinearLayoutManager(getActivity()));
         chatList.setHasFixedSize(false);

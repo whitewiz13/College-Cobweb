@@ -53,7 +53,7 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
                             GlideApp.with(mContext)
                                     .load(documentSnapshot.getString("uimage"))
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .placeholder(R.drawable.defaultpic)
+                                    .placeholder(R.drawable.loadme)
                                     .into(holder.chatImage);
                         }
                     }

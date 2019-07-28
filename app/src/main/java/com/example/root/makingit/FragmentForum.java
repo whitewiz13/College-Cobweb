@@ -20,6 +20,8 @@ public class FragmentForum extends Fragment {
     interface onDoStuffForActivity {
         void setActionBarTitle(String title);
         void makeSnackB(String msg);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
     }
     LinearLayoutManager mLayoutManager;
     public onDoStuffForActivity doStuffListener;
@@ -32,6 +34,7 @@ public class FragmentForum extends Fragment {
         setHasOptionsMenu(true);
         doStuffListener = (onDoStuffForActivity) getActivity();
         if (doStuffListener != null) {
+            doStuffListener.makeLoadingSnackBar("Loading Forums...");
             doStuffListener.setActionBarTitle("Forum");
         }
         View view = inflater.inflate(R.layout.fragment_forum, viewGroup, false);
@@ -48,12 +51,33 @@ public class FragmentForum extends Fragment {
             public void showSnackBar(String msg) {
                 doStuffListener.makeSnackB(msg);
             }
-        });
+        }) {
+            @Override
+            public void onDataChanged()
+            {
+                doStuffListener.dismissSnackBar();
+            }
+        };
         forumRecycler.setAdapter(adapter);
-        forumRecycler.setHasFixedSize(false);
+        forumRecycler.setItemViewCacheSize(20);
+        forumRecycler.setDrawingCacheEnabled(true);
+        forumRecycler.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mLayoutManager = new LinearLayoutManager(getActivity());
         forumRecycler.setLayoutManager(mLayoutManager);
         adapter.startListening();
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                forumRecycler.scrollToPosition(adapter.getItemCount()-1);
+            }
+        });
+        forumRecycler.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                forumRecycler.scrollToPosition(adapter.getItemCount()-1);
+            }
+        });
     }
     @Override
     public void onDestroyView() {

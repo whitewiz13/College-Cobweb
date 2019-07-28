@@ -1,6 +1,10 @@
 package com.example.root.makingit;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -10,14 +14,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Objects;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class FragmentAddEvent extends DialogFragment {
+    final int PICK_IMAGE_REQUEST = 1;
+    private Uri filePath;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     @Override
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
@@ -30,13 +46,18 @@ public class FragmentAddEvent extends DialogFragment {
     {
         void dismissMe(DialogFragment frag);
         void makeSnackB(String msg);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_add_event,viewGroup, false);
         final EditText ename,edetail;
         listner = (onActionListener) getActivity();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         Button enter = view.findViewById(R.id.enter);
+        Button addImage =view.findViewById(R.id.addEventImage);
         ename = view.findViewById(R.id.evname);
         edetail = view.findViewById(R.id.evdetail);
         enter.setOnClickListener(new View.OnClickListener() {
@@ -56,19 +77,78 @@ public class FragmentAddEvent extends DialogFragment {
                 }
                 saveEventData(evname,evdetail);
                 listner.dismissMe(frag);
-                listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
 
             }
         });
+        addImage.setOnClickListener(loadImage);
         return view;
     }
-    public void saveEventData(String evname,String evdetail)
+    View.OnClickListener loadImage = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            chooseImage();
+        }
+    };
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+    public void saveEventData(final String evname,final String evdetail)
     {
-        String evauthor;
-        evauthor =  Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        listner.makeLoadingSnackBar("Saving Event...");
         final  FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("events").document();
-        EventInfo event = new EventInfo(docRef.getId(),evname,evdetail,evauthor);
-        docRef.set(event);
+        final DocumentReference docRef = db.collection("events").document();
+        if(filePath != null)
+        {
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            byte[] data = baos.toByteArray();
+            final StorageReference ref = storageReference.child("event_pics/"+ Objects.requireNonNull(docRef.getId()));
+            ref.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                         @Override
+                         public void onSuccess(Uri uri) {
+                             String evauthor;
+                             evauthor =  Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+                             EventInfo event = new EventInfo(docRef.getId(),evname,evdetail,evauthor,uri.toString());
+                             docRef.set(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                 @Override
+                                 public void onSuccess(Void aVoid) {
+                                     listner.dismissSnackBar();
+                                     listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
+                                 }
+                             });
+                         }
+                     });
+                }
+            });
+        }
+        else {
+            String evauthor;
+            evauthor = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            EventInfo event = new EventInfo(docRef.getId(), evname, evdetail, evauthor, null);
+            docRef.set(event);
+            listner.dismissSnackBar();
+            listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+        }
     }
 }

@@ -56,7 +56,7 @@
             android:layout_centerHorizontal="true"
             android:ems="10"
             android:fontFamily="@font/ravenscroft"
-            android:hint="Enter Roll Number"
+            android:hint="Enter Username"
             android:inputType="text"
             android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"

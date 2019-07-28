@@ -1,7 +1,6 @@
 package com.example.root.makingit;
 
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,12 +13,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
 
 public class FragmentEvent extends Fragment{
     SwipeRefreshLayout swipeContainer;
@@ -31,6 +30,8 @@ public class FragmentEvent extends Fragment{
     interface onDoStuffForActivity{
         void setActionBarTitle(String title);
         void makeSnackB(String msg);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
     }
     private onDoStuffForActivity doStuffListener;
     @Override
@@ -38,36 +39,59 @@ public class FragmentEvent extends Fragment{
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_event, viewGroup, false);
         eventScroll = view.findViewById(R.id.EVntscrollview);
-        Button showMore = view.findViewById(R.id.showALl);
         swipeContainer = view.findViewById(R.id.swipeView);
-        showMore.setTextColor(Color.GRAY);
         doStuffListener = (onDoStuffForActivity) getActivity();
         if (doStuffListener != null) {
+            doStuffListener.makeLoadingSnackBar("Loading Events..");
             doStuffListener.setActionBarTitle("Events");
         }
         recyclerView = view.findViewById(R.id.recycler_view);
-        Query query = eventRef.orderBy("edate", Query.Direction.DESCENDING);
+        loadEventList();
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadEventList();
+            }
+        });
+        return view;
+    }
+
+    public void loadEventList()
+    {
+        final Query query = eventRef.orderBy("edate", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<EventInfo> options = new FirestoreRecyclerOptions.Builder<EventInfo>()
                 .setQuery(query,EventInfo.class)
                 .build();
-        adapter = new EventRecyclerAdapter(options, getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
+        adapter = new EventRecyclerAdapter(options,getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
             @Override
             public void showSnackBar(String msg) {
                 doStuffListener.makeSnackB(msg);
             }
-        });
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                recyclerView.refreshDrawableState();
+            public void makeLoadingSnackBar(String msg) {
+                doStuffListener.makeLoadingSnackBar(msg);
+            }
+
+            @Override
+            public void dismissSnackBar() {
+                doStuffListener.dismissSnackBar();
+
+            }
+        })
+        {
+            @Override
+            public void onDataChanged()
+            {
+                doStuffListener.dismissSnackBar();
                 swipeContainer.setRefreshing(false);
             }
-        });
+        };
         recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter.startListening();
-        return view;
     }
     @Override
     public void onDestroyView() {

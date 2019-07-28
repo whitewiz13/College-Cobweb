@@ -8,8 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -20,6 +24,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -39,14 +45,18 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
 
     interface OnActionListener{
         void showSnackBar(String msg);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView imageView;
         public TextView ename,edetail,edate,showmore,delete,eauthor,eRollno;
+        public ImageView eventImage;
         public MyViewHolder(View view) {
             super(view);
+            eventImage = view.findViewById(R.id.eventImageView);
             imageView = view.findViewById(R.id.peerProfileImage);
             ename = view.findViewById(R.id.ename);
             edetail = view.findViewById(R.id.edetail);
@@ -79,6 +89,17 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
         holder.ename.setText(model.getEname());
         holder.edetail.setText(model.getEdetail());
         holder.edate.setText(creationDate);
+        if(model.eventImage != null)
+        {
+            GlideApp.with(mContext)
+                    .load(model.getEventImage())
+                    .placeholder(R.drawable.loadme)
+                    .into(holder.eventImage);
+            holder.eventImage.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.eventImage.setVisibility(View.GONE);
+        }
         getUserInfo(holder, model.getEauthor());
         checkForUserPost(model,holder);
     }
@@ -120,19 +141,45 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.showSnackBar("Successfully Deleted!");
-                db.collection("events").document(album.getEid())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                            }
-                        });
+                if(album.getEventImage()!=null) {
+                    mListener.makeLoadingSnackBar("Deleting Event...");
+                    FirebaseStorage.getInstance().getReferenceFromUrl(album.getEventImage()).delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    db.collection("events").document(album.getEid())
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    mListener.dismissSnackBar();
+                                                    mListener.showSnackBar("Successfully Deleted!");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                }
+                                            });
+                                }
+                            });
+                }
+                else
+                {
+                    mListener.showSnackBar("Successfully Deleted!");
+                    db.collection("events").document(album.getEid())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                }
             }
         });
     }

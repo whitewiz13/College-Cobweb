@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
@@ -14,10 +15,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:text="Fname"
-        android:fontFamily="@font/malir"
+        android:fontFamily="@font/ravenscroft"
         android:textColor="@color/colorBlack"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textSize="30dp" />
 
     <TextView
         android:id="@+id/fdetail"
@@ -32,40 +32,51 @@
 
     <TextView
         android:id="@+id/fdate"
+        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fdetail"
-        android:layout_alignParentStart="true"
         android:text="fdate"
-        android:layout_marginTop="20sp"
-        android:textColor="@android:color/darker_gray" />
+        android:textSize="12sp"
+        android:textColor="@color/colorGrey" />
 
-
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/forumPostUserProfile"
+        android:layout_width="35dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/justaline"
+        android:src="@drawable/here"
+        app:civ_border_color="@color/colorWhite"
+        app:civ_border_width="3dp" />
     <View
         android:id="@+id/justaline"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_below="@+id/fdate"
-        android:background="@color/colorPrimary" />
+        android:layout_below="@+id/fdetail"
+        android:background="#d3d3d3" />
     <TextView
         android:id="@+id/forumAuthor"
-        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
-        android:text="Author Name"
-        android:layout_below="@+id/justaline"/>
+        android:layout_below="@+id/justaline"
+        android:fontFamily="@font/ravenscroft"
+        android:text="Author Text"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="60px" />
+
     <TextView
         android:id="@+id/authorRno"
-        android:layout_marginTop="5dp"
+        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
-        android:text="Roll No"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@id/forumAuthor"/>
+        android:layout_below="@+id/forumAuthor"
+        android:fontFamily="@font/ravenscroft"
+        android:text="Author Rno"
+        android:textColor="@color/colorPrimary"
+        android:textSize="60px" />
     <View
         android:id="@+id/justaline2"
         android:layout_width="match_parent"
@@ -73,7 +84,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_below="@+id/authorRno"
-        android:background="@color/colorPrimary" />
+        android:background="#d3d3d3" />
 
     <TextView
         android:id="@+id/fUpvotes"
