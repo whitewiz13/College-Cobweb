@@ -73,6 +73,18 @@
                     android:layout_marginTop="185dp"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"/>
+                <ProgressBar
+                    android:id="@+id/eventProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminateTintMode="src_atop"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:indeterminateTint="@color/colorBlack"
+                    android:visibility="invisible"
+                    android:layout_gravity="center"
+                    android:layout_below="@+id/recycler_view"
+                    />
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>

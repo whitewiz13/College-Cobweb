@@ -108,7 +108,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         }
         @Override
         public void onDrawerClosed(@NonNull View drawerView) {
-            if (fragment != null) {
+            if (fragment != null &&!fragment.isAdded()) {
                 setFragment(fragment,fTag);
                 fragment=null;
             }
@@ -298,6 +298,12 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     }
 
     @Override
+    public void tellAboutAddition(EventInfo eventInfo) {
+        FragmentEvent fragmentEvent = (FragmentEvent) getSupportFragmentManager().findFragmentByTag("fEvent");
+        fragmentEvent.newEventAdded(eventInfo);
+    }
+
+    @Override
     public void disableDrawer(boolean enabled) {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
                 DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
@@ -358,8 +364,9 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     {
         if(mDrawerLayout.isDrawerOpen(GravityCompat.START))
             mDrawerLayout.closeDrawers();
-        else
+        else {
             finish();
+        }
     }
     /*public void checkVerifiedEmail()
    {
@@ -374,8 +381,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             sbView.dismiss();
         }
    }*/
-    //Override methods for different phases in the activity
 
+    //Override methods for different phases in the activity
     @Override
     public void dismissMe(DialogFragment frag)
     { dismissDialogFragment(frag); }

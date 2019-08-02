@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,14 +32,15 @@ import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,ForumPostAdapter.MyViewHolder> {
+public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyViewHolder> {
 
     private OnActionListener mListener;
     private Context mContext;
-    public FirebaseAuth auth = FirebaseAuth.getInstance();;
+    public FirebaseAuth auth = FirebaseAuth.getInstance();
     public FirebaseFirestore db= FirebaseFirestore.getInstance();
-    public ForumPostAdapter(@NonNull FirestoreRecyclerOptions<ForumPostInfo> options,Context mContext, OnActionListener mListener) {
-        super(options);
+    List<ForumPostInfo> forumList;
+    public ForumPostAdapter(List<ForumPostInfo> forumList,Context mContext, OnActionListener mListener) {
+        this.forumList = forumList;
         this.mListener = mListener;
         this.mContext = mContext;
     }
@@ -48,11 +48,12 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
         void showSnackBar(String msg);
     }
     @Override
-    protected void onBindViewHolder(@NonNull final ForumPostAdapter.MyViewHolder holder, int position, @NonNull final ForumPostInfo model) {
+    public void onBindViewHolder(@NonNull final ForumPostAdapter.MyViewHolder holder, int position) {
+        final ForumPostInfo model = forumList.get(position);
         loadAuthorInfo(holder,model);
         setUpDateAndTime(model.getFdate(),holder);
         setUpCommentButton(holder,model.getFid());
-        doDeleteButton(holder,model);
+        doDeleteButton(holder,model,position);
         doUpVoteButton(holder,model);
         checkForUserPost(model,holder);
         holder.fname.setText(model.getFname());
@@ -66,6 +67,12 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
             }
         });
     }
+
+    @Override
+    public int getItemCount() {
+        return forumList.size();
+    }
+
     public void setUpDateAndTime(Date date,MyViewHolder holder)
     {
         Date nowDate = new Date();
@@ -107,7 +114,7 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
             }
         });
     }
-    public void trackUpVotes(final ForumPostInfo model)
+    public void trackUpVotes(final ForumPostInfo model,final MyViewHolder holder)
     {
         db.collection("forum_posts").document(model.getFid()).collection("upvotes")
                 .get()
@@ -119,6 +126,7 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
                             for (DocumentSnapshot ignored : Objects.requireNonNull(task.getResult())) {
                                 count++;
                             }
+                            holder.fupvotes.setText(String.valueOf(count));
                             HashMap<String,Object> newData = new HashMap<>();
                             newData.put("fupvote", String.valueOf(count));
                             DocumentReference docRef = db.collection("forum_posts").document(Objects.requireNonNull(model.getFid()));
@@ -156,14 +164,14 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
                         if(document.exists()) {
                             mListener.showSnackBar("You removed your vote!");
                             db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).delete();
-                            trackUpVotes(model);
+                            trackUpVotes(model,holder);
                         }
                         else {
                             mListener.showSnackBar("You upvoted this post!");
                             Map<String,Object> myMap = new HashMap<>();
                             myMap.put("more_stuff","blank");
                             db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).set(myMap);
-                            trackUpVotes(model);
+                            trackUpVotes(model,holder);
                         }
                         doUpVoteButton(holder,model);
                     }
@@ -176,12 +184,16 @@ public class ForumPostAdapter extends FirestoreRecyclerAdapter<ForumPostInfo,For
         else
         { holder.deletePost.setVisibility(View.GONE); }
     }
-    public void doDeleteButton(final MyViewHolder holder, final ForumPostInfo album) {
+    public void doDeleteButton(final MyViewHolder holder, final ForumPostInfo album,final int position) {
         holder.deletePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 db.collection("forum_posts").document(album.getFid())
                         .delete();
+                forumList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,forumList.size());
+                mListener.showSnackBar("Post deleted!");
 
             }
         });

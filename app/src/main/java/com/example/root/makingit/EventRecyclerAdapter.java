@@ -28,17 +28,19 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,EventRecyclerAdapter.MyViewHolder> {
+public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdapter.MyViewHolder> {
     private OnActionListener mListener;
     private Context mContext;
     public FirebaseAuth auth;
-    public EventRecyclerAdapter(@NonNull FirestoreRecyclerOptions<EventInfo> options,Context mContext,OnActionListener mListener) {
-        super(options);
+    List<EventInfo> eventList;
+    public EventRecyclerAdapter(List<EventInfo> eventList,Context mContext,OnActionListener mListener) {
+        this.eventList = eventList;
         this.mListener = mListener;
         this.mContext = mContext;
     }
@@ -47,6 +49,7 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
         void showSnackBar(String msg);
         void makeLoadingSnackBar(String msg);
         void dismissSnackBar();
+        void loadMore();
     }
 
 
@@ -77,11 +80,12 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull EventInfo model) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        EventInfo model = eventList.get(position);
         doButton(holder);
-        doDeleteButton(holder, model);
+        doDeleteButton(holder, model,position);
         Date date = model.getEdate();
-        String creationDate = "Loading..";
+        String creationDate = "just now";
         if (date != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a", Locale.ENGLISH);
             creationDate = dateFormat.format(date);
@@ -103,6 +107,12 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
         getUserInfo(holder, model.getEauthor());
         checkForUserPost(model,holder);
     }
+
+    @Override
+    public int getItemCount() {
+        return eventList.size();
+    }
+
     public void checkForUserPost(EventInfo model, EventRecyclerAdapter.MyViewHolder holder)
     {
         if(Objects.requireNonNull(auth.getCurrentUser()).getUid().equals(model.getEauthor()) && model.getEauthor()!=null)
@@ -135,7 +145,7 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
                 }
         });
     }
-    public void doDeleteButton(final MyViewHolder holder, final EventInfo album)
+    public void doDeleteButton(final MyViewHolder holder, final EventInfo album, final int position)
     {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +164,9 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
                                                 public void onSuccess(Void aVoid) {
                                                     mListener.dismissSnackBar();
                                                     mListener.showSnackBar("Successfully Deleted!");
+                                                    eventList.remove(position);
+                                                    notifyItemRemoved(position);
+                                                    notifyItemRangeChanged(position,eventList.size());
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -166,7 +179,14 @@ public class EventRecyclerAdapter extends FirestoreRecyclerAdapter<EventInfo,Eve
                 }
                 else
                 {
+                    if(position==eventList.size()-2)
+                    {
+                        mListener.loadMore();
+                    }
                     mListener.showSnackBar("Successfully Deleted!");
+                    eventList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position,eventList.size());
                     db.collection("events").document(album.getEid())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {

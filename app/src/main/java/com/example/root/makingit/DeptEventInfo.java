@@ -6,7 +6,7 @@ import java.util.Date;
 public class DeptEventInfo {
     @ServerTimestamp
     private Date edate;
-    String ename,edetail,eid,eauthor,dept;
+    private String ename,edetail,eid,eauthor,dept;
     public DeptEventInfo()
     {
     }

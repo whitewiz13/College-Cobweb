@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/forumSwipeRefresh">
+
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/forumNestedScroll"
     android:descendantFocusability="beforeDescendants"
     android:layout_height="match_parent"
@@ -16,5 +22,18 @@
         android:nestedScrollingEnabled="false"
         android:layoutAnimation="@anim/layout_anime_fall"
         android:layout_height="match_parent"/>
+    <ProgressBar
+        android:id="@+id/forumProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTintMode="src_atop"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:indeterminateTint="@color/colorBlack"
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:layout_below="@+id/forumRecycler"
+        />
 </RelativeLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

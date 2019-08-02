@@ -75,7 +75,7 @@
                 android:layout_below="@+id/peerAuthorRno"
                 android:fontFamily="@font/ravenscroft"
                 android:gravity="right"
-                android:text="Event Date!"
+                android:text="Just now"
                 android:textColor="@color/colorBlack"
                 android:textSize="60px" />
 

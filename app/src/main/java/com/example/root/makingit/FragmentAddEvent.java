@@ -48,6 +48,7 @@ public class FragmentAddEvent extends DialogFragment {
         void makeSnackB(String msg);
         void makeLoadingSnackBar(String msg);
         void dismissSnackBar();
+        void tellAboutAddition(EventInfo eventInfo);
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState)
     {
@@ -120,12 +121,13 @@ public class FragmentAddEvent extends DialogFragment {
                          public void onSuccess(Uri uri) {
                              String evauthor;
                              evauthor =  Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-                             EventInfo event = new EventInfo(docRef.getId(),evname,evdetail,evauthor,uri.toString());
+                             final EventInfo event = new EventInfo(docRef.getId(),evname,evdetail,evauthor,uri.toString());
                              docRef.set(event).addOnSuccessListener(new OnSuccessListener<Void>() {
                                  @Override
                                  public void onSuccess(Void aVoid) {
                                      listner.dismissSnackBar();
                                      listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
+                                     listner.tellAboutAddition(event);
                                  }
                              });
                          }
@@ -140,6 +142,7 @@ public class FragmentAddEvent extends DialogFragment {
             docRef.set(event);
             listner.dismissSnackBar();
             listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
+            listner.tellAboutAddition(event);
         }
     }
     @Override
