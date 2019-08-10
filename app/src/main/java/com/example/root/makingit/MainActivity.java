@@ -27,13 +27,13 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     FirebaseMessaging firebaseMessagingService;
     private EditText email,pass;
+    private Button skip;
     Button login;
     private ProgressBar progressBar;
-    private FirebaseAuth auth;
+    private FirebaseAuth auth=FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             Intent intent = new Intent(MainActivity.this, Home.class);
             startActivity(intent);
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         pass = findViewById(R.id.editText2);
         progressBar = findViewById(R.id.progressBBar);
         login = findViewById(R.id.submit);
+        skip = findViewById(R.id.skip);
         final TextView register = findViewById(R.id.register);
         login.setOnClickListener(loginClickListener);
         register.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +54,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,Register.class);
                 startActivity(intent);
+            }
+        });
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                auth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Intent intent = new Intent(MainActivity.this, Home.class);
+                        startActivity(intent);
+                        finish();
+                        Toast.makeText(getApplicationContext(), "Logged in as Guest User!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 

@@ -24,12 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentForum extends Fragment {
-    interface onDoStuffForActivity {
-        void setActionBarTitle(String title);
-        void makeSnackB(String msg);
-        void makeLoadingSnackBar(String msg);
-        void dismissSnackBar();
-    }
+    List<ForumPostInfo> forumList =new ArrayList<>();
+    DocumentSnapshot lastVisible=null;
     private NestedScrollView nestedScrollView;
     ProgressBar forumProgressBar;
     SwipeRefreshLayout forumSwipeRefresh;
@@ -38,6 +34,12 @@ public class FragmentForum extends Fragment {
     private CollectionReference eventRef = db.collection("forum_posts");
     ForumPostAdapter adapter;
     RecyclerView forumRecycler;
+    interface onDoStuffForActivity {
+        void setActionBarTitle(String title);
+        void makeSnackB(String msg);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
+    }
     @Override
     public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -60,11 +62,10 @@ public class FragmentForum extends Fragment {
         loadPosts();
         return view;
     }
-    List<ForumPostInfo> forumList =new ArrayList<>();
-    DocumentSnapshot lastVisible=null;
 
     public void loadPosts() {
         forumList.clear();
+        forumList = new ArrayList<>();
         forumProgressBar.setVisibility(View.VISIBLE);
         Query query = eventRef.orderBy("fdate", Query.Direction.DESCENDING).limit(5);
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -87,6 +88,16 @@ public class FragmentForum extends Fragment {
             @Override
             public void showSnackBar(String msg) {
                 doStuffListener.makeSnackB(msg);
+            }
+
+            @Override
+            public void makeLoadingSnackBar(String msg) {
+                doStuffListener.makeLoadingSnackBar(msg);
+            }
+
+            @Override
+            public void dismissSnackBar() {
+                doStuffListener.dismissSnackBar();
             }
         });
 

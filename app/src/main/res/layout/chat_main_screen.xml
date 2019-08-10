@@ -31,6 +31,29 @@
                 android:text="Author Text"
                 android:textColor="@color/colorBlack"
                 android:textSize="70px" />
+            <TextView
+                android:id="@+id/justadot"
+                android:layout_marginStart="5sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/chatUserName"
+                android:layout_alignTop="@+id/chatProfilePic"
+                android:fontFamily="@font/ravenscroft"
+                android:text="."
+                android:textColor="@color/colorBlack"
+                android:textSize="70px" />
+
+            <TextView
+                android:id="@+id/chatUserId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/chatUserName"
+                android:layout_alignTop="@+id/chatProfilePic"
+                android:fontFamily="@font/ravenscroft"
+                android:layout_marginStart="10sp"
+                android:text="UserID"
+                android:textColor="@color/colorBlack"
+                android:textSize="70px" />
 
             <TextView
                 android:id="@+id/chatLastMessage"

@@ -20,6 +20,16 @@
             android:adjustViewBounds="true"
             android:layout_marginBottom="-200dp"
             android:src="@drawable/here"/>
+        <Button
+            android:id="@+id/skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/background_border"
+            android:text="SKIP"
+            >
+
+        </Button>
             <TextView
                 android:id="@+id/welcome"
                 android:layout_width="match_parent"

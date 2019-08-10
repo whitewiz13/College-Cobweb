@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="10dp"
     android:background="@drawable/background_border"
     android:elevation="3dp"
@@ -29,6 +30,12 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/fname"
         android:text="fdetail" />
+    <ImageView
+        android:id="@+id/forumImageView"
+        android:layout_below="@id/fdetail"
+        android:layout_width="400sp"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/fdate"
@@ -54,7 +61,7 @@
         android:layout_height="2dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_below="@+id/fdetail"
+        android:layout_below="@+id/forumImageView"
         android:background="#d3d3d3" />
     <TextView
         android:id="@+id/forumAuthor"

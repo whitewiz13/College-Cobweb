@@ -40,14 +40,23 @@
             android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"
             android:textSize="25sp" />
+        <Button
+            android:id="@+id/addForumImage"
+            android:layout_below="@+id/forumDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_centerHorizontal="true"
+            android:text="Add Image"/>
 
         <Button
             android:id="@+id/forumEnter"
             android:layout_width="209dp"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/addForumImage"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="53dp"
+            android:layout_marginBottom="40dp"
             android:background="#22313F"
             android:fontFamily="@font/ravenscroft"
             android:text="Add"

@@ -44,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffForActivity,FragmentAddEvent.onActionListener
 ,FragmentDept.departmentListener,FragmentProfile.profileListener,FragmentDeptAddEvent.onActionListener
-,FragmentForum.onDoStuffForActivity,FragmentDeptNotice.departmentListener {
+,FragmentForum.onDoStuffForActivity,FragmentDeptNotice.departmentListener,FragmentAddForum.onForumAdded{
 
     String fTag="fEvent";
     Snackbar loadingSnack;
@@ -55,18 +55,12 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     Fragment fragment;
     DialogFragment frag;
     CircleImageView profileImage;
-    private FirebaseAuth auth;
+    private FirebaseAuth auth =FirebaseAuth.getInstance();
     ActionBar actionbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
-        FirebaseMessaging.getInstance().subscribeToTopic("pushChatNotification");
-        auth = FirebaseAuth.getInstance();
-        checkIfReal();
         setContentView(R.layout.home);
-        checkInternetConnection();
-        dismissNotifications();
         final NavigationView navigationView = findViewById(R.id.nav_view);
         final View headerview = navigationView.getHeaderView(0);
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -79,14 +73,38 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         rno = headerview.findViewById(R.id.surno);
         dept = headerview.findViewById(R.id.sudept);
         profileImage = headerview.findViewById(R.id.peerProfileImage);
-        checkIfReal();
-        //checkVerifiedEmail();
-        loadUserData();
-        fragment = new FragmentEvent();
-        setFragment(fragment,"fEvent");
-        navigationView.setNavigationItemSelectedListener(drawerItemSelect);
-        mDrawerLayout.addDrawerListener(drawerStateListener);
-        checkToOpenChat(extras);
+        Bundle extras = getIntent().getExtras();
+        if(auth.getCurrentUser()!=null && !auth.getCurrentUser().isAnonymous()) {
+            navigationView.inflateMenu(R.menu.drawer_view);
+            FirebaseMessaging.getInstance().subscribeToTopic("pushChatNotification");
+            checkIfReal();
+            checkInternetConnection();
+            dismissNotifications();
+            //checkVerifiedEmail();
+            loadUserData();
+            fragment = new FragmentEvent();
+            setFragment(fragment, "fEvent");
+            navigationView.setNavigationItemSelectedListener(drawerItemSelect);
+            mDrawerLayout.addDrawerListener(drawerStateListener);
+            checkToOpenChat(extras);
+        }
+        else
+        {
+            navigationView.inflateMenu(R.menu.guest_drawer);
+            setUpGuest(new UserInfo("-","GUEST","-","-","-","-"));
+            navigationView.setNavigationItemSelectedListener(guestDrawerListener);
+        }
+    }
+    //Setting up guest
+    public void setUpGuest(UserInfo uInfo)
+    {
+        uname.setText(uInfo.getName());
+        rno.setText(uInfo.getRno());
+        dept.setText(uInfo.getDept());
+        GlideApp.with(getApplicationContext())
+                .load(R.drawable.defaultpic)
+                .placeholder(R.drawable.defaultpic)
+                .into(profileImage);
     }
     //Setup Actionbar
     public void setUpActionBar(ActionBar actionbar)
@@ -112,6 +130,22 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                 setFragment(fragment,fTag);
                 fragment=null;
             }
+        }
+    };
+    //For Guest Menu
+    NavigationView.OnNavigationItemSelectedListener guestDrawerListener= new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            menuItem.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            int id= menuItem.getItemId();
+            switch (id)
+            {
+                case R.id.nav_Sign_in:
+                    startActivity(new Intent(Home.this, MainActivity.class));
+                    finish();
+            }
+            return true;
         }
     };
     NavigationView.OnNavigationItemSelectedListener drawerItemSelect = new NavigationView.OnNavigationItemSelectedListener() {
@@ -144,12 +178,20 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                     break;
                 case R.id.nav_signout:
                     auth.signOut();
+                    signOutUser();
                     break;
 
             }
             return true;
         }
     };
+    public void signOutUser()
+    {
+        startActivity(new Intent(Home.this, MainActivity.class));
+        finish();
+        Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
+
+    }
     //Checking for user authentication!
     private FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -158,9 +200,9 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             if (user == null) {
                 // user auth state is changed - user is null
                 // launch login activity
-                startActivity(new Intent(Home.this, MainActivity.class));
-                finish();
-                Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
+                //startActivity(new Intent(Home.this, MainActivity.class));
+                //finish();
+                //Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -298,9 +340,13 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     }
 
     @Override
-    public void tellAboutAddition(EventInfo eventInfo) {
-        FragmentEvent fragmentEvent = (FragmentEvent) getSupportFragmentManager().findFragmentByTag("fEvent");
-        fragmentEvent.newEventAdded(eventInfo);
+    public void tellAboutAddition() {
+        Fragment frg = null;
+        frg = getSupportFragmentManager().findFragmentByTag("fEvent");
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
     }
 
     @Override
@@ -348,7 +394,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     private BroadcastReceiver networkReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getExtras()!=null) {
+            if(intent.getExtras()!=null && auth.getCurrentUser()!=null && !auth.getCurrentUser().isAnonymous()) {
                 NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
                 if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED) {
                     sbView.dismiss();
@@ -389,6 +435,17 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     @Override
     public void makeSnackB(String msg)
     { makeSnackBar(msg); }
+
+    @Override
+    public void addedForumPost() {
+        Fragment frg = null;
+        frg = getSupportFragmentManager().findFragmentByTag("fForum");
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
+    }
+
     @Override
     public void onStart() { super.onStart();
         auth.addAuthStateListener(authListener); }

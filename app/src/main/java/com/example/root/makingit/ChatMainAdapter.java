@@ -37,6 +37,7 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         holder.lastmessage.setText(model.getMessage());
         holder.uname.setText(model.getUname());
+        holder.chatuserid.setText(model.getUsernameid());
         Date date = model.getChattime();
         String creationDate = "Loading..";
         if (date != null) {
@@ -70,10 +71,11 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
 
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
-        TextView uname,lastmessage,chattime;
+        TextView uname,lastmessage,chattime,chatuserid;
         CircleImageView chatImage;
         public MyViewHolder(View itemView) {
             super(itemView);
+            chatuserid = itemView.findViewById(R.id.chatUserId);
             uname = itemView.findViewById(R.id.chatUserName);
             lastmessage = itemView.findViewById(R.id.chatLastMessage);
             chattime = itemView.findViewById(R.id.chatMainTime);

@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
 
 public class ForumPostCommentActivity extends AppCompatActivity {
 
+    ImageView forumPostImage;
     Snackbar loadingSnack;
     Button postComment;
     EditText commentTypeBox;
@@ -48,6 +50,7 @@ public class ForumPostCommentActivity extends AppCompatActivity {
         setContentView(R.layout.forum_post_comment_activity);
         makeLoadingSnackBar("Loading Comments...");
         postComment = findViewById(R.id.postCommentButton);
+        forumPostImage = findViewById(R.id.forumPostMainImage);
         postUpvotes = findViewById(R.id.postUpvotes);
         commentTypeBox = findViewById(R.id.commentTypeBox);
         postDetail = findViewById(R.id.postDetail);
@@ -68,6 +71,17 @@ public class ForumPostCommentActivity extends AppCompatActivity {
                             postUpvotes.setText(model.getFupvote());
                             postDetail.setText(model.getFdetail());
                             ab.setTitle(model.getFname());
+                            if(model.getForumImage() != null)
+                            {
+                                GlideApp.with(getApplicationContext())
+                                        .load(model.getForumImage())
+                                        .placeholder(R.drawable.loadme)
+                                        .into(forumPostImage);
+                                forumPostImage.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                forumPostImage.setVisibility(View.GONE);
+                            }
                         }
                     }
                 }

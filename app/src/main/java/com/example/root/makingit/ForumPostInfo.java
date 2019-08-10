@@ -7,15 +7,23 @@ import java.util.Date;
 public class ForumPostInfo {
     @ServerTimestamp
     private Date fdate;
-    String fid,fname,fdetail,fauthor,fcomment,fupvote;
+    String fid;
+    String fname;
+    String fdetail;
+    String fauthor;
+    String fcomment;
+    String fupvote;
+    String forumImage;
+
     public  ForumPostInfo()
     {
 
     }
     public ForumPostInfo(String fid,String fname,String fdetail,
                          String fauthor,String fcomment,
-                         String fupvote)
+                         String fupvote,String forumImage)
     {
+        this.forumImage = forumImage;
         this.fid = fid;
         this.fname = fname;
         this.fdetail = fdetail;
@@ -31,7 +39,9 @@ public class ForumPostInfo {
     public void setFupvote(String fupvote) { this.fupvote = fupvote; }
     public void setFauthor(String fauthor) { this.fauthor = fauthor; }
     public void setFcomment(String fcomment) { this.fcomment = fcomment; }
+    public void setForumImage(String forumImage) { this.forumImage = forumImage; }
 
+    public String getForumImage() { return forumImage; }
     public String getFauthor() { return fauthor; }
     public String getFcomment() { return fcomment; }
     public Date getFdate() { return fdate; }

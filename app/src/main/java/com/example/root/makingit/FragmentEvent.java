@@ -86,7 +86,7 @@ public class FragmentEvent extends Fragment{
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-        adapter = new EventRecyclerAdapter(eventList,getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
+        adapter = new EventRecyclerAdapter(eventList,getActivity(), new EventRecyclerAdapter.OnActionListener() {
             @Override
             public void showSnackBar(String msg) {
                 doStuffListener.makeSnackB(msg);
@@ -101,15 +101,8 @@ public class FragmentEvent extends Fragment{
                 doStuffListener.dismissSnackBar();
 
             }
-            @Override
-            public void loadMore()
-            {
-                loadNextList();
-            }
         });
         recyclerView.setAdapter(adapter);
-        recyclerView.setItemViewCacheSize(20);
-        recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         if (eventScroll != null) {
@@ -134,18 +127,18 @@ public class FragmentEvent extends Fragment{
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        eventList.add(documentSnapshot.toObject(EventInfo.class));
+                            eventList.add(documentSnapshot.toObject(EventInfo.class));
                     }
                     if(queryDocumentSnapshots.size()!=0) {
                         lastVisible = queryDocumentSnapshots.getDocuments()
                                 .get(queryDocumentSnapshots.size() - 1);
+                        adapter.notifyItemRangeInserted(lastSize,eventList.size());
                     }
                     else
                     {
                         lastVisible=null;
                         progressBar.setVisibility(View.INVISIBLE);
                     }
-                    adapter.notifyItemRangeInserted(lastSize,eventList.size());
                     progressBar.setVisibility(View.INVISIBLE);
                 }
             });
@@ -154,10 +147,6 @@ public class FragmentEvent extends Fragment{
             progressBar.setVisibility(View.INVISIBLE);
             doStuffListener.makeSnackB("End of Events!");
         }
-    }
-    public void newEventAdded(EventInfo eventInfo)
-    {
-      loadEventList();
     }
     public void onPrepareOptionsMenu(Menu menu)
     {

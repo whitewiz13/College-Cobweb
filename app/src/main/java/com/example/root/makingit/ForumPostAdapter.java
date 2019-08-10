@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,6 +24,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +50,8 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
     }
     interface OnActionListener{
         void showSnackBar(String msg);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
     }
     @Override
     public void onBindViewHolder(@NonNull final ForumPostAdapter.MyViewHolder holder, int position) {
@@ -60,6 +66,17 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
         holder.fdetail.setText(model.getFdetail());
         holder.fcomments.setText(model.getFcomment());
         holder.fupvotes.setText(model.getFupvote());
+        if(model.getForumImage() != null)
+        {
+            GlideApp.with(mContext)
+                    .load(model.getForumImage())
+                    .placeholder(R.drawable.loadme)
+                    .into(holder.forumImageView);
+            holder.forumImageView.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.forumImageView.setVisibility(View.GONE);
+        }
         holder.upVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,22 +205,50 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
         holder.deletePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.collection("forum_posts").document(album.getFid())
-                        .delete();
-                forumList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,forumList.size());
-                mListener.showSnackBar("Post deleted!");
-
+                if (album.getForumImage() != null) {
+                    mListener.makeLoadingSnackBar("Deleting Event...");
+                    FirebaseStorage.getInstance().getReferenceFromUrl(album.getForumImage()).delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    db.collection("forum_posts").document(album.getFid())
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    mListener.dismissSnackBar();
+                                                    mListener.showSnackBar("Successfully Deleted!");
+                                                    forumList.remove(position);
+                                                    notifyItemRemoved(position);
+                                                    notifyItemRangeChanged(position, forumList.size());
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                }
+                                            });
+                                }
+                            });
+                } else {
+                    db.collection("forum_posts").document(album.getFid())
+                            .delete();
+                    forumList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, forumList.size());
+                    mListener.showSnackBar("Post deleted!");
+                }
             }
         });
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView fname,fdetail,fdate,fupvotes,fcomments,commentButton,authorName,authorRno;
         CircleImageView forumProfilePic;
+        ImageView forumImageView;
         public Button deletePost,upVote;
         public MyViewHolder(View view) {
             super(view);
+            forumImageView = view.findViewById(R.id.forumImageView);
             forumProfilePic = view.findViewById(R.id.forumPostUserProfile);
             upVote = view.findViewById(R.id.upVoteButton);
             deletePost = view.findViewById(R.id.deletePost);

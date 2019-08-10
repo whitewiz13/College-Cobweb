@@ -46,9 +46,8 @@
                 android:id="@+id/eventImageView"
                 android:layout_below="@id/edetail"
                 android:layout_width="400sp"
-                android:layout_height="400sp"
-                android:visibility="gone"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
             <View
                 android:id="@+id/justaline"
                 android:layout_width="match_parent"

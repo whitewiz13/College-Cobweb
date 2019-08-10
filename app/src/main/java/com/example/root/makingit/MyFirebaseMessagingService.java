@@ -27,6 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         String sender = data.get("sender");
         String message = data.get("body");
+        String upvoterId = data.get("");
         if(sender != null) {
             String authId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
             String receiver =data.get("receiver");

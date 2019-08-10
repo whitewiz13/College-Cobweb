@@ -103,7 +103,8 @@ public class ChatScreenActivity extends AppCompatActivity {
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot != null) {
                     db.collection("users").document(Objects.requireNonNull(authUid)).collection("chats")
-                            .document(id).set(new ChatMainModel(messsage,chatsModel.getChattime(),id,documentSnapshot.getString("name")));
+                            .document(id).set(new ChatMainModel(messsage,chatsModel.getChattime(),id,documentSnapshot.getString("name"),
+                            documentSnapshot.getString("rno")));
                 }
             }
         });
@@ -113,7 +114,8 @@ public class ChatScreenActivity extends AppCompatActivity {
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot != null) {
                     db.collection("users").document(id).collection("chats")
-                            .document(authUid).set(new ChatMainModel(messsage,chatsModel.getChattime(),authUid,documentSnapshot.getString("name")));
+                            .document(authUid).set(new ChatMainModel(messsage,chatsModel.getChattime(),authUid,documentSnapshot.getString("name"),
+                            documentSnapshot.getString(("rno"))));
                 }
             }
         });

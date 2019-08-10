@@ -43,6 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Register extends AppCompatActivity {
     FirebaseMessaging firebaseMessagingService;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ProgressBar progressBar;
     private EditText email, password;
     private Spinner deptSpinner;
@@ -115,7 +116,6 @@ public class Register extends AppCompatActivity {
     {
         progressBar.setVisibility(View.VISIBLE);
         btnreg.setEnabled(false);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("taken_rno").document(rnoo).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -144,6 +144,7 @@ public class Register extends AppCompatActivity {
                                                 }
                                             } else if (!task.isSuccessful()) {
                                                 showToast(Objects.requireNonNull(task.getException()).getMessage());
+                                                btnreg.setEnabled(true);
                                                 progressBar.setVisibility(View.GONE);
                                             }
                                         }
@@ -204,7 +205,6 @@ public class Register extends AppCompatActivity {
                                     String eemail = email.getText().toString().trim();
                                     String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");
                                     Map<String,Object> myMap = new HashMap<>();
-                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     DocumentReference docRef = db.collection("users").document(auth.getCurrentUser().getUid());
                                     UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,dept,eemail,uri.toString());
                                     myMap.put("more_stuff",user.getName());
@@ -232,7 +232,6 @@ public class Register extends AppCompatActivity {
             String eemail = email.getText().toString().trim();
             String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");
             Map<String,Object> myMap = new HashMap<>();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
             UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,dept,eemail,"https://i.stack.imgur.com/34AD2.jpg");
             myMap.put("more_stuff",user.getName());
