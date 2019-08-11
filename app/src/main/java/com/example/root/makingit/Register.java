@@ -207,7 +207,7 @@ public class Register extends AppCompatActivity {
                                     Map<String,Object> myMap = new HashMap<>();
                                     DocumentReference docRef = db.collection("users").document(auth.getCurrentUser().getUid());
                                     UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,dept,eemail,uri.toString());
-                                    myMap.put("more_stuff",user.getName());
+                                    myMap.put("more_Stuff",auth.getCurrentUser().getUid());
                                     docRef.set(user);
                                     db.collection("taken_rno").document(rollnumber).set(myMap);
                                     showToast("Account Created Successfully!");
@@ -234,7 +234,7 @@ public class Register extends AppCompatActivity {
             Map<String,Object> myMap = new HashMap<>();
             DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
             UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,dept,eemail,"https://i.stack.imgur.com/34AD2.jpg");
-            myMap.put("more_stuff",user.getName());
+            myMap.put("more_stuff",auth.getCurrentUser().getUid());
             docRef.set(user);
             db.collection("taken_rno").document(rollnumber).set(myMap);
             showToast("Account Created Successfully!");

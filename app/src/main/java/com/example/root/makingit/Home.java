@@ -28,6 +28,7 @@ import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,7 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffForActivity,FragmentAddEvent.onActionListener
 ,FragmentDept.departmentListener,FragmentProfile.profileListener,FragmentDeptAddEvent.onActionListener
-,FragmentForum.onDoStuffForActivity,FragmentDeptNotice.departmentListener,FragmentAddForum.onForumAdded{
+,FragmentForum.onDoStuffForActivity,FragmentDeptNotice.departmentListener,FragmentAddForum.onForumAdded
+,FragmentBrowseInstitute.onDoStuffForActivity{
 
     String fTag="fEvent";
     Snackbar loadingSnack;
@@ -56,6 +58,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     DialogFragment frag;
     CircleImageView profileImage;
     private FirebaseAuth auth =FirebaseAuth.getInstance();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     ActionBar actionbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +93,12 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         }
         else
         {
+            fragment = new FragmentBrowseInstitute();
+            setFragment(fragment,"fBrowseIn");
             navigationView.inflateMenu(R.menu.guest_drawer);
             setUpGuest(new UserInfo("-","GUEST","-","-","-","-"));
             navigationView.setNavigationItemSelectedListener(guestDrawerListener);
+            mDrawerLayout.addDrawerListener(drawerStateListener);
         }
     }
     //Setting up guest
@@ -141,9 +147,13 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             int id= menuItem.getItemId();
             switch (id)
             {
+                case R.id.nav_browse_college:
+                    fragment = new FragmentBrowseInstitute();
+                    fTag = "fBrowseIn";
+                    break;
                 case R.id.nav_Sign_in:
-                    startActivity(new Intent(Home.this, MainActivity.class));
-                    finish();
+                    auth.getCurrentUser().delete();
+                    auth.signOut();
             }
             return true;
         }
@@ -178,20 +188,12 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                     break;
                 case R.id.nav_signout:
                     auth.signOut();
-                    signOutUser();
                     break;
 
             }
             return true;
         }
     };
-    public void signOutUser()
-    {
-        startActivity(new Intent(Home.this, MainActivity.class));
-        finish();
-        Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
-
-    }
     //Checking for user authentication!
     private FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -200,9 +202,9 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             if (user == null) {
                 // user auth state is changed - user is null
                 // launch login activity
-                //startActivity(new Intent(Home.this, MainActivity.class));
-                //finish();
-                //Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Home.this, MainActivity.class));
+                finish();
+                Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -268,10 +270,18 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                     DocumentSnapshot document = task.getResult();
                     assert document != null;
                     if (!document.exists()) {
-                        auth.getCurrentUser().delete();
-                        startActivity(new Intent(Home.this, Register.class));
-                        finish();
-                        Toast.makeText(getApplicationContext(), "Error Occurred Please Register again!", Toast.LENGTH_SHORT).show();
+                        auth.getCurrentUser().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                startActivity(new Intent(Home.this, Register.class));
+                                finish();
+                                Toast.makeText(getApplicationContext(), "Error Occurred Please Register again!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        checkUserName();
                     }
                 }
             }
@@ -279,11 +289,10 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     }
     public void loadUserData()
     {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
+            public void onEvent(@Nullable final DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
                     return;
@@ -298,7 +307,38 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                             .into(profileImage);
                 }
             }
+
         });
+
+    }
+    public void checkUserName()
+    {
+       db.collection("users").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(
+                new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot snapshot = task.getResult();
+                        if(snapshot!=null) {
+                            db.collection("taken_rno").document(Objects.requireNonNull(snapshot.getString("rno"))).get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot documentSnapshot = task.getResult();
+                                            if (documentSnapshot != null && !Objects.equals(documentSnapshot.getString("more_stuff"), auth.getCurrentUser().getUid())) {
+                                                changeUserName();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                }
+        );
+    }
+    public void changeUserName()
+    {
+        frag=new FragmentChangeUserName();
+        frag.setCancelable(false);
+        setDialogFragment(frag);
     }
     public void setFragment(Fragment fragment,String tag)
     {
@@ -454,7 +494,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         if (authListener != null) { auth.removeAuthStateListener(authListener); } }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        if(auth.getCurrentUser()!=null &&!auth.getCurrentUser().isAnonymous())
+            getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return super.onCreateOptionsMenu(menu); }
     @Override
     protected void onPause() { super.onPause();

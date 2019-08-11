@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:elevation="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/background_border"
+            android:elevation="5dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/collegeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/ravenscroft"
+                android:text="Event Heading!"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/eventtext" />
+
+            <TextView
+                android:id="@+id/collegeDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/collegeName"
+                android:fontFamily="@font/malir"
+                android:textColor="@color/colorBlack"
+                android:maxLines="2"
+                android:text="Details about even heading!"
+                android:textSize="@dimen/edetailtext" />
+            <ImageView
+                android:layout_marginTop="5sp"
+                android:id="@+id/eventImageView"
+                android:layout_below="@id/collegeDetail"
+                android:layout_width="400sp"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+            <View
+                android:id="@+id/justaline"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/eventImageView"
+                android:layout_gravity="center"
+                android:layout_marginTop="20sp"
+                android:background="@color/colorPrimary" />
+
+            <View
+                android:id="@+id/justaline2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/peerAuthorRno"
+                android:layout_gravity="center"
+                android:background="@color/colorPrimary" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

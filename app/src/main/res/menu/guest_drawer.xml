@@ -4,11 +4,11 @@
         <item
             android:icon="@drawable/ic_event_note"
             android:id="@+id/nav_browse_college"
-            android:title="Guest Event"
+            android:title="Browse Institute"
             android:checked="true"
             />
         <item
-            android:icon="@drawable/ic_event_note"
+            android:icon="@drawable/ic_sign_in"
             android:id="@+id/nav_Sign_in"
             android:title="Sign In/Sign Up"
             android:checked="true"

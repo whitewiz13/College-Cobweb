@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -27,14 +28,22 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     FirebaseMessaging firebaseMessagingService;
     private EditText email,pass;
-    private Button skip;
+    Button skip;
     Button login;
     private ProgressBar progressBar;
     private FirebaseAuth auth=FirebaseAuth.getInstance();
+    FirebaseUser user = auth.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (auth.getCurrentUser() != null) {
+            Intent intent = new Intent(MainActivity.this, Home.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+        if (user!=null && user.isAnonymous())
+        {
             Intent intent = new Intent(MainActivity.this, Home.class);
             startActivity(intent);
             finish();
@@ -59,9 +68,11 @@ public class MainActivity extends AppCompatActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
                 auth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
                         Intent intent = new Intent(MainActivity.this, Home.class);
                         startActivity(intent);
                         finish();
