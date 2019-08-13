@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -159,13 +160,18 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    DocumentSnapshot docSnap = task.getResult();
-                    if (docSnap != null)
-                        if (docSnap.exists()) {
-                            holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLUE));
-                        } else {
-                            holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
-                        }
+                    try {
+                        DocumentSnapshot docSnap = task.getResult();
+                        if (docSnap != null)
+                            if (docSnap.exists()) {
+                                holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLUE));
+                            } else {
+                                holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
+                            }
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(mContext,"Turn on network connection!",Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -176,21 +182,25 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot document = task.getResult();
-                        assert document != null;
-                        if(document.exists()) {
-                            mListener.showSnackBar("You removed your vote!");
-                            db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).delete();
-                            trackUpVotes(model,holder);
+                        try {
+                            DocumentSnapshot document = task.getResult();
+                            assert document != null;
+                            if (document.exists()) {
+                                mListener.showSnackBar("You removed your vote!");
+                                db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).delete();
+                                trackUpVotes(model, holder);
+                            } else {
+                                mListener.showSnackBar("You upvoted this post!");
+                                Map<String, Object> myMap = new HashMap<>();
+                                myMap.put("more_stuff", "blank");
+                                db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).set(myMap);
+                                trackUpVotes(model, holder);
+                            }
+                            doUpVoteButton(holder, model);
+                        }catch (Exception e)
+                        {
+                            Toast.makeText(mContext,e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
-                        else {
-                            mListener.showSnackBar("You upvoted this post!");
-                            Map<String,Object> myMap = new HashMap<>();
-                            myMap.put("more_stuff","blank");
-                            db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).set(myMap);
-                            trackUpVotes(model,holder);
-                        }
-                        doUpVoteButton(holder,model);
                     }
                 });
     }

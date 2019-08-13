@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent">
+<android.support.v4.widget.SwipeRefreshLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:id="@+id/forumSwipeRefresh">
-
-
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
     android:id="@+id/forumNestedScroll"
     android:descendantFocusability="beforeDescendants"
     android:layout_height="match_parent"
@@ -13,8 +16,7 @@
 <RelativeLayout
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:id="@+id/forumLayout"
-    >
+    android:id="@+id/forumLayout">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/forumRecycler"
         android:layout_width="match_parent"
@@ -37,3 +39,4 @@
 </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>
+ </LinearLayout>

@@ -25,7 +25,7 @@
                 android:id="@+id/ename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/josefina"
                 android:text="Event Heading!"
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ename"
-                android:fontFamily="@font/malir"
+                android:fontFamily="@font/oswald"
                 android:textColor="@color/colorBlack"
                 android:maxLines="2"
                 android:text="Details about even heading!"
@@ -72,33 +72,36 @@
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/ename"
                 android:layout_below="@+id/peerAuthorRno"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
                 android:gravity="right"
                 android:text="Just now"
+                android:textStyle="bold"
                 android:textColor="@color/colorBlack"
-                android:textSize="60px" />
+                android:textSize="40px" />
 
             <TextView
                 android:id="@+id/peerAuthorText"
                 android:layout_width="wrap_content"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/ename"
                 android:layout_below="@+id/justaline"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
                 android:text="Author Text"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="60px" />
+                android:textSize="40px" />
 
             <TextView
                 android:id="@+id/peerAuthorRno"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/ename"
                 android:layout_below="@+id/peerAuthorText"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
                 android:text="Author Rno"
                 android:textColor="@color/colorPrimary"
-                android:textSize="60px" />
+                android:textSize="40px" />
             <TextView
                 android:id="@+id/showmore"
                 android:layout_width="47dp"
@@ -106,19 +109,21 @@
                 android:layout_alignBottom="@+id/edate"
                 android:layout_alignStart="@+id/ename"
                 android:clickable="true"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
                 android:gravity="center_vertical"
                 android:text="'Show More'"
+                android:textStyle="bold"
                 android:textAlignment="center"
                 android:textSize="@dimen/showmore" />
             <TextView
                 android:id="@+id/delete"
                 android:layout_width="47dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:layout_alignBottom="@+id/edate"
                 android:textAlignment="center"
                 android:layout_toEndOf="@+id/showmore"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
                 android:text="Delete"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/showmore" />

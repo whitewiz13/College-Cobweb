@@ -37,6 +37,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
@@ -129,6 +130,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         public void onDrawerStateChanged(int newState) { }
         @Override
         public void onDrawerOpened(@NonNull View drawerView) {
+            if(!auth.getCurrentUser().isAnonymous())
+                checkUserName();
         }
         @Override
         public void onDrawerClosed(@NonNull View drawerView) {
@@ -313,26 +316,29 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     }
     public void checkUserName()
     {
-       db.collection("users").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(
-                new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot snapshot = task.getResult();
-                        if(snapshot!=null) {
-                            db.collection("taken_rno").document(Objects.requireNonNull(snapshot.getString("rno"))).get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            DocumentSnapshot documentSnapshot = task.getResult();
-                                            if (documentSnapshot != null && !Objects.equals(documentSnapshot.getString("more_stuff"), auth.getCurrentUser().getUid())) {
-                                                changeUserName();
+        if(auth.getCurrentUser()!=null) {
+            final String uid = auth.getCurrentUser().getUid();
+            db.collection("users").document(uid).get().addOnCompleteListener(
+                    new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot snapshot = task.getResult();
+                            if (snapshot != null) {
+                                db.collection("taken_rno").document(Objects.requireNonNull(snapshot.getString("rno"))).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                if (documentSnapshot != null && !Objects.equals(documentSnapshot.getString("more_stuff"), uid)) {
+                                                    changeUserName();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                            }
                         }
                     }
-                }
-        );
+            );
+        }
     }
     public void changeUserName()
     {
@@ -374,8 +380,9 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 
     @Override
     public void dismissSnackBar() {
-        if(haveNetworkConnection()) {
-            loadingSnack.dismiss();
+        if (haveNetworkConnection()) {
+            if(loadingSnack!=null)
+                loadingSnack.dismiss();
         }
     }
 
@@ -405,6 +412,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(auth.getCurrentUser() !=null && !auth.getCurrentUser().isAnonymous())
+            checkUserName();
         switch (item.getItemId()) {
             case R.id.addEventButton:
                 frag=new FragmentAddEvent();
@@ -421,6 +430,20 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.sortLoc:
+                if(!item.isChecked()) {
+                    FragmentBrowseInstitute fragmentBrowseInstitute = (FragmentBrowseInstitute) getSupportFragmentManager().findFragmentByTag("fBrowseIn");
+                    fragmentBrowseInstitute.loadInstituteList("collegeAddress", Query.Direction.ASCENDING);
+                    item.setChecked(true);
+                }
+                break;
+            case R.id.sortRating:
+                if(!item.isChecked()) {
+                    FragmentBrowseInstitute fragmentBrowseInstitute = (FragmentBrowseInstitute) getSupportFragmentManager().findFragmentByTag("fBrowseIn");
+                    fragmentBrowseInstitute.loadInstituteList("collegeRating", Query.Direction.DESCENDING);
+                    item.setChecked(true);
+                }
+                break;
 
         }
         return super.onOptionsItemSelected(item);
@@ -496,6 +519,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     public boolean onCreateOptionsMenu(Menu menu) {
         if(auth.getCurrentUser()!=null &&!auth.getCurrentUser().isAnonymous())
             getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        else
+            getMenuInflater().inflate(R.menu.guest_toolbar_menu,menu);
         return super.onCreateOptionsMenu(menu); }
     @Override
     protected void onPause() { super.onPause();

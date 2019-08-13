@@ -6,5 +6,5 @@
     <dimen name="bottom_text">60px</dimen>
     <dimen name="eventtext">70px</dimen>
     <dimen name="edetailtext">50px</dimen>
-    <dimen name="showmore">55px</dimen>
+    <dimen name="showmore">35px</dimen>
 </resources>

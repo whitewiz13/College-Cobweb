@@ -3,23 +3,23 @@
     <item
         android:id="@+id/searchButton"
         android:icon="@drawable/ic_search"
-        android:title=""
+        android:title="Search"
         app:showAsAction="always" />
     <item
         android:id="@+id/addDeptEventButton"
-        android:title=""
+        android:title="Add Department Event"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_add"
         />
     <item
         android:id="@+id/addForumPostButton"
-        android:title=""
+        android:title="Add Forum Post"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_add"
         />
     <item
         android:id="@+id/addEventButton"
-        android:title=""
+        android:title="Add Global Event"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_add"
         />

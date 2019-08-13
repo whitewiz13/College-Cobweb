@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/browseInList"
         android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
         android:layout_height="wrap_content">
-
     </android.support.v7.widget.RecyclerView>
+    <ProgressBar
+        android:id="@+id/instituteProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTintMode="src_atop"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:indeterminateTint="@color/colorBlack"
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:layout_below="@+id/browseInList"
+        />
 </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

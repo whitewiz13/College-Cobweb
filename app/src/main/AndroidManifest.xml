@@ -54,7 +54,12 @@
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.MyNoActionBar"
             android:label="@string/title_activity_main"/>
+
         <activity android:name=".ChatScreenActivity"
+            android:theme="@style/AppTheme.MyNoActionBar"
+            android:label="@string/title_activity_main"/>
+
+        <activity android:name=".InstituteMainActivity"
             android:theme="@style/AppTheme.MyNoActionBar"
             android:label="@string/title_activity_main"/>
     </application>

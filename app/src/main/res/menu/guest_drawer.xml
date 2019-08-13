@@ -8,10 +8,13 @@
             android:checked="true"
             />
         <item
+            android:icon="@drawable/ic_forum"
+            android:id="@+id/nav_about"
+            android:title="About"/>
+        <item
             android:icon="@drawable/ic_sign_in"
             android:id="@+id/nav_Sign_in"
             android:title="Sign In/Sign Up"
-            android:checked="true"
             />
     </group>
 </menu>

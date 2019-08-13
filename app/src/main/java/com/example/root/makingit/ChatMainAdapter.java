@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -49,13 +51,19 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot != null) {
-                            GlideApp.with(mContext)
-                                    .load(documentSnapshot.getString("uimage"))
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .placeholder(R.drawable.loadme)
-                                    .into(holder.chatImage);
+                        try {
+
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot != null) {
+                                GlideApp.with(mContext)
+                                        .load(documentSnapshot.getString("uimage"))
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .placeholder(R.drawable.loadme)
+                                        .into(holder.chatImage);
+                            }
+                        }catch (Exception e)
+                        {
+                            Toast.makeText(mContext,"Turn on network connection!",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
