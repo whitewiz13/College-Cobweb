@@ -4,7 +4,7 @@
         <item
             android:icon="@drawable/ic_event_note"
             android:id="@+id/nav_browse_college"
-            android:title="Browse Institute"
+            android:title="Browse Institutes"
             android:checked="true"
             />
         <item

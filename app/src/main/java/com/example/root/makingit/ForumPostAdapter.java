@@ -7,10 +7,13 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +28,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firestore.v1.Write;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -63,6 +68,7 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
         doDeleteButton(holder,model,position);
         doUpVoteButton(holder,model);
         checkForUserPost(model,holder);
+        trackUpVotes(model,holder);
         holder.fname.setText(model.getFname());
         holder.fdetail.setText(model.getFdetail());
         holder.fcomments.setText(model.getFcomment());
@@ -152,6 +158,24 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
                         }
                     }
                 });
+        db.collection("forum_posts").document(model.getFid()).collection("comments")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int count = 0;
+                            for (DocumentSnapshot ignored : Objects.requireNonNull(task.getResult())) {
+                                count++;
+                            }
+                            holder.fcomments.setText(String.valueOf(count));
+                            HashMap<String,Object> newData = new HashMap<>();
+                            newData.put("fcomment", String.valueOf(count));
+                            DocumentReference docRef = db.collection("forum_posts").document(Objects.requireNonNull(model.getFid()));
+                            docRef.update(newData);
+                        }
+                    }
+                });
     }
     public void doUpVoteButton(final MyViewHolder holder, final ForumPostInfo model)
     {
@@ -215,42 +239,78 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
         holder.deletePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (album.getForumImage() != null) {
-                    mListener.makeLoadingSnackBar("Deleting Event...");
-                    FirebaseStorage.getInstance().getReferenceFromUrl(album.getForumImage()).delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    db.collection("forum_posts").document(album.getFid())
-                                            .delete()
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    mListener.dismissSnackBar();
-                                                    mListener.showSnackBar("Successfully Deleted!");
-                                                    forumList.remove(position);
-                                                    notifyItemRemoved(position);
-                                                    notifyItemRangeChanged(position, forumList.size());
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                }
-                                            });
-                                }
-                            });
-                } else {
-                    db.collection("forum_posts").document(album.getFid())
-                            .delete();
-                    forumList.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, forumList.size());
-                    mListener.showSnackBar("Post deleted!");
-                }
+                PopupMenu popupMenu = new PopupMenu(mContext,holder.deletePost);
+                popupMenu.getMenuInflater().inflate(R.menu.forum_popup_menu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.deletePost)
+                            deletePost(album,position);
+                        return false;
+                    }
+                });
+                popupMenu.show();
             }
         });
     }
+    public void deletePost(final ForumPostInfo album,final int position)
+    {
+        if (album.getForumImage() != null) {
+            mListener.makeLoadingSnackBar("Deleting Event...");
+            FirebaseStorage.getInstance().getReferenceFromUrl(album.getForumImage()).delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            db.collection("forum_posts").document(album.getFid())
+                                    .delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mListener.dismissSnackBar();
+                                            mListener.showSnackBar("Successfully Deleted!");
+                                            forumList.remove(position);
+                                            notifyItemRemoved(position);
+                                            notifyItemRangeChanged(position, forumList.size());
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                        }
+                                    });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    db.collection("forum_posts").document(album.getFid())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    mListener.dismissSnackBar();
+                                    mListener.showSnackBar("Successfully Deleted!");
+                                    forumList.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyItemRangeChanged(position, forumList.size());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                }
+            });
+        } else {
+            db.collection("forum_posts").document(album.getFid())
+                    .delete();
+            forumList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, forumList.size());
+            mListener.showSnackBar("Post deleted!");
+        }
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView fname,fdetail,fdate,fupvotes,fcomments,commentButton,authorName,authorRno;
         CircleImageView forumProfilePic;

@@ -20,45 +20,65 @@
 
     <EditText
         android:id="@+id/myBasicName"
+        android:textStyle="bold"
+        android:drawablePadding="5sp"
+        android:drawableStart="@drawable/ic_profile"
+        android:elevation="3sp"
+        android:padding="10sp"
+        android:background="@drawable/background_border_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/myBasicRoll"
         android:layout_alignParentEnd="true"
         android:enabled="false"
         android:layout_toEndOf="@+id/pfImageView"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/oswald"
         android:text="Uname"
         android:textAlignment="viewStart"
         android:textColor="@color/colorBlack"
-        android:textSize="22sp" />
+        android:textSize="17sp" />
 
     <EditText
         android:id="@+id/myBasicRoll"
+        android:elevation="3sp"
+        android:drawableStart="@drawable/ic_user"
+        android:drawablePadding="5sp"
+        android:padding="10sp"
+        android:layout_marginTop="10sp"
         android:layout_width="match_parent"
+        android:textStyle="bold"
+        android:background="@drawable/background_border_line"
         android:layout_height="wrap_content"
         android:layout_above="@+id/myBasicDept"
         android:layout_alignParentEnd="true"
         android:enabled="false"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/oswald"
         android:text="RollNUmber"
         android:textAlignment="viewStart"
         android:layout_toEndOf="@+id/pfImageView"
         android:textColor="@color/colorBlack"
-        android:textSize="22sp" />
+        android:textSize="17sp" />
 
     <EditText
         android:id="@+id/myBasicDept"
+        android:drawableStart="@drawable/ic_school"
+        android:drawablePadding="5sp"
+        android:padding="10sp"
+        android:elevation="3sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView11"
         android:layout_alignParentEnd="true"
         android:enabled="false"
-        android:fontFamily="@font/ravenscroft"
+        android:layout_marginTop="10sp"
+        android:background="@drawable/background_border_line"
+        android:fontFamily="@font/oswald"
         android:text="Dept"
+        android:textStyle="bold"
         android:textAlignment="textStart"
         android:textColor="@color/colorBlack"
         android:layout_toEndOf="@+id/pfImageView"
-        android:textSize="22sp" />
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/textView5"
@@ -68,11 +88,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="13dp"
         android:enabled="false"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/josefina"
         android:text="Basic Info"
         android:textAlignment="center"
         android:textColor="@color/colorBlack"
-        android:textSize="27sp" />
+        android:textSize="22sp" />
 
     <View
         android:id="@+id/justaline"
@@ -89,9 +109,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:textStyle="bold"
         android:layout_alignParentStart="true"
-        android:fontFamily="@font/ravenscroft"
-        android:textSize="20sp"
+        android:fontFamily="@font/oswald"
+        android:textSize="15sp"
         android:textColor="@color/colorBlack"
         android:layout_marginBottom="58dp"
         android:layout_marginStart="25dp"
@@ -99,10 +120,17 @@
 
     <EditText
         android:id="@+id/about"
+        android:elevation="3sp"
+        android:background="@drawable/background_border_line"
+        android:textStyle="bold"
+        android:drawablePadding="5sp"
+        android:padding="10sp"
+        android:drawableLeft="@drawable/ic_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView11"
         android:layout_below="@+id/textView11"
+        android:fontFamily="@font/oswald"
         android:layout_marginTop="-58dp"
         android:enabled="false"
         android:text="Stuff about you!" />

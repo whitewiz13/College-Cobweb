@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -58,8 +59,8 @@ public class FragmentDeptNotice extends Fragment {
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         assert documentSnapshot != null;
                         dept = documentSnapshot.getString("dept");
-                        mainHeading.setText(dept + " Events");
-                        eventRef = db.collection(dept).document("events").collection("events");
+                        mainHeading.setText(documentSnapshot.getString("dept_name") + " Events");
+                        eventRef = db.collection("institute_list").document(dept).collection("events");
                         okayDoNow();
                     }
                 });

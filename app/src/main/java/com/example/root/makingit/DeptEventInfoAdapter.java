@@ -150,7 +150,7 @@ public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo
                 mydb.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        db.collection(Objects.requireNonNull(documentSnapshot.getString("dept"))).document("events").collection("events").document(album.getEid())
+                        db.collection("institute_list").document(Objects.requireNonNull(documentSnapshot.getString("dept"))).collection("events").document(album.getEid())
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

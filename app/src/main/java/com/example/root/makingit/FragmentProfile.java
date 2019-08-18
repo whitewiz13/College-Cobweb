@@ -51,7 +51,6 @@ public class FragmentProfile extends Fragment {
     EditText name,rno,dept,about,email,phone,address;
     Boolean imageChanged = false;
     Button editButton;
-    ScrollView profileScroll;
     private final int PICK_IMAGE_REQUEST = 1;
     View.OnClickListener imagelistener;
     CircleImageView profileImage;
@@ -72,7 +71,6 @@ public class FragmentProfile extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, viewGroup, false);
-        profileScroll = view.findViewById(R.id.profileScroll);
         name = view.findViewById(R.id.myBasicName);
         myListener = (profileListener) getActivity();
         if (myListener != null) {

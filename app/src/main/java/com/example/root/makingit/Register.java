@@ -27,10 +27,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.firestore.v1.Write;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,7 +48,6 @@ public class Register extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ProgressBar progressBar;
     private EditText email, password;
-    private Spinner deptSpinner;
     private EditText fname,rollnumber;
     private FirebaseAuth auth;
     private Button btnreg;
@@ -64,7 +65,6 @@ public class Register extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         imageView = findViewById(R.id.peerProfileImage);
-        deptSpinner = findViewById(R.id.dept);
         auth = FirebaseAuth.getInstance();
         fname = findViewById(R.id.name);
         rollnumber = findViewById(R.id.rollno);
@@ -72,9 +72,6 @@ public class Register extends AppCompatActivity {
         password= findViewById(R.id.rpass);
         btnreg= findViewById(R.id.reg);
         progressBar = findViewById(R.id.progressBBar);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.dept_names,android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        deptSpinner.setAdapter(adapter);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,10 +185,12 @@ public class Register extends AppCompatActivity {
         }
     }*/
     private void uploadImageAndSave(final String fname,final String rollnumber) throws IOException {
+        final WriteBatch batch;
+        batch = db.batch();
         if(filePath != null)
         {
             Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
             byte[] data = baos.toByteArray();
             final StorageReference ref = storageReference.child("user_profile_pic/"+ Objects.requireNonNull(auth.getCurrentUser()).getUid());
@@ -203,15 +202,17 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String eemail = email.getText().toString().trim();
-                                    String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");
                                     Map<String,Object> myMap = new HashMap<>();
+                                    Map<String,Object> myEmailMap = new HashMap<>();
                                     DocumentReference docRef = db.collection("users").document(auth.getCurrentUser().getUid());
-                                    UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,dept,eemail,uri.toString());
-                                    myMap.put("more_Stuff",auth.getCurrentUser().getUid());
-                                    docRef.set(user);
-                                    db.collection("taken_rno").document(rollnumber).set(myMap);
+                                    UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,null,eemail,uri.toString(),null);
+                                    myMap.put("more_stuff",auth.getCurrentUser().getUid());
+                                    myEmailMap.put("more_stuff",auth.getCurrentUser().getUid());
+                                    batch.set(docRef,user);
+                                    batch.set(db.collection("taken_rno").document(rollnumber),myMap);
+                                    batch.set(db.collection("taken_email").document(eemail),myEmailMap);
+                                    batch.commit();
                                     showToast("Account Created Successfully!");
-                                    performSubscription(dept);
                                     progressBar.setVisibility(View.GONE);
                                     //sendVerificationEmail();
                                     startActivity(new Intent(Register.this, Home.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
@@ -230,20 +231,22 @@ public class Register extends AppCompatActivity {
         else
         {
             String eemail = email.getText().toString().trim();
-            String dept = deptSpinner.getSelectedItem().toString().replaceAll("\\s+","");
             Map<String,Object> myMap = new HashMap<>();
+            Map<String,Object> myEmailMap = new HashMap<>();
             DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
-            UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,dept,eemail,"https://i.stack.imgur.com/34AD2.jpg");
+            UserInfo user = new UserInfo(docRef.getId(),fname,rollnumber,null,eemail,"https://i.stack.imgur.com/34AD2.jpg",null);
             myMap.put("more_stuff",auth.getCurrentUser().getUid());
-            docRef.set(user);
-            db.collection("taken_rno").document(rollnumber).set(myMap);
+            myEmailMap.put("more_stuff",auth.getCurrentUser().getUid());
+            batch.set(docRef,user);
+            batch.set(db.collection("taken_rno").document(rollnumber),myMap);
+            batch.set(db.collection("taken_email").document(eemail),myEmailMap);
+            batch.commit();
             showToast("Account Created Successfully!");
-            performSubscription(dept);
             progressBar.setVisibility(View.GONE);
             startActivity(new Intent(Register.this, Home.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
         }
-    }
+    }/*
     public void performSubscription(String dept)
     {
         firebaseMessagingService = FirebaseMessaging.getInstance();
@@ -254,7 +257,7 @@ public class Register extends AppCompatActivity {
         firebaseMessagingService.unsubscribeFromTopic("pushMSCCHEMISTRYEvent");
         firebaseMessagingService.unsubscribeFromTopic("pushMSCZOOLOGYEvent");
         firebaseMessagingService.subscribeToTopic("push"+dept+"Event");
-    }
+    }*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

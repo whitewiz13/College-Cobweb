@@ -71,7 +71,8 @@ public class FragmentDeptAddEvent extends DialogFragment {
         mydb.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                DocumentReference docRef = db.collection(Objects.requireNonNull(documentSnapshot.getString("dept"))).document("events").collection("events").document();
+                DocumentReference docRef = db.collection("institute_list").document(Objects.requireNonNull(documentSnapshot.getString("dept")))
+                        .collection("events").document();
                 DeptEventInfo deptEvent = new DeptEventInfo(docRef.getId(),evname,evdetail,evauthor,documentSnapshot.getString("dept"));
                 docRef.set(deptEvent);
             }

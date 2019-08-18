@@ -41,6 +41,7 @@ public class FragmentAddEvent extends DialogFragment {
                 .getAttributes().windowAnimations = R.style.DialogAnimation;
     }
     DialogFragment frag = this;
+    Button addImage;
     public onActionListener listner;
     interface onActionListener
     {
@@ -58,7 +59,7 @@ public class FragmentAddEvent extends DialogFragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         Button enter = view.findViewById(R.id.enter);
-        Button addImage =view.findViewById(R.id.addEventImage);
+        addImage =view.findViewById(R.id.addEventImage);
         ename = view.findViewById(R.id.evname);
         edetail = view.findViewById(R.id.evdetail);
         enter.setOnClickListener(new View.OnClickListener() {
@@ -152,6 +153,10 @@ public class FragmentAddEvent extends DialogFragment {
                 && data != null && data.getData() != null )
         {
             filePath = data.getData();
+            if(addImage!=null)
+            {
+            addImage.setBackground(getResources().getDrawable(R.drawable.ic_check));
+            addImage.setEnabled(false);}
         }
     }
 }

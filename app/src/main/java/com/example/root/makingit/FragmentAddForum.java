@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -123,7 +124,7 @@ public class FragmentAddForum extends FragmentAddEvent {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
-                        public void onSuccess(Uri uri) {
+                        public void onSuccess(final Uri uri) {
                             String evauthor;
                             evauthor =  Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
                             ForumPostInfo forumpost = new ForumPostInfo(docRef.getId(),evname,evdetail,evauthor,"0","0",uri.toString());
@@ -133,6 +134,11 @@ public class FragmentAddForum extends FragmentAddEvent {
                                     listner.dismissSnackBar();
                                     listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
                                     mListener.addedForumPost();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    FirebaseStorage.getInstance().getReferenceFromUrl(uri.toString()).delete();
                                 }
                             });
                         }

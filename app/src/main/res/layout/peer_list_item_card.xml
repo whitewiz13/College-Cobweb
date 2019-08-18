@@ -27,10 +27,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/peerDept"
                 android:layout_alignTop="@+id/peerProfileImage"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
+                android:textStyle="bold"
                 android:text="Author Text"
                 android:textColor="@color/colorBlack"
-                android:textSize="60px" />
+                android:textSize="50px" />
 
             <TextView
                 android:id="@+id/peerAuthorRno"
@@ -39,10 +40,10 @@
                 android:layout_below="@+id/peerAuthorText"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/peerProfileImage"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
                 android:text="Author Rno"
                 android:textColor="@color/colorBlack"
-                android:textSize="60px" />
+                android:textSize="50px" />
 
             <TextView
                 android:id="@+id/peerDept"
@@ -51,10 +52,10 @@
                 android:layout_below="@+id/peerAuthorRno"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/peerProfileImage"
-                android:fontFamily="@font/ravenscroft"
+                android:fontFamily="@font/oswald"
                 android:text="Author Dept"
                 android:textColor="@color/colorBlack"
-                android:textSize="60px" />
+                android:textSize="50px" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/peerProfileImage"

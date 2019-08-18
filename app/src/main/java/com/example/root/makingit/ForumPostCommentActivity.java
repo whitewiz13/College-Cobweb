@@ -2,6 +2,7 @@ package com.example.root.makingit;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -33,10 +36,10 @@ public class ForumPostCommentActivity extends AppCompatActivity {
 
     ImageView forumPostImage;
     Snackbar loadingSnack;
-    Button postComment;
+    FloatingActionButton postComment;
     EditText commentTypeBox;
     String id;
-    TextView postDetail,postUpvotes;
+    TextView postDetail,postUpvotes,postComments;
     Toolbar tb;
     ActionBar ab;
     public String authUid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -50,6 +53,7 @@ public class ForumPostCommentActivity extends AppCompatActivity {
         setContentView(R.layout.forum_post_comment_activity);
         makeLoadingSnackBar("Loading Comments...");
         postComment = findViewById(R.id.postCommentButton);
+        postComments =findViewById(R.id.postComments);
         forumPostImage = findViewById(R.id.forumPostMainImage);
         postUpvotes = findViewById(R.id.postUpvotes);
         commentTypeBox = findViewById(R.id.commentTypeBox);
@@ -70,6 +74,7 @@ public class ForumPostCommentActivity extends AppCompatActivity {
                         if(model!=null) {
                             postUpvotes.setText(model.getFupvote());
                             postDetail.setText(model.getFdetail());
+                            postComments.setText(model.getFcomment());
                             ab.setTitle(model.getFname());
                             if(model.getForumImage() != null)
                             {
@@ -124,8 +129,31 @@ public class ForumPostCommentActivity extends AppCompatActivity {
                 String commentID = Objects.requireNonNull(task.getResult()).getId();
                 db.collection("forum_posts").document(id).collection("comments")
                         .document(commentID).update("commentid",commentID);
+                trackComments(model,postComments);
             }
         });
+
+    }
+    public void trackComments(final ForumPostInfo model, final TextView commentText)
+    {
+        db.collection("forum_posts").document(model.getFid()).collection("comments")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int count = 0;
+                            for (DocumentSnapshot ignored : Objects.requireNonNull(task.getResult())) {
+                                count++;
+                            }
+                            commentText.setText(String.valueOf(count));
+                            HashMap<String,Object> newData = new HashMap<>();
+                            newData.put("fcomment", String.valueOf(count));
+                            DocumentReference docRef = db.collection("forum_posts").document(Objects.requireNonNull(model.getFid()));
+                            docRef.update(newData);
+                        }
+                    }
+                });
     }
     public void makeLoadingSnackBar(String msg) {
             loadingSnack = Snackbar.make(findViewById(R.id.commentPostScreen), msg, Snackbar.LENGTH_INDEFINITE);

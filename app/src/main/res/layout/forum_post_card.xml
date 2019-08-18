@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="10dp"
     android:background="@drawable/background_border"
     android:elevation="3dp"
-    android:padding="20dp">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/fname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:fontFamily="@font/josefina"
         android:text="Fname"
-        android:fontFamily="@font/ravenscroft"
         android:textColor="@color/colorBlack"
-        android:textSize="30dp" />
+        android:textSize="25dp" />
 
     <TextView
         android:id="@+id/fdetail"
         android:textIsSelectable="true"
         android:autoLink="web"
-        android:layout_marginTop="10sp"
+        android:textColor="@color/colorBlack"
+        android:fontFamily="@font/oswald"
+        android:layout_marginTop="5sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -69,10 +69,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/justaline"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/oswald"
+        android:textStyle="bold"
         android:text="Author Text"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="60px" />
+        android:textSize="40px" />
 
     <TextView
         android:id="@+id/authorRno"
@@ -80,10 +81,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/forumAuthor"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/oswald"
+        android:textStyle="bold"
         android:text="Author Rno"
         android:textColor="@color/colorPrimary"
-        android:textSize="60px" />
+        android:textSize="40px" />
     <View
         android:id="@+id/justaline2"
         android:layout_width="match_parent"
@@ -136,24 +138,21 @@
         android:id="@+id/deletePost"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/fUpvotes"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginTop="14dp"
         android:background="@drawable/ic_delete"
-        android:gravity="center"
-        android:textAlignment="center" />
+        android:gravity="center" />
 
     <Button
         android:id="@+id/upVoteButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_below="@id/fUpvotes"
-        android:textStyle="normal"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15sp"
-        android:layout_toEndOf="@+id/deletePost"
         android:background="@drawable/ic_upvote"
-        android:hapticFeedbackEnabled="true"
         />
 
 </RelativeLayout>

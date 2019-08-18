@@ -14,11 +14,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="13dp"
         android:enabled="false"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/josefina"
         android:text="Contact Info"
         android:textAlignment="center"
         android:textColor="@color/colorBlack"
-        android:textSize="27sp" />
+        android:textSize="22sp" />
     <View
         android:id="@+id/justaline"
         android:layout_width="match_parent"
@@ -31,42 +31,61 @@
 
     <EditText
         android:id="@+id/myContactEmail"
+        android:elevation="3sp"
+        android:padding="10sp"
+        android:background="@drawable/background_border_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:textStyle="bold"
         android:layout_marginTop="74dp"
         android:enabled="false"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/oswald"
         android:hint="Email"
         android:textAlignment="viewStart"
+        android:drawablePadding="5sp"
+        android:drawableLeft="@drawable/ic_email"
+
         android:textColor="@color/colorBlack"
-        android:textSize="22sp" />
+        android:textSize="17sp" />
 
     <EditText
         android:id="@+id/myContactPhone"
         android:layout_width="match_parent"
+        android:drawableLeft="@drawable/ic_call"
+        android:drawablePadding="5sp"
+        android:elevation="3sp"
+        android:layout_marginTop="10sp"
+        android:padding="10sp"
+        android:background="@drawable/background_border_line"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:enabled="false"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/oswald"
         android:hint="Phone"
         android:textAlignment="textStart"
+        android:textStyle="bold"
         android:textColor="@color/colorBlack"
-        android:textSize="22sp" />
+        android:textSize="17sp" />
 
     <EditText
         android:id="@+id/myContactAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="3sp"
+        android:padding="10sp"
+        android:drawableLeft="@drawable/ic_locatio"
+        android:drawablePadding="5sp"
+        android:layout_marginTop="10sp"
+        android:background="@drawable/background_border_line"
         android:layout_below="@+id/myContactPhone"
         android:layout_centerHorizontal="true"
         android:enabled="false"
-        android:fontFamily="@font/ravenscroft"
+        android:textStyle="bold"
+        android:fontFamily="@font/oswald"
         android:hint="Address"
         android:textAlignment="viewStart"
         android:textColor="@color/colorBlack"
-        android:textSize="22sp" />
-
-
+        android:textSize="17sp" />
 </RelativeLayout>

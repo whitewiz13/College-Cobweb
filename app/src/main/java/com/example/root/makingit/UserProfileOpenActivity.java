@@ -86,9 +86,10 @@ public class UserProfileOpenActivity extends AppCompatActivity {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         if (documentSnapshot != null && !documentSnapshot.exists()) {
                             if (documentSnapshotName != null) {
-                                db.collection("users").document(authId)
-                                        .collection("chats").document(id).set(new ChatMainModel(documentSnapshotName.getString("name")
-                                        , "Start a conversation", id,documentSnapshot.getString("rno")));
+                                    db.collection("users").document(authId)
+                                            .collection("chats").document(id).set(new ChatMainModel(documentSnapshotName.getString("name")
+                                            , "You started a conversation", id, documentSnapshotName.getString("rno")));
+
                             }
                         }
                     }

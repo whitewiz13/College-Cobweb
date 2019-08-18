@@ -2,6 +2,7 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:animateLayoutChanges="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
@@ -11,16 +12,195 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:tabSelectedTextColor="@color/colorWhite"
-        app:tabIndicatorColor="@color/colorWhite"
-        app:tabTextColor="@color/colorWhite"
+        app:tabSelectedTextColor="@color/colorBlack"
+        app:tabIndicatorColor="@color/colorBlack"
+        app:tabTextColor="@color/colorGrey"
+        app:tabTextAppearance="@style/tab_text"
+        android:background="@color/colorWhite"
         app:tabMode="fixed"
         app:tabGravity="fill"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/setUpCollege"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/setupLabel"
+            android:textSize="30sp"
+            android:padding="10sp"
+            android:textColor="@color/colorBlack"
+            android:fontFamily="@font/oswald"
+            android:text="Setup College.."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.SearchView
+            android:id="@+id/collegeSearchView"
+            app:queryHint="Search College"
+            android:elevation="3sp"
+            android:background="@drawable/background_border_line"
+            android:layout_below="@+id/setupLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.SearchView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/collegeRecyclerList"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5sp"
+            android:layout_below="@+id/collegeSearchView"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/collegeCardView"
+            android:layout_below="@id/collegeSearchView"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:elevation="3dp">
+
+            <RelativeLayout
+                android:animateLayoutChanges="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/background_border"
+                android:elevation="5dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/collegeName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/josefina"
+                    android:text="Event Heading!"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/eventtext" />
+
+                <TextView
+                    android:id="@+id/collegeDetail"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5sp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/justaline2"
+                    android:fontFamily="@font/oswald"
+                    android:maxLines="2"
+                    android:textColor="@color/colorBlack"
+                    android:text="Details about even heading!"
+                    android:textSize="@dimen/edetailtext" />
+                <TextView
+                    android:id="@+id/ratingLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/instituteShowMore"
+                    android:textColor="@color/colorBlack"
+                    android:text="Rating : "/>
+                <TextView
+                    android:id="@+id/ratingText"
+                    android:textColor="@color/colorBlack"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/instituteShowMore"
+                    android:layout_toEndOf="@+id/ratingLabel"
+                    android:textStyle="bold"
+                    android:text="4.0"/>
+                <TextView
+                    android:id="@+id/locationLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ratingLabel"
+                    android:text="Location : "/>
+                <TextView
+                    android:id="@+id/locationText"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:layout_below="@+id/ratingText"
+                    android:textStyle="bold"
+                    android:layout_toEndOf="@+id/locationLabel"
+                    android:text="LOC"/>
+                <TextView
+                    android:id="@+id/popularCourseLabel"
+                    android:text="Popular Course : "
+                    android:layout_marginTop="10sp"
+                    android:textColor="@color/colorBlack"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/locationLabel"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/popularCourseText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:text="BSC"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorBlack"
+                    android:layout_below="@+id/locationText"
+                    android:layout_toEndOf="@+id/popularCourseLabel"/>
+                <ImageView
+                    android:id="@+id/instituteImageView"
+                    android:layout_below="@id/popularCourseLabel"
+                    android:layout_width="400sp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+                <View
+                    android:id="@+id/justaline"
+                    android:layout_marginTop="10sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/instituteImageView"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <View
+                    android:id="@+id/justaline2"
+                    android:layout_width="250sp"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/collegeName"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5sp"
+                    android:background="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/instituteShowMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/collegeDetail"
+                    android:background="@drawable/background_border"
+                    android:text="Read More" />
+                <Button
+                android:id="@+id/checkYes"
+                    android:layout_marginTop="2sp"
+                android:background="@drawable/ic_check"
+                android:layout_below="@+id/justaline"
+                android:layout_width="40sp"
+                android:layout_height="40sp" />
+                <Button
+                    android:background="@drawable/ic_cross"
+                    android:id="@+id/checkNo"
+                    android:layout_below="@+id/justaline"
+                    android:layout_marginTop="2sp"
+                    android:layout_marginStart="20sp"
+                    android:layout_toEndOf="@+id/checkYes"
+                    android:layout_width="40sp"
+                    android:layout_height="40sp" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>
 </LinearLayout>

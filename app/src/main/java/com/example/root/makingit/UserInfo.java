@@ -1,9 +1,18 @@
 package com.example.root.makingit;
 
 public class UserInfo {
-    String name,rno,uid,dept,email,about,uimage,address,phone;
+    String name;
+    String rno;
+    String uid;
+    String dept;
+    String email;
+    String about;
+    String uimage;
+    String address;
+    String phone;
+    String dept_name;
     public UserInfo() { }
-    public UserInfo(String uid,String name,String rno,String dept,String email,String uimage)
+    public UserInfo(String uid,String name,String rno,String dept,String email,String uimage,String dept_name)
     {
         this.uid=uid;
         this.name = name;
@@ -11,6 +20,7 @@ public class UserInfo {
         this.dept=dept;
         this.email=email;
         this.uimage = uimage;
+        this.dept_name = dept_name;
     }
     public void setUimage(String uimage) { this.uimage = uimage; }
     public void setAbout(String about) { this.about = about; }
@@ -25,7 +35,13 @@ public class UserInfo {
     }
     public void setAddress(String address) { this.address = address; }
     public void setPhone(String phone) { this.phone = phone;}
+    public String getDept_name() {
+        return dept_name;
+    }
 
+    public void setDept_name(String dept_name) {
+        this.dept_name = dept_name;
+    }
     public String getAddress() { return address; }
     public String getPhone() { return phone; }
     public String getUimage() { return uimage; }

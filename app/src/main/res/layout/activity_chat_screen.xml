@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/chatScreenLayout"
     android:layout_width="match_parent"
-    android:background="@drawable/here"
+    android:background="@drawable/chat_back"
     android:layout_height="wrap_content">
     <android.support.v7.widget.Toolbar
         android:id="@+id/chatScreenToolbar"
@@ -14,33 +14,44 @@
         android:layout_below="@+id/chatScreenToolbar"
         android:id="@+id/chatMessageList"
         android:layout_width="match_parent"
-        android:paddingBottom="50sp"
+        android:paddingBottom="60sp"
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
     <RelativeLayout
         android:id="@+id/someView"
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
+        android:paddingStart="10sp"
+        android:paddingBottom="10sp"
+        android:paddingTop="10sp"
+        android:paddingEnd="1sp"
         android:elevation="3sp"
-        android:background="@drawable/background_border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/chatTypeBox"
-            android:layout_width="250dp"
-            android:background="@drawable/background_border"
+            android:layout_width="match_parent"
+            android:padding="8sp"
+            android:layout_marginEnd="10sp"
+            android:background="@drawable/background_border_line"
             android:layout_centerVertical="true"
-            android:layout_marginStart="10sp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/malir"
+            android:layout_toStartOf="@+id/sendMessage"
+            android:fontFamily="@font/oswald"
+            android:textStyle="bold"
+            android:textSize="15sp"
             android:hint="Enter Text to Send" />
-        <Button
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/sendMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send"
-            android:layout_alignParentRight="true"
-            android:layout_alignEnd="@+id/chatTypeBox"/>
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="3dp"
+            android:backgroundTint="@color/colorBlack"
+            android:src="@drawable/ic_send"
+            android:tint="@color/colorWhite" />
     </RelativeLayout>
 </RelativeLayout>

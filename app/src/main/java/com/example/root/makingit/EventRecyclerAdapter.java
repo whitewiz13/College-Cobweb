@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
@@ -87,8 +90,13 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
         holder.ename.setText(model.getEname());
         holder.edetail.setText(model.getEdetail());
         holder.edate.setText(creationDate);
+        if(FirebaseStorage.getInstance().getReference(model.getEid())==null)
+        {
+            Toast.makeText(mContext,"SomethingBad", Toast.LENGTH_LONG).show();
+        }
         if(model.eventImage != null)
         {
+
             GlideApp.with(mContext)
                     .load(model.getEventImage())
                     .placeholder(R.drawable.loadme)
@@ -99,7 +107,12 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
             holder.eventImage.setVisibility(View.GONE);
         }
         getUserInfo(holder, model.getEauthor());
-        checkForUserPost(model,holder);
+        try {
+                checkForUserPost(model, holder);
+            }catch (Exception e)
+        {
+            Toast.makeText(mContext,"Something went wrong!",Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -145,7 +158,7 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(album.getEventImage()!=null) {
+                if (album.getEventImage() != null) {
                     mListener.makeLoadingSnackBar("Deleting Event...");
                     FirebaseStorage.getInstance().getReferenceFromUrl(album.getEventImage()).delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -160,7 +173,7 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
                                                     mListener.showSnackBar("Successfully Deleted!");
                                                     eventList.remove(position);
                                                     notifyItemRemoved(position);
-                                                    notifyItemRangeChanged(position,eventList.size());
+                                                    notifyItemRangeChanged(position, eventList.size());
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -169,7 +182,23 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
                                                 }
                                             });
                                 }
-                            });
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            db.collection("events").document(album.getEid())
+                                    .delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mListener.dismissSnackBar();
+                                            mListener.showSnackBar("Successfully Deleted!");
+                                            eventList.remove(position);
+                                            notifyItemRemoved(position);
+                                            notifyItemRangeChanged(position, eventList.size());
+                                        }
+                                    });
+                        }
+                    });
                 }
                 else
                 {
@@ -207,10 +236,15 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
                 if (snapshot != null && snapshot.exists()) {
                     holder.eauthor.setText(snapshot.getString("name"));
                     holder.eRollno.setText(snapshot.getString("rno"));
-                    GlideApp.with(mContext)
-                            .load(snapshot.getString("uimage"))
-                            .placeholder(R.drawable.loadme)
-                            .into(holder.imageView);
+                    try {
+                        GlideApp.with(mContext)
+                                .load(snapshot.getString("uimage"))
+                                .placeholder(R.drawable.loadme)
+                                .into(holder.imageView);
+                    }catch (Exception e4)
+                    {
+                        Toast.makeText(mContext,e4.getMessage(),Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

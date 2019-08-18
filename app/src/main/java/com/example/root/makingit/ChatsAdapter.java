@@ -1,7 +1,10 @@
 package com.example.root.makingit;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,9 +25,10 @@ import java.util.Objects;
 
 public class ChatsAdapter extends FirestoreRecyclerAdapter<ChatsModel,ChatsAdapter.MyViewHolder> {
 
-
-    public ChatsAdapter(@NonNull FirestoreRecyclerOptions<ChatsModel> options) {
+    private Context mContext;
+    public ChatsAdapter(@NonNull FirestoreRecyclerOptions<ChatsModel> options, Context mContext) {
         super(options);
+        this.mContext = mContext;
     }
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull ChatsModel model) {
@@ -45,17 +49,22 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<ChatsModel,ChatsAdapt
         String compID = model.getChatpersonid();
         if(Objects.equals(compID, authId))
         {
-            holder.message.setTextColor(Color.BLUE);
+            holder.message.setTextColor(Color.BLACK);
             holder.message.setGravity(Gravity.END);
             holder.chatTime.setGravity(Gravity.END);
             holder.chatReceiverLayout.setGravity(Gravity.END);
+            holder.chatInnerLayout.setBackground(mContext.getDrawable(R.drawable.background_border_black));
+            holder.chatInnerLayout.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorWhite));
+
         }
         else
         {
-            holder.message.setTextColor(Color.RED);
+            holder.message.setTextColor(Color.BLACK);
             holder.message.setGravity(Gravity.START);
             holder.chatTime.setGravity(Gravity.START);
             holder.chatReceiverLayout.setGravity(Gravity.START);
+            holder.chatInnerLayout.setBackground(mContext.getDrawable(R.drawable.background_border_sender));
+            holder.chatInnerLayout.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorCreme));
         }
     }
     @NonNull
@@ -68,12 +77,13 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<ChatsModel,ChatsAdapt
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView message, chatTime;
-        RelativeLayout chatReceiverLayout;
+        RelativeLayout chatReceiverLayout,chatInnerLayout;
         public MyViewHolder(View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.chatMessage);
             chatTime = itemView.findViewById(R.id.chatTime);
             chatReceiverLayout = itemView.findViewById(R.id.chatReceiverLayout);
+            chatInnerLayout = itemView.findViewById(R.id.chatReceiverInnerLayout);
         }
     }
 }

@@ -1,119 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true"
-    android:background="@color/colorYes"
+<android.support.v4.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:transitionName="robot"
-        android:layout_height="match_parent"
-        android:background="#551a8b"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
         android:focusable="true"
         android:focusableInTouchMode="true">
+
         <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scaleType="fitStart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:layout_marginBottom="-200dp"
-            android:src="@drawable/here"/>
+            android:scaleType="fitStart"
+            android:src="@drawable/test" />
 
         <TextView
             android:id="@+id/rwelcome"
-            android:layout_width="match_parent"
+            android:background="@drawable/background_border"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:fontFamily="@font/ravenscroft"
-            android:text="Registration"
-            android:textAlignment="center"
+            android:padding="10sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30sp"
+            android:elevation="3sp"
+            android:fontFamily="@font/oswald"
+            android:text="Make your account"
             android:textColor="#000000"
-            android:textSize="70sp"
+            android:textSize="40sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/name"
             android:layout_width="288dp"
+            android:drawableStart="@drawable/ic_profile"
             android:layout_height="wrap_content"
             android:layout_below="@+id/peerProfileImage"
             android:layout_centerHorizontal="true"
+            android:elevation="3sp"
+            android:padding="10sp"
+            android:background="@drawable/background_border_line"
             android:ems="10"
-            android:fontFamily="@font/ravenscroft"
+            android:fontFamily="@font/oswald"
+            android:textStyle="bold"
             android:hint="Enter Full Name"
             android:inputType="text"
             android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/rollno"
             android:layout_width="288dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:drawableStart="@drawable/ic_user"
+            android:elevation="3sp"
+            android:padding="10sp"
+            android:background="@drawable/background_border_line"
             android:layout_below="@+id/name"
             android:layout_centerHorizontal="true"
             android:ems="10"
-            android:fontFamily="@font/ravenscroft"
             android:hint="Enter Username"
             android:inputType="text"
             android:textColor="@color/colorBlack"
+            android:fontFamily="@font/oswald"
+            android:textStyle="bold"
             android:textCursorDrawable="@null"
-            android:textSize="25sp" />
-
-        <Spinner
-            android:id="@+id/dept"
-            android:layout_width="288dp"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"
-            android:layout_below="@+id/rollno"
-            android:layout_centerHorizontal="true"
-            android:backgroundTint="#FFFFFF"
-            android:ems="10"
-            android:fontFamily="@font/ravenscroft"
-            android:hint="Select Department"
-            android:inputType="text"
-            android:textColor="#FFFFFF"
-            android:textCursorDrawable="@null"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/rname"
             android:layout_width="288dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/dept"
+            android:layout_below="@+id/rollno"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="10sp"
+            android:drawableStart="@drawable/ic_email"
+            android:background="@drawable/background_border_line"
+            android:elevation="3sp"
             android:ems="10"
-            android:fontFamily="@font/ravenscroft"
+            android:fontFamily="@font/oswald"
             android:hint="Enter Email"
             android:inputType="textEmailAddress"
+            android:padding="10sp"
             android:textColor="@color/colorBlack"
             android:textCursorDrawable="@null"
-            android:textSize="25sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/rpass"
             android:layout_width="288dp"
+
             android:layout_height="wrap_content"
             android:layout_below="@+id/rname"
             android:layout_centerHorizontal="true"
             android:ems="10"
-            android:fontFamily="@font/ravenscroft"
             android:hint="Enter Password"
+            android:fontFamily="@font/oswald"
+            android:textStyle="bold"
             android:inputType="textPassword"
+            android:layout_marginTop="10sp"
+            android:drawableStart="@drawable/ic_lock"
             android:textColor="@color/colorBlack"
+            android:elevation="3sp"
+            android:padding="10sp"
+            android:background="@drawable/background_border_line"
             android:textCursorDrawable="@null"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/reg"
             android:layout_below="@id/rpass"
             android:layout_marginTop="100px"
-            android:layout_width="209dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#22313F"
+            android:background="@drawable/background_border_line"
+            android:backgroundTint="@color/colorBlack"
             android:textColor="#FFFFFF"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/ravenscroft"
@@ -122,18 +131,16 @@
 
         <ProgressBar
             android:id="@+id/progressBBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:indeterminateTintMode="src_atop"
-            android:layout_centerHorizontal="true"
             android:indeterminateTint="@color/colorBlack"
-            android:layout_below="@+id/reg"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
             android:visibility="gone"
             />
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/peerProfileImage"
+            android:layout_marginTop="10sp"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_below="@+id/rwelcome"
@@ -142,4 +149,4 @@
             app:civ_border_color="@color/colorWhite"
             app:civ_border_width="3dp" />
     </RelativeLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

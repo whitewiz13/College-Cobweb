@@ -14,7 +14,11 @@
         <item
             android:icon="@drawable/ic_dept"
             android:id="@+id/nav_dept"
-            android:title="My Department" />
+            android:title="My College" />
+        <item
+            android:id="@+id/nav_browse_college"
+            android:icon="@drawable/ic_search"
+            android:title="Browse Institutes"/>
         <item
             android:icon="@drawable/ic_forum"
             android:id="@+id/nav_forum"
@@ -25,6 +29,10 @@
             android:title="Chats" />
     </group>
     <group android:checkableBehavior="single" android:id="@+id/group2">
+     <!---   <item android:id="@+id/linkAccount"
+            android:title="Link Account"
+            android:icon="@drawable/ic_link"/> -->
+
         <item
             android:icon="@drawable/ic_settings"
             android:id="@+id/nav_setting"

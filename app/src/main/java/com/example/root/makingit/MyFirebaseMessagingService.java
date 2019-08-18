@@ -66,7 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String description = "CHAT Channel";
             NotificationManager notificationManager;
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_noti)
+                    .setSmallIcon(R.drawable.cuhplogo)
                     .setContentTitle(senderName)
                     .setContentText(message)
                     .setStyle(new NotificationCompat.BigTextStyle()
@@ -84,7 +84,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setContentTitle("Student Helper")
                             //set content text to support devices running API level < 24
                             .setContentText(chatcount + " new messages")
-                            .setSmallIcon(R.drawable.ic_noti)
+                            .setSmallIcon(R.drawable.cuhplogo)
                             .setDeleteIntent(getDeleteIntent())
                             .setColor(getResources().getColor(R.color.colorPrimaryDark))
                             //build summary info into InboxStyle template
@@ -145,7 +145,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String description = "BaseChannel";
             NotificationManager notificationManager;
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_noti)
+                    .setSmallIcon(R.drawable.cuhplogo)
                     .setContentTitle(title)
                     .setContentText(message)
                     .setStyle(new NotificationCompat.BigTextStyle()
@@ -162,7 +162,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setContentTitle("Student Helper")
                             //set content text to support devices running API level < 24
                             .setContentText(count + " new events")
-                            .setSmallIcon(R.drawable.ic_noti)
+                            .setSmallIcon(R.drawable.cuhplogo)
                             .setDeleteIntent(getDeleteIntent())
                             .setColor(getResources().getColor(R.color.colorPrimaryDark))
                             //build summary info into InboxStyle template
@@ -209,7 +209,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String description = "Base Channel";
         NotificationManager notificationManager;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_noti)
+                .setSmallIcon(R.drawable.cuhplogo)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setLargeIcon(bmp)
@@ -226,7 +226,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle("Student Helper!")
                         //set content text to support devices running API level < 24
                         .setContentText(deptcount+" new department events")
-                        .setSmallIcon(R.drawable.ic_noti)
+                        .setSmallIcon(R.drawable.cuhplogo)
                         .setColor(getResources().getColor(R.color.colorPrimaryDark))
                         //build summary info into InboxStyle template
                         .setStyle(new NotificationCompat.InboxStyle()

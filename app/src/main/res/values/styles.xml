@@ -23,6 +23,11 @@
     <style name="ToolbarTheme">
         <item name="android:fontFamily">@font/josefina</item>
     </style>
+    <style name="ToolbarThemeAppBar">
+        <item name="android:fontFamily">@font/josefina</item>
+        <item name="android:textStyle"></item>
+        <item name="android:textSize">20sp</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="android:windowBackground">@color/colorWhite</item>
         <item name="colorPrimary">@color/colorYes</item>
@@ -42,7 +47,17 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
-
+    <style name="AppTheme.MyNoActionBarTrans">
+        <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="actionOverflowButtonStyle">@style/actionOverflowButtonStyle</item> <!-- sets the style for the overflow button -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
     <style name="MyProgressBarRectangle" parent="@style/Widget.AppCompat.ProgressBar">
         <item name="android:indeterminateDrawable">@xml/progress</item>
         <item name="android:minHeight">80dp</item>

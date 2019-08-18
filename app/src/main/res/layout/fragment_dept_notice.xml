@@ -38,7 +38,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_toEndOf="@+id/myImageView"
                         android:fontFamily="@font/ravenscroft"
-                        android:text="MSC IT Events"
+                        android:text="Events"
                         android:textAlignment="center"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/big_cap" />

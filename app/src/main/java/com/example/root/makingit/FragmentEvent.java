@@ -86,7 +86,7 @@ public class FragmentEvent extends Fragment{
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-        adapter = new EventRecyclerAdapter(eventList,getActivity(), new EventRecyclerAdapter.OnActionListener() {
+        adapter = new EventRecyclerAdapter(eventList,getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
             @Override
             public void showSnackBar(String msg) {
                 doStuffListener.makeSnackB(msg);

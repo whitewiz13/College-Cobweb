@@ -50,8 +50,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 ,FragmentBrowseInstitute.onDoStuffForActivity{
 
     String fTag="fEvent";
-    Snackbar loadingSnack;
-    Snackbar sbView;
+    Snackbar loadingSnack,sbView;
     private DrawerLayout mDrawerLayout;
     private TextView uname,rno,dept;
     Toolbar tb;
@@ -97,7 +96,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             fragment = new FragmentBrowseInstitute();
             setFragment(fragment,"fBrowseIn");
             navigationView.inflateMenu(R.menu.guest_drawer);
-            setUpGuest(new UserInfo("-","GUEST","-","-","-","-"));
+            setUpGuest(new UserInfo("-","GUEST","-","-","-","-","-"));
             navigationView.setNavigationItemSelectedListener(guestDrawerListener);
             mDrawerLayout.addDrawerListener(drawerStateListener);
         }
@@ -130,9 +129,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         public void onDrawerStateChanged(int newState) { }
         @Override
         public void onDrawerOpened(@NonNull View drawerView) {
-            if(!auth.getCurrentUser().isAnonymous())
-                checkUserName();
-        }
+    }
         @Override
         public void onDrawerClosed(@NonNull View drawerView) {
             if (fragment != null &&!fragment.isAdded()) {
@@ -180,6 +177,10 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                 case R.id.nav_dept:
                     fragment = new FragmentDept();
                     fTag = "fDept";
+                    break;
+                case R.id.nav_browse_college:
+                    fragment = new FragmentBrowseInstitute();
+                    fTag = "fBrowseIn";
                     break;
                 case R.id.nav_forum:
                     fragment = new FragmentForum();
@@ -303,7 +304,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                 if (snapshot != null && snapshot.exists()) {
                     uname.setText(snapshot.getString("name"));
                     rno.setText(snapshot.getString("rno"));
-                    dept.setText(snapshot.getString("dept"));
+                    dept.setText(snapshot.getString("dept_name"));
                     GlideApp.with(getApplicationContext())
                             .load(snapshot.getString("uimage"))
                             .placeholder(R.drawable.defaultpic)
@@ -324,16 +325,21 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             DocumentSnapshot snapshot = task.getResult();
                             if (snapshot != null) {
-                                db.collection("taken_rno").document(Objects.requireNonNull(snapshot.getString("rno"))).get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                DocumentSnapshot documentSnapshot = task.getResult();
-                                                if (documentSnapshot != null && !Objects.equals(documentSnapshot.getString("more_stuff"), uid)) {
-                                                    changeUserName();
+                                try {
+                                    db.collection("taken_rno").document(Objects.requireNonNull(snapshot.getString("rno"))).get()
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                                    if (documentSnapshot != null && !Objects.equals(documentSnapshot.getString("more_stuff"), uid)) {
+                                                        changeUserName();
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                }catch (Exception e)
+                                {
+                                    Toast.makeText(getApplication(),e.getMessage(),Toast.LENGTH_LONG).show();
+                                }
                             }
                         }
                     }
@@ -364,6 +370,17 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     {
         fragment.dismiss();
     }
+
+    @Override
+    public void collegeUpdated() {
+        Fragment frg = null;
+        frg = getSupportFragmentManager().findFragmentByTag("fDept");
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
+    }
+
     @Override
     public void setActionBarTitle(String title)
     {
@@ -412,8 +429,6 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(auth.getCurrentUser() !=null && !auth.getCurrentUser().isAnonymous())
-            checkUserName();
         switch (item.getItemId()) {
             case R.id.addEventButton:
                 frag=new FragmentAddEvent();

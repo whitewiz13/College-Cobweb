@@ -27,7 +27,7 @@ public class PeerInfoRecyclerAdapter extends FirestoreRecyclerAdapter<UserInfo,P
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull UserInfo model) {
             holder.authorName.setText(model.getName());
             holder.authorRno.setText(model.getRno());
-            holder.authorDept.setText(model.getDept());
+            holder.authorDept.setText(model.getDept_name());
             GlideApp.with(mContext)
                     .load(model.getUimage())
                     .placeholder(R.drawable.loadme)
