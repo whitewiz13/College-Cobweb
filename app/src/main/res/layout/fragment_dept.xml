@@ -156,6 +156,7 @@
                     android:id="@+id/instituteImageView"
                     android:layout_below="@id/popularCourseLabel"
                     android:layout_width="400sp"
+                    android:layout_centerHorizontal="true"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
                 <View

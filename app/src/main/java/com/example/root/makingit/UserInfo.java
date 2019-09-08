@@ -1,16 +1,7 @@
 package com.example.root.makingit;
 
 public class UserInfo {
-    String name;
-    String rno;
-    String uid;
-    String dept;
-    String email;
-    String about;
-    String uimage;
-    String address;
-    String phone;
-    String dept_name;
+    String name,rno,uid,dept,email,about,uimage,address,phone,dept_name;
     public UserInfo() { }
     public UserInfo(String uid,String name,String rno,String dept,String email,String uimage,String dept_name)
     {

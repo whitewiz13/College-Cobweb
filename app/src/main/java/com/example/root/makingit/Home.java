@@ -1,6 +1,7 @@
 package com.example.root.makingit;
 
 import android.app.NotificationManager;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,6 +22,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +45,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,6 +57,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 ,FragmentBrowseInstitute.onDoStuffForActivity{
 
     String fTag="fEvent";
+    private boolean exit = false;
+    RecyclerView searchEverything;
     Snackbar loadingSnack,sbView;
     private DrawerLayout mDrawerLayout;
     private TextView uname,rno,dept;
@@ -67,6 +76,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         final NavigationView navigationView = findViewById(R.id.nav_view);
         final View headerview = navigationView.getHeaderView(0);
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        searchEverything = findViewById(R.id.searchingEverything);
         tb = findViewById(R.id.toolbar);
         setSupportActionBar(tb);
         tb.setTitleTextColor(Color.WHITE);
@@ -77,6 +87,11 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         dept = headerview.findViewById(R.id.sudept);
         profileImage = headerview.findViewById(R.id.peerProfileImage);
         Bundle extras = getIntent().getExtras();
+        final List<CollegeListSearchModel> resultList = new ArrayList<>();
+        resultList.add(new CollegeListSearchModel("GCKULLU","Kullu","101"));
+        resultList.add(new CollegeListSearchModel("GCMANDI","MANDI","101"));
+        searchEverything.setAdapter(new CollegeSearchListAdapter(resultList,this));
+        searchEverything.setLayoutManager(new LinearLayoutManager(this));
         if(auth.getCurrentUser()!=null && !auth.getCurrentUser().isAnonymous()) {
             navigationView.inflateMenu(R.menu.drawer_view);
             FirebaseMessaging.getInstance().subscribeToTopic("pushChatNotification");
@@ -100,6 +115,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             navigationView.setNavigationItemSelectedListener(guestDrawerListener);
             mDrawerLayout.addDrawerListener(drawerStateListener);
         }
+
     }
     //Setting up guest
     public void setUpGuest(UserInfo uInfo)
@@ -152,7 +168,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                     fTag = "fBrowseIn";
                     break;
                 case R.id.nav_Sign_in:
-                    auth.getCurrentUser().delete();
+                    if(auth.getCurrentUser()!=null)
+                        auth.getCurrentUser().delete();
                     auth.signOut();
             }
             return true;
@@ -373,8 +390,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 
     @Override
     public void collegeUpdated() {
-        Fragment frg = null;
-        frg = getSupportFragmentManager().findFragmentByTag("fDept");
+        Fragment frg = getSupportFragmentManager().findFragmentByTag("fDept");
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.detach(frg);
         ft.attach(frg);
@@ -405,8 +421,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 
     @Override
     public void tellAboutAddition() {
-        Fragment frg = null;
-        frg = getSupportFragmentManager().findFragmentByTag("fEvent");
+        Fragment frg = getSupportFragmentManager().findFragmentByTag("fEvent");
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.detach(frg);
         ft.attach(frg);
@@ -488,8 +503,20 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     {
         if(mDrawerLayout.isDrawerOpen(GravityCompat.START))
             mDrawerLayout.closeDrawers();
-        else {
+        else if(exit)
+        {
             finish();
+        }
+        else{
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
         }
     }
     /*public void checkVerifiedEmail()
@@ -516,8 +543,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 
     @Override
     public void addedForumPost() {
-        Fragment frg = null;
-        frg = getSupportFragmentManager().findFragmentByTag("fForum");
+        Fragment frg = getSupportFragmentManager().findFragmentByTag("fForum");
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.detach(frg);
         ft.attach(frg);

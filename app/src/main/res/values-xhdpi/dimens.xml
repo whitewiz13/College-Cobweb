@@ -7,4 +7,5 @@
     <dimen name="eventtext">60px</dimen>
     <dimen name="edetailtext">40px</dimen>
     <dimen name="showmore">36px</dimen>
+    <dimen name="main_event_text">80px</dimen>
 </resources>

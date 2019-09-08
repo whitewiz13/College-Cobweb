@@ -106,12 +106,14 @@ public class FragmentAddEvent extends DialogFragment {
         {
             Bitmap bmp = null;
             try {
-                bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                bmp = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), filePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            if (bmp != null) {
+                bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            }
             byte[] data = baos.toByteArray();
             final StorageReference ref = storageReference.child("event_pics/"+ Objects.requireNonNull(docRef.getId()));
             ref.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

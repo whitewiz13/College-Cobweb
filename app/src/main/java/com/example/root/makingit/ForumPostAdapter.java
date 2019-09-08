@@ -28,9 +28,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firestore.v1.Write;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -188,9 +186,9 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
                         DocumentSnapshot docSnap = task.getResult();
                         if (docSnap != null)
                             if (docSnap.exists()) {
-                                holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLUE));
+                                holder.upVote.setImageTintList(ColorStateList.valueOf(Color.BLUE));
                             } else {
-                                holder.upVote.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
+                                holder.upVote.setImageTintList(ColorStateList.valueOf(Color.BLACK));
                             }
                     }catch (Exception e)
                     {
@@ -312,10 +310,11 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView fname,fdetail,fdate,fupvotes,fcomments,commentButton,authorName,authorRno;
+        public TextView fname,fdetail,fdate,fupvotes,fcomments,authorName,authorRno;
         CircleImageView forumProfilePic;
         ImageView forumImageView;
-        public Button deletePost,upVote;
+        public Button deletePost;
+        ImageButton upVote,commentButton;
         public MyViewHolder(View view) {
             super(view);
             forumImageView = view.findViewById(R.id.forumImageView);

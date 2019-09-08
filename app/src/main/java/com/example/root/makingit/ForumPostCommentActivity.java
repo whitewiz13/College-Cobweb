@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,6 +62,12 @@ public class ForumPostCommentActivity extends AppCompatActivity {
         setSupportActionBar(tb);
         ab = getSupportActionBar();
         tb.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        if(ab!=null)
+        {
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setDisplayShowHomeEnabled(true);
+            ab.setHomeAsUpIndicator(R.drawable.ic_back_arrow);
+        }
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             id = extras.getString("postId");
@@ -121,7 +126,7 @@ public class ForumPostCommentActivity extends AppCompatActivity {
     }
     public void uploadAndSaveComment(String commentText,final String id)
     {
-        CommentPostInfo postObject = new CommentPostInfo(authUid,commentText);
+        CommentPostInfo postObject = new CommentPostInfo(authUid,commentText,"0","0","0");
         db.collection("forum_posts").document(id).collection("comments")
                 .add(postObject).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override

@@ -91,7 +91,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setStyle(new NotificationCompat.InboxStyle()
                                     .addLine(senderName + " : " + message)
                                     .addLine("Tap to check!")
-                                    .setBigContentTitle("Student Helper")
+                                    .setBigContentTitle("College Cobweb")
                                     .setSummaryText(chatcount + " new messages"))
                             //specify which group this notification belongs to
                             .setGroup(CHAT_GROUP_KEY)
@@ -159,7 +159,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setAutoCancel(true);
             Notification summaryNotification =
                     new NotificationCompat.Builder(this, CHANNEL_ID)
-                            .setContentTitle("Student Helper")
+                            .setContentTitle("College Cobweb")
                             //set content text to support devices running API level < 24
                             .setContentText(count + " new events")
                             .setSmallIcon(R.drawable.cuhplogo)
@@ -223,7 +223,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true);
         Notification summaryNotification =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
-                        .setContentTitle("Student Helper!")
+                        .setContentTitle("College Cobweb")
                         //set content text to support devices running API level < 24
                         .setContentText(deptcount+" new department events")
                         .setSmallIcon(R.drawable.cuhplogo)

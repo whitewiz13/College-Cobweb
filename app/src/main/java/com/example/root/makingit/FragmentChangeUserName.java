@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,13 +58,15 @@ public class FragmentChangeUserName extends FragmentAddEvent {
                     assert document != null;
                     if(document.exists())
                     {
-                        Toast.makeText(getActivity().getApplicationContext(), "Username Already Exists!", Toast.LENGTH_SHORT).show();
+                        if(getActivity() !=null)
+                            Toast.makeText(getActivity().getApplicationContext(), "Username Already Exists!", Toast.LENGTH_SHORT).show();
                         changeName.setEnabled(true);
                     }
                     else
                     {
                         Map<String,Object> myMap = new HashMap<>();
-                        myMap.put("more_stuff",auth.getCurrentUser().getUid());
+                        if(auth.getCurrentUser()!=null)
+                            myMap.put("more_stuff",auth.getCurrentUser().getUid());
                         db.collection("taken_rno").document(rnoo).set(myMap);
                         db.collection("users").document(auth.getCurrentUser().getUid())
                                 .update("rno",rnoo);

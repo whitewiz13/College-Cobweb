@@ -12,19 +12,23 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PeerInfoRecyclerAdapter extends FirestoreRecyclerAdapter<UserInfo,PeerInfoRecyclerAdapter.MyViewHolder> {
+public class PeerInfoRecyclerAdapter extends RecyclerView.Adapter<PeerInfoRecyclerAdapter.MyViewHolder> {
 
     private Context mContext;
     private OnItemClickListener listener;
-    public PeerInfoRecyclerAdapter(@NonNull FirestoreRecyclerOptions<UserInfo> options, Context mContext) {
-        super(options);
+    List<UserInfo> peerList;
+    public PeerInfoRecyclerAdapter(List<UserInfo> peerList,Context mContext) {
+        this.peerList = peerList;
         this.mContext = mContext;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull UserInfo model) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            UserInfo model = peerList.get(position);
             holder.authorName.setText(model.getName());
             holder.authorRno.setText(model.getRno());
             holder.authorDept.setText(model.getDept_name());
@@ -33,6 +37,12 @@ public class PeerInfoRecyclerAdapter extends FirestoreRecyclerAdapter<UserInfo,P
                     .placeholder(R.drawable.loadme)
                     .into(holder.profileImage);
     }
+
+    @Override
+    public int getItemCount() {
+        return peerList.size();
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,14 +66,14 @@ public class PeerInfoRecyclerAdapter extends FirestoreRecyclerAdapter<UserInfo,P
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                        listener.onItemClick(position);
                     }
                 }
             });
         }
     }
     public interface OnItemClickListener {
-        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+        void onItemClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

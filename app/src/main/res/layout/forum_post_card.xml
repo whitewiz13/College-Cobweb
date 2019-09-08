@@ -26,6 +26,7 @@
         android:fontFamily="@font/oswald"
         android:layout_marginTop="5sp"
         android:layout_width="wrap_content"
+        android:textSize="17sp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/fname"
@@ -33,7 +34,10 @@
     <ImageView
         android:id="@+id/forumImageView"
         android:layout_below="@id/fdetail"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="20sp"
         android:layout_width="400sp"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
@@ -59,6 +63,7 @@
         android:id="@+id/justaline"
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_marginTop="20sp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_below="@+id/forumImageView"
@@ -73,7 +78,7 @@
         android:textStyle="bold"
         android:text="Author Text"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="40px" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/authorRno"
@@ -85,7 +90,7 @@
         android:textStyle="bold"
         android:text="Author Rno"
         android:textColor="@color/colorPrimary"
-        android:textSize="40px" />
+        android:textSize="16sp" />
     <View
         android:id="@+id/justaline2"
         android:layout_width="match_parent"
@@ -117,7 +122,7 @@
         android:text="0" />
 
     <TextView
-        android:id="@+id/commentButton"
+        android:id="@+id/commentTextOnly"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/fcomments"
@@ -145,14 +150,27 @@
         android:background="@drawable/ic_delete"
         android:gravity="center" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/upVoteButton"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_below="@id/fUpvotes"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
         android:layout_marginStart="10dp"
+        android:layout_below="@id/fUpvotes"
         android:layout_marginTop="15sp"
-        android:background="@drawable/ic_upvote"
+        android:src="@drawable/ic_upvote"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        />
+    <ImageButton
+        android:id="@+id/commentButton"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_marginStart="25dp"
+        android:layout_below="@id/fUpvotes"
+        android:layout_toEndOf="@+id/upVoteButton"
+        android:layout_marginTop="15sp"
+        android:src="@drawable/ic_chat"
+        android:background="?attr/selectableItemBackgroundBorderless"
         />
 
 </RelativeLayout>

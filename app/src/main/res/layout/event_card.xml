@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -29,7 +28,7 @@
                 android:text="Event Heading!"
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/eventtext" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/edetail"
@@ -40,12 +39,14 @@
                 android:textColor="@color/colorBlack"
                 android:maxLines="2"
                 android:text="Details about even heading!"
-                android:textSize="@dimen/edetailtext" />
+                android:textSize="17sp" />
             <ImageView
-                android:layout_marginTop="5sp"
+                android:layout_marginTop="20sp"
                 android:id="@+id/eventImageView"
                 android:layout_below="@id/edetail"
                 android:layout_width="400sp"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
             <View
@@ -77,7 +78,7 @@
                 android:text="Just now"
                 android:textStyle="bold"
                 android:textColor="@color/colorBlack"
-                android:textSize="40px" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/peerAuthorText"
@@ -89,7 +90,7 @@
                 android:fontFamily="@font/oswald"
                 android:text="Author Text"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="40px" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/peerAuthorRno"
@@ -101,10 +102,10 @@
                 android:fontFamily="@font/oswald"
                 android:text="Author Rno"
                 android:textColor="@color/colorPrimary"
-                android:textSize="40px" />
+                android:textSize="16sp" />
             <TextView
                 android:id="@+id/showmore"
-                android:layout_width="47dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/edate"
                 android:layout_alignStart="@+id/ename"
@@ -114,7 +115,7 @@
                 android:text="'Show More'"
                 android:textStyle="bold"
                 android:textAlignment="center"
-                android:textSize="@dimen/showmore" />
+                android:textSize="13sp" />
             <TextView
                 android:id="@+id/delete"
                 android:layout_width="47dp"
@@ -126,7 +127,7 @@
                 android:fontFamily="@font/oswald"
                 android:text="Delete"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/showmore" />
+                android:textSize="13sp" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/peerProfileImage"
@@ -134,7 +135,7 @@
                 android:layout_height="42dp"
                 android:layout_centerVertical="true"
                 android:layout_below="@id/justaline"
-                android:src="@drawable/here"
+                android:src="@drawable/loadme"
                 app:civ_border_color="@color/colorWhite"
                 app:civ_border_width="3dp" />
 

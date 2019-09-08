@@ -37,7 +37,6 @@ public class InstituteListAdapter extends RecyclerView.Adapter<InstituteListAdap
         holder.collegeDetail.setText(collegeInfo.getCollegeAbout());
         holder.collegeRating.setText(collegeInfo.getCollegeRating());
         holder.collegeAddress.setText(collegeInfo.getCollegeAddress());
-        holder.popularCourse.setText(collegeInfo.getPopularCourses());
         if(collegeInfo.getCollegeImage() != null)
         {
             GlideApp.with(mContext)
@@ -73,7 +72,7 @@ public class InstituteListAdapter extends RecyclerView.Adapter<InstituteListAdap
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView collegeName,collegeDetail,collegeRating,collegeAddress,popularCourse,showMore;
+        TextView collegeName,collegeDetail,collegeRating,collegeAddress,showMore;
         ImageView collegeImage;
         Button exploreButton;
         public MyViewHolder(View view){
@@ -82,7 +81,6 @@ public class InstituteListAdapter extends RecyclerView.Adapter<InstituteListAdap
             collegeDetail = view.findViewById(R.id.collegeDetail);
             collegeRating = view.findViewById(R.id.ratingText);
             collegeAddress = view.findViewById(R.id.locationText);
-            popularCourse = view.findViewById(R.id.popularCourseText);
             collegeImage = view.findViewById(R.id.instituteImageView);
             showMore = view.findViewById(R.id.instituteShowMore);
             exploreButton = view.findViewById(R.id.instituteExplore);

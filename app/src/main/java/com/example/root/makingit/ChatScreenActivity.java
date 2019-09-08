@@ -13,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -104,7 +103,7 @@ public class ChatScreenActivity extends AppCompatActivity {
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot != null) {
                     db.collection("users").document(Objects.requireNonNull(authUid)).collection("chats")
-                            .document(id).set(new ChatMainModel(messsage,chatsModel.getChattime(),id,documentSnapshot.getString("name"),
+                            .document(id).set(new ChatMainModel("(Sent) "+messsage,chatsModel.getChattime(),id,documentSnapshot.getString("name"),
                             documentSnapshot.getString("rno")));
                 }
             }

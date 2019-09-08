@@ -1,43 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="192dp"
     android:background="@drawable/nav_back"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:orientation="vertical"
-    android:gravity="bottom">
+    android:gravity="bottom"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/peerProfileImage"
         android:layout_width="59dp"
         android:layout_height="61dp"
+        android:layout_alignParentTop="true"
         android:src="@drawable/defaultpic"
         app:civ_border_color="@color/colorWhite"
         app:civ_border_width="1dp" />
     <TextView
         android:id = "@+id/suname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ravenscroft"
-        android:textSize="30dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
-
-    <TextView
-        android:id="@+id/surno"
+        android:layout_below="@+id/peerProfileImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ravenscroft"
+        android:fontFamily="@font/oswald"
+        android:textStyle="bold"
+        android:text="Loading"
+        android:textColor="@color/colorWhite"
+        android:textSize="20dp" />
+    <TextView
+        android:id="@+id/repPoints"
+        android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginStart="10sp"
+        android:text="200 REP"
+        android:textSize="15dp"
+        android:fontFamily="@font/oswald"
+        android:textColor="@color/colorWhite"
+        android:layout_toEndOf="@+id/peerProfileImage"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/surno"
+        android:layout_below="@+id/suname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/oswald"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
         android:text="CUHP00IT00"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20dp" />
+        android:textSize="15dp" />
 
     <TextView
+        android:layout_below="@+id/surno"
         android:id="@+id/sudept"
-        android:layout_width="match_parent"
-        android:fontFamily="@font/ravenscroft"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:fontFamily="@font/oswald"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:layout_height="wrap_content"
+        android:textSize="12dp"
         android:text="MSC OO" />
 
-</LinearLayout>
+</RelativeLayout>

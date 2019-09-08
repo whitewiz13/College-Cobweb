@@ -2,9 +2,7 @@ package com.example.root.makingit;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +23,7 @@ import java.util.Objects;
 
 public class ChatsAdapter extends FirestoreRecyclerAdapter<ChatsModel,ChatsAdapter.MyViewHolder> {
 
+    FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
     private Context mContext;
     public ChatsAdapter(@NonNull FirestoreRecyclerOptions<ChatsModel> options, Context mContext) {
         super(options);
@@ -44,7 +43,6 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<ChatsModel,ChatsAdapt
     }
     public void setDifferentDesign(MyViewHolder holder,ChatsModel model)
     {
-        FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
         String authId = auth.getUid();
         String compID = model.getChatpersonid();
         if(Objects.equals(compID, authId))

@@ -1,13 +1,10 @@
 package com.example.root.makingit;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class FragmentDept extends Fragment {
     CardView collegeCardView;
@@ -89,7 +87,7 @@ public class FragmentDept extends Fragment {
     }
     public void checkForCollege(final View view)
     {
-        db.collection("users").document(auth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.getString("dept")==null)
@@ -159,18 +157,22 @@ public class FragmentDept extends Fragment {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             final CollegeInfo collegeInfo = documentSnapshot.toObject(CollegeInfo.class);
-                            collegeName.setText(collegeInfo.getCollegeName());
-                            collegeAbout.setText(collegeInfo.getCollegeAbout());
-                            collegeRating.setText(collegeInfo.getCollegeRating());
-                            collegeAddress.setText(collegeInfo.getCollegeAddress());
-                            popularCourses.setText(collegeInfo.getPopularCourses());
-                            if(collegeInfo.getCollegeImage() != null)
+                            if(collegeInfo!=null) {
+                                collegeName.setText(collegeInfo.getCollegeName());
+                                collegeAbout.setText(collegeInfo.getCollegeAbout());
+                                collegeRating.setText(collegeInfo.getCollegeRating());
+                                collegeAddress.setText(collegeInfo.getCollegeAddress());
+                                popularCourses.setText(collegeInfo.getPopularCourses());
+                            }
+                            if(collegeInfo!=null && collegeInfo.getCollegeImage() != null)
                             {
-                                GlideApp.with(getActivity().getApplicationContext())
-                                        .load(collegeInfo.getCollegeImage())
-                                        .placeholder(R.drawable.loadme)
-                                        .into(collegeImage);
-                                collegeImage.setVisibility(View.VISIBLE);
+                                if(getActivity()!=null) {
+                                    GlideApp.with(getActivity().getApplicationContext())
+                                            .load(collegeInfo.getCollegeImage())
+                                            .placeholder(R.drawable.loadme)
+                                            .into(collegeImage);
+                                    collegeImage.setVisibility(View.VISIBLE);
+                                }
                             }
                             else {
                                 collegeImage.setVisibility(View.GONE);
@@ -179,8 +181,11 @@ public class FragmentDept extends Fragment {
                                 @Override
                                 public void onClick(View view) {
                                     Map<String,Object> myMap = new HashMap<>();
-                                    myMap.put("dept",collegeInfo.getCollegeId());
-                                    myMap.put("dept_name",collegeInfo.getCollegeName());
+                                    if(collegeInfo!=null) {
+                                        myMap.put("dept", collegeInfo.getCollegeId());
+                                        myMap.put("dept_name", collegeInfo.getCollegeName());
+                                    }
+                                    if(auth.getCurrentUser()!=null)
                                     db.collection("users").document(auth.getCurrentUser().getUid())
                                             .update(myMap);
                                     myListener.collegeUpdated();
@@ -211,9 +216,10 @@ public class FragmentDept extends Fragment {
     }
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new FragmentDeptNotice(), "Notice");
-        adapter.addFragment(new FragmentDeptSubject(), "Subject Help");
+        adapter.addFragment(new FragmentDeptNotice(), "Events");
         adapter.addFragment(new FragmentDeptOther(), "Peers");
+        adapter.addFragment(new FragmentDeptSubject(), "Reviews");
+        adapter.addFragment(new FragmentDeptSubject(), "Alumni");
         viewPager.setAdapter(adapter);
     }
     @Override

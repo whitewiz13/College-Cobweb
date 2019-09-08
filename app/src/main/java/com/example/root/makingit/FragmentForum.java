@@ -146,13 +146,13 @@ public class FragmentForum extends Fragment {
         }
         else {
             forumProgressBar.setVisibility(View.INVISIBLE);
-            doStuffListener.makeSnackB("End of Forums!");
         }
     }
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.addEventButton).setVisible(false);
         menu.findItem(R.id.addDeptEventButton).setVisible(false);
+        menu.findItem(R.id.searchButton).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 }

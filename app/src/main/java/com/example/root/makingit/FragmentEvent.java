@@ -8,6 +8,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +28,9 @@ import java.util.List;
 
 
 public class FragmentEvent extends Fragment{
+    Boolean searching = false;
     List<EventInfo> eventList = new ArrayList<>();
+    List<EventInfo> allList = new ArrayList<>();
     DocumentSnapshot lastVisible=null;
     private ProgressBar progressBar;
     SwipeRefreshLayout swipeContainer;
@@ -60,7 +63,10 @@ public class FragmentEvent extends Fragment{
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadEventList();
+                if(!searching)
+                    loadEventList();
+                else
+                    swipeContainer.setRefreshing(false);
             }
         });
         return view;
@@ -68,6 +74,7 @@ public class FragmentEvent extends Fragment{
     public void loadEventList()
     {
         eventList.clear();
+        allList.clear();
         progressBar.setVisibility(View.VISIBLE);
         final Query query = eventRef.orderBy("edate", Query.Direction.DESCENDING).limit(5);
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -86,7 +93,8 @@ public class FragmentEvent extends Fragment{
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-        adapter = new EventRecyclerAdapter(eventList,getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
+        if(getActivity()!=null)
+            adapter = new EventRecyclerAdapter(eventList,getActivity().getApplicationContext(), new EventRecyclerAdapter.OnActionListener() {
             @Override
             public void showSnackBar(String msg) {
                 doStuffListener.makeSnackB(msg);
@@ -116,10 +124,20 @@ public class FragmentEvent extends Fragment{
                 }
             });
         }
+        //NOT DISPLAYING
+        final Query query2 = eventRef.orderBy("edate", Query.Direction.DESCENDING);
+        query2.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    allList.add(documentSnapshot.toObject(EventInfo.class));
+                }
+            }
+        });
     }
     public void loadNextList()
     {
-        if(lastVisible!=null) {
+        if(lastVisible!=null && !searching) {
             final int lastSize = eventList.size();
             final Query query = eventRef.orderBy("edate", Query.Direction.DESCENDING).startAfter(lastVisible)
                     .limit(10);
@@ -145,19 +163,64 @@ public class FragmentEvent extends Fragment{
         }
         else {
             progressBar.setVisibility(View.INVISIBLE);
-            doStuffListener.makeSnackB("End of Events!");
         }
+    }
+    public void showSearchResult(String searchText)
+    {
+        searchText = searchText.toLowerCase();
+        progressBar.setVisibility(View.VISIBLE);
+        final List<EventInfo> resultList = new ArrayList<>();
+        resultList.clear();
+        for (EventInfo eventInfo : allList)  {
+            if (eventInfo.getEname() != null && eventInfo.getEname().toLowerCase().contains(searchText) || eventInfo.getEdetail().toLowerCase().contains(searchText)) {
+                resultList.add(eventInfo);
+            }
+        }
+        adapter = new EventRecyclerAdapter(resultList, getContext(), new EventRecyclerAdapter.OnActionListener() {
+            @Override
+            public void showSnackBar(String msg) {
+                doStuffListener.makeSnackB(msg);
+            }
+
+            @Override
+            public void makeLoadingSnackBar(String msg) {
+                doStuffListener.makeLoadingSnackBar(msg);
+            }
+
+            @Override
+            public void dismissSnackBar() {
+                doStuffListener.dismissSnackBar();
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
     public void onPrepareOptionsMenu(Menu menu)
     {
         menu.findItem(R.id.addDeptEventButton).setVisible(false);
         menu.findItem(R.id.addForumPostButton).setVisible(false);
-        menu.findItem(R.id.searchButton).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        MenuItem menuitem = menu.findItem(R.id.searchButton);
+        SearchView mSearchView = (SearchView) menuitem.getActionView();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                eventList.add(0,new EventInfo("123","123","123","123",null));
-                adapter.notifyItemInserted(0);
-                adapter.notifyItemRangeChanged(0,eventList.size());
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(!newText.isEmpty()) {
+                    showSearchResult(newText);
+                    searching=true;
+                }
+                return false;
+            }
+        });
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                loadEventList();
+                searching = false;
                 return false;
             }
         });

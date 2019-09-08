@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,12 +38,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener {
@@ -153,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
+                if(account!=null)
+                    firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
               progressBar.setVisibility(View.GONE);
             }
@@ -161,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     }
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        db.collection("taken_email").document(acct.getEmail()).get().addOnSuccessListener(
+        db.collection("taken_email").document(Objects.requireNonNull(acct.getEmail())).get().addOnSuccessListener(
                 new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -207,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                     if (!document.exists()) {
                         WriteBatch batch = db.batch();
                         DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
-                        UserInfo userInfo = new UserInfo(docRef.getId(),account.getDisplayName(),"Not Available",null,account.getEmail(),account.getPhotoUrl().toString(),null);
+                        UserInfo userInfo = new UserInfo(docRef.getId(),account.getDisplayName(),"Not Available",null,account.getEmail(), Objects.requireNonNull(account.getPhotoUrl()).toString(),null);
                         batch.set(docRef,userInfo);
                         batch.commit();
                         progressBar.setVisibility(View.GONE);
@@ -262,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                             if (ppass.length() < 6) {
                                 pass.setError(getString(R.string.minimun_length));
                             } else {
-                                Toast.makeText(MainActivity.this, getString(R.string.auth_failed)+" " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, getString(R.string.auth_failed)+" " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Intent intent = new Intent(MainActivity.this, Home.class);
@@ -282,10 +278,12 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     String uid = documentSnapshot.getString("more_stuff");
                     try {
+                        if (uid != null) {
                             db.collection("users").document(uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     userName = documentSnapshot.getString("email");
+                                    if (userName != null) {
                                         auth.signInWithEmailAndPassword(userName, ppass)
                                                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                                     @Override
@@ -295,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                                                             if (ppass.length() < 6) {
                                                                 pass.setError(getString(R.string.minimun_length));
                                                             } else {
-                                                                Toast.makeText(MainActivity.this, getString(R.string.auth_failed) + " " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(MainActivity.this, getString(R.string.auth_failed) + " " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                                                             }
                                                         } else {
                                                             Intent intent = new Intent(MainActivity.this, Home.class);
@@ -312,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                                                 progressBar.setVisibility(View.GONE);
                                             }
                                         });
+                                    }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -320,6 +319,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                                     progressBar.setVisibility(View.GONE);
                                 }
                             });
+                        }
                     }catch (Exception e)
                     {
                         Toast.makeText(getApplicationContext(),"Invalid Username!",Toast.LENGTH_SHORT).show();

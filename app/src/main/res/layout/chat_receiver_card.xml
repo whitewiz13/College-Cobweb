@@ -27,14 +27,12 @@
         <TextView
             android:id="@+id/chatTime"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/chatMessage"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_below="@+id/chatMessage"
             android:paddingStart="15sp"
-            android:textSize="12sp"
             android:paddingEnd="10sp"
             android:paddingBottom="5sp"
-            android:text="12:00" />
-
+            android:text="12:00"
+            android:textSize="12sp" />
     </RelativeLayout>
 </RelativeLayout>

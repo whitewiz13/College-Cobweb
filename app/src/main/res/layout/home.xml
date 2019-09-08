@@ -27,6 +27,14 @@
             android:background="@color/colorPrimary"
             android:theme="@style/ToolbarTheme" />
         </android.support.design.widget.AppBarLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchingEverything"
+            android:visibility="gone"
+            android:background="@drawable/background_border_line"
+            android:elevation="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
             <FrameLayout
                 android:id="@+id/fragmentMain"
                 android:name="com.example.root.makingit.fragmentEven"

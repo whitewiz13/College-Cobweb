@@ -14,10 +14,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -40,13 +40,7 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
         holder.lastmessage.setText(model.getMessage());
         holder.uname.setText(model.getUname());
         holder.chatuserid.setText(model.getUsernameid());
-        Date date = model.getChattime();
-        String creationDate = "Loading..";
-        if (date != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-            creationDate = dateFormat.format(date);
-        }
-        holder.chattime.setText(creationDate);
+        setUpDateAndTime(model.getChattime(),holder);
         db.collection("users").document(model.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -68,7 +62,29 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
                     }
                 });
     }
-
+    public void setUpDateAndTime(Date date,MyViewHolder holder)
+    {
+        Date nowDate = new Date();
+        String creationDate = "just now";
+        long timeInMilliSeconds = 0;
+        if(date!=null)
+            timeInMilliSeconds = nowDate.getTime()-date.getTime();
+        long seconds = timeInMilliSeconds / 1000;
+        if(seconds < 60)
+            holder.chattime.setText("Just now");
+        else if(nowDate.getDay() > date.getDay())
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd, MMM hh:mm a", Locale.ENGLISH);
+            creationDate = dateFormat.format(date);
+            holder.chattime.setText(creationDate);
+        }
+        else
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+            creationDate = dateFormat.format(date);
+            holder.chattime.setText(creationDate);
+        }
+    }
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

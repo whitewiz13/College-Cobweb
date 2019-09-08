@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +27,7 @@ public class FragmentChat extends FragmentDept {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_chat,container,false);
         myListener = (departmentListener) getActivity();
         if(myListener!=null) {
@@ -62,5 +64,13 @@ public class FragmentChat extends FragmentDept {
             }
         });
         return view;
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.addEventButton).setVisible(false);
+        menu.findItem(R.id.addDeptEventButton).setVisible(false);
+        menu.findItem(R.id.addForumPostButton).setVisible(false);
+        menu.findItem(R.id.searchButton).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 }

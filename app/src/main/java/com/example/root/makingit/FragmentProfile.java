@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.DataSource;
@@ -98,6 +97,11 @@ public class FragmentProfile extends Fragment {
             public void onClick(View view) {
                     if (editMode == 1) {
                         editMode = 0;
+                        if(name.getText().toString().length() > 20)
+                        {
+                            Toast.makeText(getActivity(),"Name too long (Max 20 characters)!",Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         updateUserDate();
                         disableAll();
                     } else {
@@ -235,6 +239,7 @@ public class FragmentProfile extends Fragment {
         menu.findItem(R.id.addEventButton).setVisible(false);
         menu.findItem(R.id.addDeptEventButton).setVisible(false);
         menu.findItem(R.id.addForumPostButton).setVisible(false);
+        menu.findItem(R.id.searchButton).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
     public void disableAll()

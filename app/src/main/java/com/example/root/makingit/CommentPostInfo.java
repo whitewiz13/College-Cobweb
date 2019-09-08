@@ -7,14 +7,22 @@ import java.util.Date;
 public class CommentPostInfo {
     @ServerTimestamp
     Date commenttime;
-    String commenterid,commentid;
+    String commenterid;
+    String commentid;
     String commenttext;
+    String downvotes;
+    String upvotes;
+    String replies;
+
     public CommentPostInfo()
     {
 
     }
-    public CommentPostInfo(String commenterid,String commenttext)
+    public CommentPostInfo(String commenterid,String commenttext,String upvotes,String downvotes,String replies)
     {
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
+        this.replies = replies;
         this.commenterid = commenterid;
         this.commenttext = commenttext;
     }
@@ -48,6 +56,30 @@ public class CommentPostInfo {
     public void setCommenttime(Date commenttime) {
         this.commenttime = commenttime;
     }
+    public String getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(String downvotes) {
+        this.downvotes = downvotes;
+    }
+
+    public String getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(String upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public String getReplies() {
+        return replies;
+    }
+
+    public void setReplies(String replies) {
+        this.replies = replies;
+    }
+
 
 
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -36,6 +37,7 @@ public class FragmentBrowseInstitute extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_browse_institutes,container,false);
         insProgress  =view.findViewById(R.id.instituteProgressBar);
         browseInList = view.findViewById(R.id.browseInList);
@@ -68,5 +70,19 @@ public class FragmentBrowseInstitute extends Fragment {
         browseInList.setAdapter(adapter);
         browseInList.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.notifyDataSetChanged();
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if(menu.findItem(R.id.addEventButton)!=null) {
+            menu.findItem(R.id.addEventButton).setVisible(false);
+        }
+        if(menu.findItem(R.id.addForumPostButton)!=null) {
+            menu.findItem(R.id.addForumPostButton).setVisible(false);
+        }
+        if(menu.findItem(R.id.addDeptEventButton)!=null)
+        {
+            menu.findItem(R.id.addDeptEventButton).setVisible(false);
+        }
+        super.onPrepareOptionsMenu(menu);
     }
 }

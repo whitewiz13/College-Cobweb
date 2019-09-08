@@ -118,7 +118,7 @@
         <Button
             android:id="@+id/reg"
             android:layout_below="@id/rpass"
-            android:layout_marginTop="100px"
+            android:layout_marginTop="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/background_border_line"

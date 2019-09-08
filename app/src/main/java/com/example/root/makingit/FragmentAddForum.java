@@ -34,6 +34,7 @@ public class FragmentAddForum extends FragmentAddEvent {
     final int PICK_IMAGE_REQUEST = 1;
     private Uri filePath;
     FirebaseStorage storage;
+    Button addImage;
     StorageReference storageReference;
     @Override
     public void onActivityCreated(Bundle arg0) {
@@ -55,7 +56,7 @@ public class FragmentAddForum extends FragmentAddEvent {
         storageReference = storage.getReference();
         mListener = (onForumAdded) getActivity();
         Button enter = view.findViewById(R.id.forumEnter);
-        Button addImage =view.findViewById(R.id.addForumImage);
+        addImage =view.findViewById(R.id.addForumImage);
         ename = view.findViewById(R.id.forumName);
         edetail = view.findViewById(R.id.forumDetail);
         addImage.setOnClickListener(loadImage);
@@ -100,6 +101,10 @@ public class FragmentAddForum extends FragmentAddEvent {
                 && data != null && data.getData() != null )
         {
             filePath = data.getData();
+            if(addImage!=null)
+            {
+                addImage.setBackground(getResources().getDrawable(R.drawable.ic_check));
+                addImage.setEnabled(false);}
         }
     }
     public void saveForumData(final String evname,final String evdetail)
@@ -111,12 +116,14 @@ public class FragmentAddForum extends FragmentAddEvent {
         {
             Bitmap bmp = null;
             try {
-                bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                bmp = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), filePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            if (bmp != null) {
+                bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            }
             byte[] data = baos.toByteArray();
             final StorageReference ref = storageReference.child("forum_pics/"+ Objects.requireNonNull(docRef.getId()));
             ref.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

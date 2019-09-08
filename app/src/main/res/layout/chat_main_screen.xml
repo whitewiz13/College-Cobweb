@@ -5,61 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:elevation="3dp">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/background_border"
-            android:elevation="5dp"
-            android:padding="10dp">
+            android:layout_marginTop="10sp"
+            android:layout_marginEnd="10sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginBottom="5sp">
 
             <TextView
                 android:id="@+id/chatUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/chatMainTime"
                 android:layout_alignStart="@+id/chatLastMessage"
-                android:layout_alignTop="@+id/chatProfilePic"
+
                 android:fontFamily="@font/josefina"
                 android:text="Author Text"
                 android:textColor="@color/colorBlack"
-                android:textSize="50px" />
-            <TextView
-                android:id="@+id/justadot"
-                android:layout_marginStart="5sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/chatUserName"
-                android:layout_alignTop="@+id/chatProfilePic"
-                android:fontFamily="@font/josefina"
-                android:text="."
-                android:textColor="@color/colorBlack"
-                android:textSize="50px" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/chatUserId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/chatUserName"
-                android:layout_alignTop="@+id/chatProfilePic"
+                android:layout_below="@+id/chatUserName"
                 android:fontFamily="@font/josefina"
                 android:layout_marginStart="10sp"
+                android:layout_toEndOf="@id/chatProfilePic"
                 android:text="UserID"
                 android:textColor="@color/colorBlack"
-                android:textSize="50px" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/chatLastMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/chatUserName"
+                android:layout_below="@+id/chatUserId"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5sp"
                 android:fontFamily="@font/oswald"
@@ -71,9 +53,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/chatProfilePic"
-                android:layout_width="73dp"
-                android:layout_height="86dp"
-                android:layout_below="@id/justaline"
+                android:layout_width="63dp"
+                android:layout_height="76dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/loadme"
                 app:civ_border_color="@color/colorWhite"
@@ -86,10 +67,17 @@
                 android:paddingStart="10sp"
                 android:paddingEnd="10sp"
                 android:paddingBottom="5sp"
+                android:textSize="13sp"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@+id/chatLastMessage"
-                android:layout_marginTop="0dp"
                 android:text="12:00" />
+            <View
+                android:id="@+id/justaline2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10sp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_below="@+id/chatLastMessage"
+                android:background="#d3d3d3" />
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
 </RelativeLayout>

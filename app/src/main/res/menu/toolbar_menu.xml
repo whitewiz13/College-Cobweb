@@ -4,6 +4,7 @@
         android:id="@+id/searchButton"
         android:icon="@drawable/ic_search"
         android:title="Search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
     <item
         android:id="@+id/addDeptEventButton"

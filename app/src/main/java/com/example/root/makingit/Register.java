@@ -11,11 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,11 +26,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firestore.v1.Write;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,7 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class Register extends AppCompatActivity {
-    FirebaseMessaging firebaseMessagingService;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ProgressBar progressBar;
     private EditText email, password;
