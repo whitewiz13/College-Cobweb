@@ -3,17 +3,16 @@ package com.example.root.makingit;
 public class CollegeInfo {
     public String collegeName;
     public String collegeAddress;
-    public String collegeRating;
+    public long collegeRating;
     public String collegeAbout;
     public String popularCourses;
     public String collegeId;
-
     String collegeImage;
     public CollegeInfo()
     {
 
     }
-    public CollegeInfo(String collegeName,String collegeAddress,String collegeRating,String collegeAbout,String popularCourses,String collegeImage
+    public CollegeInfo(String collegeName,String collegeAddress,long collegeRating,String collegeAbout,String popularCourses,String collegeImage
     ,String collegeId)
     {
         this.collegeName = collegeName;
@@ -37,10 +36,10 @@ public class CollegeInfo {
     public void setCollegeAddress(String collegeAddress) {
         this.collegeAddress = collegeAddress;
     }
-    public String getCollegeRating() {
+    public long getCollegeRating() {
         return collegeRating;
     }
-    public void setCollegeRating(String collegeRating) {
+    public void setCollegeRating(long collegeRating) {
         this.collegeRating = collegeRating;
     }
     public String getCollegeAbout() {

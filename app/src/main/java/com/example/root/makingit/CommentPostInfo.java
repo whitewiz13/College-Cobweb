@@ -1,5 +1,6 @@
 package com.example.root.makingit;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -13,7 +14,46 @@ public class CommentPostInfo {
     String downvotes;
     String upvotes;
     String replies;
+    public int getCount() {
+        return count;
+    }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public Boolean getUpvoted() {
+        return upvoted;
+    }
+
+    public void setUpvoted(Boolean upvoted) {
+        this.upvoted = upvoted;
+    }
+    @Exclude
+    int countDown;
+    @Exclude
+    Boolean downvoted;
+
+    public int getCountDown() {
+        return countDown;
+    }
+
+    public void setCountDown(int countDown) {
+        this.countDown = countDown;
+    }
+
+    public Boolean getDownvoted() {
+        return downvoted;
+    }
+
+    public void setDownvoted(Boolean downvoted) {
+        this.downvoted = downvoted;
+    }
+
+    @Exclude
+    int count;
+    @Exclude
+    Boolean upvoted;
     public CommentPostInfo()
     {
 

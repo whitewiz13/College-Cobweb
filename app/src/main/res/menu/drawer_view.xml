@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <group android:checkableBehavior="single" android:id="@+id/group1">
-        <item
+        <!---<item
             android:icon="@drawable/ic_event_note"
             android:id="@+id/nav_events"
             android:title="Events"
             android:checked="true"
-        />
+        />-->
+        <item
+            android:icon="@drawable/ic_dept"
+            android:id="@+id/nav_dept"
+            android:checked="true"
+            android:title="My College" />
+        <item
+            android:icon="@drawable/ic_forum"
+            android:id="@+id/nav_forum"
+            android:title="Forum" />
         <item
             android:icon="@drawable/ic_profile"
             android:id="@+id/nav_myprofile"
             android:title="My Profile" />
         <item
-            android:icon="@drawable/ic_dept"
-            android:id="@+id/nav_dept"
-            android:title="My College" />
-        <item
             android:id="@+id/nav_browse_college"
             android:icon="@drawable/ic_search"
             android:title="Browse Institutes"/>
-        <item
-            android:icon="@drawable/ic_forum"
-            android:id="@+id/nav_forum"
-            android:title="Forum" />
         <item
             android:icon="@drawable/ic_chat"
             android:id="@+id/nav_chat"

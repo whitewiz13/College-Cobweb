@@ -52,30 +52,29 @@ public class FragmentDeptOther extends Fragment{
         peerList.clear();
         mydb.collection("users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid())
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Query query = userRef.whereEqualTo("dept", Objects.requireNonNull(documentSnapshot).getString("dept"));
-                query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            peerList.add(documentSnapshot.toObject(UserInfo.class));
-                            adapter = new PeerInfoRecyclerAdapter(peerList,getContext());
-                            peerRecycler.setAdapter(adapter);
-                            peerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            adapter.setOnItemClickListener(new PeerInfoRecyclerAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(int position) {
-                                    UserInfo model = peerList.get(position);
-                                    String id = model.getUid();
-                                    Intent i = new Intent(getActivity(), UserProfileOpenActivity.class);
-                                    i.putExtra("userId",id);
-                                    startActivity(i);
-                                }
-                            });
-                        }
-                    }
-                });
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Query query = userRef.whereEqualTo("dept", Objects.requireNonNull(documentSnapshot).getString("dept"));
+                        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    peerList.add(documentSnapshot.toObject(UserInfo.class)); }
+                                adapter = new PeerInfoRecyclerAdapter(peerList,getContext());
+                                peerRecycler.setAdapter(adapter);
+                                peerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                adapter.setOnItemClickListener(new PeerInfoRecyclerAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        UserInfo model = peerList.get(position);
+                                        String id = model.getUid();
+                                        Intent i = new Intent(getActivity(), UserProfileOpenActivity.class);
+                                        i.putExtra("userId",id);
+                                        startActivity(i);
+                                    }
+                                });
+                            }
+                        });
 
             }
         });

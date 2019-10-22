@@ -28,18 +28,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String sender = data.get("sender");
         String message = data.get("body");
         String upvoterId = data.get("");
-        if(sender != null) {
-            String authId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-            String receiver =data.get("receiver");
-            String checkSender = data.get("checksender");
-            String senderName = data.get("sendername");
-            sendChatNotification(authId,message,receiver,checkSender,senderName,sender);
+        try {
+            if (sender != null) {
+                String authId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+                String receiver = data.get("receiver");
+                String checkSender = data.get("checksender");
+                String senderName = data.get("sendername");
+                sendChatNotification(authId, message, receiver, checkSender, senderName, sender);
+            } else {
+                String title = data.get("title");
+                String author = data.get("author");
+                String dept = data.get("dept");
+                checkCreator(author, title, message, dept);
+            }
         }
-        else {
-            String title = data.get("title");
-            String author = data.get("author");
-            String dept = data.get("dept");
-            checkCreator(author, title, message, dept);
+        catch (Exception e)
+        {
+
         }
     }
     public void sendChatNotification(String authId, String message,String receiverId,String checkSender,String senderName,String senderId)

@@ -31,6 +31,10 @@ public class FragmentDeptAddEvent extends DialogFragment {
     {
         void dismissMe(DialogFragment frag);
         void makeSnackB(String msg);
+        void addedDeptEvent(DeptEventInfo deptEventInfo);
+        void addedReview(ReviewModel reviewModel);
+        void makeLoadingSnackBar(String msg);
+        void dismissSnackBar();
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState)
     {
@@ -75,6 +79,7 @@ public class FragmentDeptAddEvent extends DialogFragment {
                         .collection("events").document();
                 DeptEventInfo deptEvent = new DeptEventInfo(docRef.getId(),evname,evdetail,evauthor,documentSnapshot.getString("dept"));
                 docRef.set(deptEvent);
+                listner.addedDeptEvent(deptEvent);
             }
         });
     }

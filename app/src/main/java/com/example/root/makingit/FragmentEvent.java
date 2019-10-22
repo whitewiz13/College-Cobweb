@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -45,7 +45,7 @@ public class FragmentEvent extends Fragment{
         void makeLoadingSnackBar(String msg);
         void dismissSnackBar();
     }
-    private onDoStuffForActivity doStuffListener;
+      private onDoStuffForActivity doStuffListener;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -55,7 +55,7 @@ public class FragmentEvent extends Fragment{
         swipeContainer = view.findViewById(R.id.swipeView);
         doStuffListener = (onDoStuffForActivity) getActivity();
         if (doStuffListener != null) {
-            doStuffListener.makeLoadingSnackBar("Loading Events..");
+            doStuffListener.makeLoadingSnackBar("Loading Events...");
             doStuffListener.setActionBarTitle("Events");
         }
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -110,9 +110,18 @@ public class FragmentEvent extends Fragment{
 
             }
         });
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),1)
+        {
+            @Override
+            public boolean supportsPredictiveItemAnimations()
+            {
+                return true;
+            }
+        };
+        recyclerView.setLayoutManager(gridLayoutManager);
+        adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         if (eventScroll != null) {
             eventScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
@@ -165,6 +174,11 @@ public class FragmentEvent extends Fragment{
             progressBar.setVisibility(View.INVISIBLE);
         }
     }
+    public void added(EventInfo eventInfo)
+    {
+        eventList.add(0,eventInfo);
+        adapter.notifyDataSetChanged();
+    }
     public void showSearchResult(String searchText)
     {
         searchText = searchText.toLowerCase();
@@ -192,8 +206,18 @@ public class FragmentEvent extends Fragment{
                 doStuffListener.dismissSnackBar();
             }
         });
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),1)
+        {
+            @Override
+            public boolean supportsPredictiveItemAnimations()
+            {
+                return true;
+            }
+        };
+        recyclerView.setLayoutManager(gridLayoutManager);
+        adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
     }
     public void onPrepareOptionsMenu(Menu menu)
     {

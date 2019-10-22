@@ -110,7 +110,7 @@ public class UserProfileOpenActivity extends AppCompatActivity {
                     if (uinfo != null) {
                         uNameAct.setText(uinfo.getName());
                         uRnoAct.setText(uinfo.getRno());
-                        uDeptAct.setText(uinfo.getDept());
+                        uDeptAct.setText(uinfo.getDept_name());
                         uAboutAct.setText(uinfo.getAbout());
                             GlideApp.with(getApplicationContext())
                                     .load(uinfo.getUimage())

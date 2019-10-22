@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,6 +24,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 public class InstituteMainActivity extends AppCompatActivity {
     TabLayout tabLayout;
@@ -79,7 +80,7 @@ public class InstituteMainActivity extends AppCompatActivity {
     //Setup Actionbar
     public void setUpActionBar(ActionBar actionbar,CollegeInfo collegeInfo)
     {
-        GlideApp.with(this)
+        GlideApp.with(getApplicationContext())
                 .asBitmap()
                 .load(collegeInfo.getCollegeImage())
                 .placeholder(R.drawable.loadme)
@@ -92,16 +93,25 @@ public class InstituteMainActivity extends AppCompatActivity {
                 });
         collapsingToolbarLayout.setTitle(collegeInfo.getCollegeName());
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarThemeAppBar);
+        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.ToolbarThemeAppBarCollap);
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setHomeAsUpIndicator(R.drawable.ic_back_arrow);
         }
     }
     private void setupViewPager(ViewPager viewPager) {
+        Bundle bundle = new Bundle();
+        Bundle bundle1 = new Bundle();
+        bundle.putString("collegeId", id);
+        bundle1.putInt("hideIt",1);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        FragmentInstituteMore frag = new FragmentInstituteMore();
+        FragmentAlumni alumniFrag = new FragmentAlumni();
+        frag.setArguments(bundle);
+        alumniFrag.setArguments(bundle1);
         adapter.addFragment(new FragmentInstituteAbout(), "About");
-        adapter.addFragment(new FragmentInstituteCourse(), "Courses");
-        adapter.addFragment(new FragmentInstituteMore(), "Alumni");
+        adapter.addFragment(frag, "Reviews");
+        adapter.addFragment(alumniFrag, "Alumni");
         viewPager.setAdapter(adapter);
     }
 

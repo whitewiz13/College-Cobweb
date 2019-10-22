@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,10 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
         holder.lastmessage.setText(model.getMessage());
         holder.uname.setText(model.getUname());
         holder.chatuserid.setText(model.getUsernameid());
+        if(model.getSender())
+                holder.sentThis.setVisibility(View.VISIBLE);
+        else
+            holder.sentThis.setVisibility(View.GONE);
         setUpDateAndTime(model.getChattime(),holder);
         db.collection("users").document(model.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -66,6 +71,32 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
     {
         Date nowDate = new Date();
         String creationDate = "just now";
+        SimpleDateFormat dateFormat;
+        long timeInMilliSeconds = 0;
+        if(date!=null)
+            timeInMilliSeconds = nowDate.getTime()-date.getTime();
+        long seconds = timeInMilliSeconds / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+        if(seconds<60)
+            holder.chattime.setText("Just now");
+        else if(hours<24)  {
+            dateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+            creationDate = dateFormat.format(date);
+            holder.chattime.setText(creationDate);
+        }
+        else if(hours >=24 && hours <48)
+        {
+            holder.chattime.setText("Yesterday");
+        }
+        else {
+            dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+            creationDate = dateFormat.format(date);
+            holder.chattime.setText(creationDate);
+        }
+     /*   Date nowDate = new Date();
+        String creationDate = "just now";
         long timeInMilliSeconds = 0;
         if(date!=null)
             timeInMilliSeconds = nowDate.getTime()-date.getTime();
@@ -74,16 +105,16 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
             holder.chattime.setText("Just now");
         else if(nowDate.getDay() > date.getDay())
         {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd, MMM hh:mm a", Locale.ENGLISH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("mm/dd/yy", Locale.ENGLISH);
             creationDate = dateFormat.format(date);
             holder.chattime.setText(creationDate);
         }
         else
         {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.ENGLISH);
             creationDate = dateFormat.format(date);
             holder.chattime.setText(creationDate);
-        }
+        }*/
     }
     @NonNull
     @Override
@@ -96,9 +127,11 @@ public class ChatMainAdapter extends FirestoreRecyclerAdapter<ChatMainModel,Chat
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
         TextView uname,lastmessage,chattime,chatuserid;
+        ImageButton sentThis;
         CircleImageView chatImage;
         public MyViewHolder(View itemView) {
             super(itemView);
+            sentThis = itemView.findViewById(R.id.sentProof);
             chatuserid = itemView.findViewById(R.id.chatUserId);
             uname = itemView.findViewById(R.id.chatUserName);
             lastmessage = itemView.findViewById(R.id.chatLastMessage);

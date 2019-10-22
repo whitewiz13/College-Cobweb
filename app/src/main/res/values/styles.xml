@@ -1,4 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -25,8 +26,13 @@
     </style>
     <style name="ToolbarThemeAppBar">
         <item name="android:fontFamily">@font/josefina</item>
-        <item name="android:textStyle"></item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">20sp</item>
+    </style>
+    <style name="ToolbarThemeAppBarCollap">
+        <item name="android:fontFamily">@font/josefina</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">19sp</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="android:windowBackground">@color/colorWhite</item>

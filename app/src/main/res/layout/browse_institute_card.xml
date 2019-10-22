@@ -28,11 +28,11 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/eventtext" />
-
             <TextView
                 android:id="@+id/collegeDetail"
                 android:layout_width="match_parent"
                 android:layout_marginTop="5sp"
+                android:ellipsize="end"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/justaline2"
                 android:fontFamily="@font/oswald"
@@ -40,39 +40,142 @@
                 android:textColor="@color/colorBlack"
                 android:text="Details about even heading!"
                 android:textSize="@dimen/edetailtext" />
-            <TextView
-                android:id="@+id/ratingLabel"
+            <RelativeLayout
+                android:id="@+id/instituteRating"
+                android:layout_marginTop="30sp"
+                android:layout_below="@id/collegeDetail"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="10sp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/instituteShowMore"
-                android:textColor="@color/colorBlack"
-                android:text="Rating : "/>
-            <TextView
-                android:id="@+id/ratingText"
-                android:textColor="@color/colorBlack"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="10sp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/instituteShowMore"
-                android:layout_toEndOf="@+id/ratingLabel"
-                android:textStyle="bold"
-                android:text="4.0"/>
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/realStars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/starFirst"
+                        android:layout_width="30sp"
+                        android:clickable="false"
+                        android:layout_height="30sp"
+                        android:tint="@color/colorGrey"
+                        android:src="@drawable/ic_star"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+                    <ImageButton
+                        android:id="@+id/starSecond"
+                        android:layout_width="30sp"
+                        android:layout_height="30sp"
+                        android:clickable="false"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                    <ImageButton
+                        android:id="@+id/starThird"
+                        android:layout_width="30sp"
+                        android:clickable="false"
+                        android:layout_height="30sp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                    <ImageButton
+                        android:id="@+id/starFourth"
+                        android:layout_width="30sp"
+                        android:layout_height="30sp"
+                        android:clickable="false"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                    <ImageButton
+                        android:id="@+id/starFifth"
+                        android:layout_width="30sp"
+                        android:layout_height="30sp"
+                        android:clickable="false"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/insProgress"
+                    android:layout_width="20sp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginStart="5sp"
+                    android:layout_toEndOf="@+id/realStars"
+                    android:layout_height="20sp"/>
+                <TextView
+                    android:layout_below="@+id/realStars"
+                    android:id="@+id/instituteRatingText"
+                    android:layout_marginTop="5sp"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/josefina"
+                    android:layout_marginStart="10sp"
+                    android:text="0"/>
+
+                <TextView
+                    android:layout_below="@+id/realStars"
+                    android:id="@+id/textView11"
+                    android:layout_marginTop="5sp"
+                    android:layout_toEndOf="@+id/instituteRatingText"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/josefina"
+                    android:text=" Stars"/>
+                <TextView
+                    android:layout_below="@+id/realStars"
+                    android:id="@+id/textView12"
+                    android:layout_marginTop="5sp"
+                    android:layout_toEndOf="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/josefina"
+                    android:text=" ("/>
+                <TextView
+                    android:layout_below="@+id/realStars"
+                    android:layout_toEndOf="@+id/textView12"
+                    android:id="@+id/instituteNumberOfUsers"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginTop="5sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/josefina"
+                    android:text=" 0"/>
+                <TextView
+                    android:layout_below="@+id/realStars"
+                    android:id="@+id/textView13"
+                    android:layout_marginTop="5sp"
+                    android:layout_toEndOf="@+id/instituteNumberOfUsers"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/josefina"
+                    android:text=" Votes"/>
+                <TextView
+                    android:layout_below="@+id/realStars"
+                    android:id="@+id/textView14"
+                    android:layout_marginTop="5sp"
+                    android:layout_toEndOf="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/josefina"
+                    android:text=" )"/>
+            </RelativeLayout>
             <TextView
                 android:id="@+id/locationLabel"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="20sp"
                 android:textColor="@color/colorBlack"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ratingLabel"
+                android:layout_below="@+id/instituteRating"
                 android:text="Location : "/>
             <TextView
                 android:id="@+id/locationText"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="20sp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorBlack"
-                android:layout_below="@+id/ratingText"
+                android:layout_below="@+id/instituteRating"
                 android:textStyle="bold"
                 android:layout_toEndOf="@+id/locationLabel"
                 android:text="LOC"/>

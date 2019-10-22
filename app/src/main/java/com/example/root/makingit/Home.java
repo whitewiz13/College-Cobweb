@@ -1,7 +1,6 @@
 package com.example.root.makingit;
 
 import android.app.NotificationManager;
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +23,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
@@ -56,7 +55,7 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
 ,FragmentForum.onDoStuffForActivity,FragmentDeptNotice.departmentListener,FragmentAddForum.onForumAdded
 ,FragmentBrowseInstitute.onDoStuffForActivity{
 
-    String fTag="fEvent";
+    String fTag="fDept";
     private boolean exit = false;
     RecyclerView searchEverything;
     Snackbar loadingSnack,sbView;
@@ -100,8 +99,8 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
             dismissNotifications();
             //checkVerifiedEmail();
             loadUserData();
-            fragment = new FragmentEvent();
-            setFragment(fragment, "fEvent");
+            fragment = new FragmentDept();
+            setFragment(fragment, "fDept");
             navigationView.setNavigationItemSelectedListener(drawerItemSelect);
             mDrawerLayout.addDrawerListener(drawerStateListener);
             checkToOpenChat(extras);
@@ -145,6 +144,12 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
         public void onDrawerStateChanged(int newState) { }
         @Override
         public void onDrawerOpened(@NonNull View drawerView) {
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            if(inputManager!=null){
+            inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);}
     }
         @Override
         public void onDrawerClosed(@NonNull View drawerView) {
@@ -186,10 +191,6 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                 case R.id.nav_myprofile:
                     fragment= new FragmentProfile();
                     fTag = "fProfile";
-                    break;
-                case R.id.nav_events:
-                    fragment = new FragmentEvent();
-                    fTag = "fEvent";
                     break;
                 case R.id.nav_dept:
                     fragment = new FragmentDept();
@@ -418,14 +419,18 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
                 loadingSnack.dismiss();
         }
     }
-
     @Override
-    public void tellAboutAddition() {
+    public void tellAboutAddition(EventInfo eventInfo) {
+        /*
         Fragment frg = getSupportFragmentManager().findFragmentByTag("fEvent");
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.detach(frg);
         ft.attach(frg);
         ft.commit();
+
+        FragmentEvent fragmentEvent = (FragmentEvent) getSupportFragmentManager().findFragmentByTag("fEvent");
+        fragmentEvent.added(eventInfo);
+         */
     }
 
     @Override
@@ -445,10 +450,6 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.addEventButton:
-                frag=new FragmentAddEvent();
-                setDialogFragment(frag);
-                break;
             case R.id.addDeptEventButton:
                 frag = new FragmentDeptAddEvent();
                 setDialogFragment(frag);
@@ -542,12 +543,28 @@ public class Home extends AppCompatActivity implements FragmentEvent.onDoStuffFo
     { makeSnackBar(msg); }
 
     @Override
-    public void addedForumPost() {
+    public void addedDeptEvent(DeptEventInfo deptEventInfo) {
+        FragmentDept fragmentDept = (FragmentDept) getSupportFragmentManager().findFragmentByTag("fDept");
+        fragmentDept.addedEvent(deptEventInfo);
+    }
+
+    @Override
+    public void addedReview(ReviewModel reviewModel) {
+        FragmentDept fragmentDept = (FragmentDept) getSupportFragmentManager().findFragmentByTag("fDept");
+        fragmentDept.addedReview(reviewModel);
+    }
+
+
+    @Override
+    public void addedForumPost(ForumPostInfo forumPostInfo) {
+        /*
         Fragment frg = getSupportFragmentManager().findFragmentByTag("fForum");
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.detach(frg);
         ft.attach(frg);
-        ft.commit();
+        ft.commit();*/
+        FragmentForum fragmentForum = (FragmentForum) getSupportFragmentManager().findFragmentByTag("fForum");
+        fragmentForum.added(forumPostInfo);
     }
 
     @Override

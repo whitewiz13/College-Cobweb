@@ -6,16 +6,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,7 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -47,10 +50,10 @@ public class ForumPostCommentActivity extends AppCompatActivity {
     RecyclerView postCommentRec;
     CommentPostAdapter adapter;
     Query colRef;
+    List<CommentPostInfo> commentList = new ArrayList<>();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forum_post_comment_activity);
-        makeLoadingSnackBar("Loading Comments...");
         postComment = findViewById(R.id.postCommentButton);
         postComments =findViewById(R.id.postComments);
         forumPostImage = findViewById(R.id.forumPostMainImage);
@@ -59,6 +62,15 @@ public class ForumPostCommentActivity extends AppCompatActivity {
         postDetail = findViewById(R.id.postDetail);
         tb = findViewById(R.id.forumPostToolbar);
         postCommentRec = findViewById(R.id.postCommentsSection);
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!commentTypeBox.getText().toString().equals("")) {
+                    uploadAndSaveComment(commentTypeBox.getText().toString(), id);
+                    commentTypeBox.setText("");
+                }
+            }
+        });
         setSupportActionBar(tb);
         ab = getSupportActionBar();
         tb.setTitleTextColor(getResources().getColor(R.color.colorWhite));
@@ -96,37 +108,39 @@ public class ForumPostCommentActivity extends AppCompatActivity {
                     }
                 }
             });
+            loadCommentList();
         }
+    }
+    public void loadCommentList()
+    {
+        makeLoadingSnackBar("Loading Comments...");
+        commentList.clear();
         colRef = db.collection("forum_posts").document(id).collection("comments")
                 .orderBy("commenttime",Query.Direction.DESCENDING);
-        FirestoreRecyclerOptions<CommentPostInfo> options = new FirestoreRecyclerOptions.Builder<CommentPostInfo>()
-                .setQuery(colRef,CommentPostInfo.class)
-                .build();
-        adapter = new CommentPostAdapter(options,getApplicationContext(),id)
-        {
+        colRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onDataChanged()
-            {
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    commentList.add(documentSnapshot.toObject(CommentPostInfo.class)); }
+                adapter = new CommentPostAdapter(commentList,getApplicationContext(),id);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(ForumPostCommentActivity.this,1)
+                {
+                    @Override
+                    public boolean supportsPredictiveItemAnimations()
+                    {
+                        return true;
+                    }
+                };
+                adapter.setHasStableIds(true);
+                postCommentRec.setLayoutManager(gridLayoutManager);
+                postCommentRec.setAdapter(adapter);
                 dismissSnackBar();
             }
-        };
-        postCommentRec.setAdapter(adapter);
-        postCommentRec.setHasFixedSize(false);
-        postCommentRec.setLayoutManager(new LinearLayoutManager(this));
-        postComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!commentTypeBox.getText().toString().equals("")) {
-                    uploadAndSaveComment(commentTypeBox.getText().toString(), id);
-                    commentTypeBox.setText("");
-                }
-            }
         });
-        adapter.startListening();
     }
     public void uploadAndSaveComment(String commentText,final String id)
     {
-        CommentPostInfo postObject = new CommentPostInfo(authUid,commentText,"0","0","0");
+        final CommentPostInfo postObject = new CommentPostInfo(authUid,commentText,"0","0","0");
         db.collection("forum_posts").document(id).collection("comments")
                 .add(postObject).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
@@ -134,10 +148,12 @@ public class ForumPostCommentActivity extends AppCompatActivity {
                 String commentID = Objects.requireNonNull(task.getResult()).getId();
                 db.collection("forum_posts").document(id).collection("comments")
                         .document(commentID).update("commentid",commentID);
+                postObject.setCommentid(commentID);
+                commentList.add(0,postObject);
+                adapter.notifyDataSetChanged();
                 trackComments(model,postComments);
             }
         });
-
     }
     public void trackComments(final ForumPostInfo model, final TextView commentText)
     {
@@ -164,7 +180,14 @@ public class ForumPostCommentActivity extends AppCompatActivity {
             loadingSnack = Snackbar.make(findViewById(R.id.commentPostScreen), msg, Snackbar.LENGTH_INDEFINITE);
             loadingSnack.show();
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public void dismissSnackBar() {
             loadingSnack.dismiss();
     }

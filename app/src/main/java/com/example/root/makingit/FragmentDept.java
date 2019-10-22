@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,7 +37,8 @@ import java.util.Objects;
 
 public class FragmentDept extends Fragment {
     CardView collegeCardView;
-    TextView collegeName,collegeAddress,collegeAbout,collegeRating,popularCourses;
+    ProgressBar progressBar;
+    TextView collegeName,collegeAddress,collegeAbout,collegeRating;
     ImageView collegeImage;
     Button checkYes,checkNo;
     RecyclerView collegeRecycler;
@@ -61,13 +63,16 @@ public class FragmentDept extends Fragment {
     {
         setHasOptionsMenu(true);
         myListener = (departmentListener) getActivity();
+        if (myListener != null) {
+            myListener.makeLoadingSnackBar("Loading...");
+        }
         View view = inflater.inflate(R.layout.fragment_dept,viewGroup, false);
+        progressBar = view.findViewById(R.id.deptProgress);
         collegeName = view.findViewById(R.id.collegeName);
         collegeAbout = view.findViewById(R.id.collegeDetail);
         collegeRating = view.findViewById(R.id.ratingText);
         collegeCardView = view.findViewById(R.id.collegeCardView);
         collegeAddress =view.findViewById(R.id.locationText);
-        popularCourses = view.findViewById(R.id.popularCourseText);
         collegeImage = view.findViewById(R.id.instituteImageView);
         checkYes = view.findViewById(R.id.checkYes);
         checkNo = view.findViewById(R.id.checkNo);
@@ -79,9 +84,10 @@ public class FragmentDept extends Fragment {
     }
     public  void setUpFragments(View view)
     {
+        myListener.dismissSnackBar();
         viewPager = view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
         tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -102,13 +108,29 @@ public class FragmentDept extends Fragment {
                 {
                     RelativeLayout setupCollege = view.findViewById(R.id.setUpCollege);
                     setupCollege.setVisibility(View.GONE);
-                    setUpFragments(view);
+                    try {
+                        setUpFragments(view);
+                    }catch (Exception e)
+                    {
+                        
+                    }
                 }
             }
         });
     }
+    public void addedReview(ReviewModel reviewModel)
+    {
+        FragmentDeptSubject fragmentReview =(FragmentDeptSubject) getChildFragmentManager().getFragments().get(viewPager.getCurrentItem());
+        fragmentReview.added(reviewModel);
+    }
+    public void addedEvent(DeptEventInfo deptEventInfo)
+    {
+        FragmentDeptNotice fragmentDeptNotice =(FragmentDeptNotice) getChildFragmentManager().getFragments().get(viewPager.getCurrentItem());
+        fragmentDeptNotice.added(deptEventInfo);
+    }
     public  void doFindCollege(View view)
     {
+        myListener.dismissSnackBar();
         Query query = collegeDBRef;
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -137,10 +159,10 @@ public class FragmentDept extends Fragment {
     }
     public void searchList(String searchText) {
         if(searchText!=null && !searchText.equals("")){
-        searchText = searchText.toUpperCase();
+        searchText = searchText.toLowerCase();
         final List<CollegeListSearchModel> resultList = new ArrayList<>();
         for (CollegeListSearchModel user : collegeSearchList)  {
-            if (user.getCollegeName() != null && user.getCollegeName().contains(searchText) || user.getCollegeAddress().contains(searchText)) {
+            if (user.getCollegeName() != null && (user.getCollegeId().toLowerCase().contains(searchText) || user.getCollegeName().toLowerCase().contains(searchText) || user.getCollegeAddress().toLowerCase().contains(searchText))) {
                 resultList.add(user);
             }
         }
@@ -160,9 +182,8 @@ public class FragmentDept extends Fragment {
                             if(collegeInfo!=null) {
                                 collegeName.setText(collegeInfo.getCollegeName());
                                 collegeAbout.setText(collegeInfo.getCollegeAbout());
-                                collegeRating.setText(collegeInfo.getCollegeRating());
+                                collegeRating.setText(String.valueOf(collegeInfo.getCollegeRating()));
                                 collegeAddress.setText(collegeInfo.getCollegeAddress());
-                                popularCourses.setText(collegeInfo.getPopularCourses());
                             }
                             if(collegeInfo!=null && collegeInfo.getCollegeImage() != null)
                             {
@@ -219,12 +240,13 @@ public class FragmentDept extends Fragment {
         adapter.addFragment(new FragmentDeptNotice(), "Events");
         adapter.addFragment(new FragmentDeptOther(), "Peers");
         adapter.addFragment(new FragmentDeptSubject(), "Reviews");
-        adapter.addFragment(new FragmentDeptSubject(), "Alumni");
+        adapter.addFragment(new FragmentAlumni(), "Alumni");
         viewPager.setAdapter(adapter);
     }
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.addEventButton).setVisible(false);
+        menu.findItem(R.id.sortElements).setVisible(false);
+        //menu.findItem(R.id.addEventButton).setVisible(false);
         menu.findItem(R.id.addForumPostButton).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }

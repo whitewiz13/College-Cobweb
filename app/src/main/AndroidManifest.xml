@@ -65,6 +65,9 @@
         <activity android:name=".InstituteMainActivity"
             android:theme="@style/AppTheme.MyNoActionBarTrans"
             android:label="@string/title_activity_main"/>
+        <activity android:name=".AddAlumniActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.MyNoActionBar"/>
     </application>
 
 </manifest>

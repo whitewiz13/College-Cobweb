@@ -5,10 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -27,6 +28,7 @@ public class FragmentForum extends Fragment {
     List<ForumPostInfo> forumList =new ArrayList<>();
     DocumentSnapshot lastVisible=null;
     private NestedScrollView nestedScrollView;
+    String crit = "fupvote";
     ProgressBar forumProgressBar;
     SwipeRefreshLayout forumSwipeRefresh;
     public onDoStuffForActivity doStuffListener;
@@ -56,23 +58,23 @@ public class FragmentForum extends Fragment {
         forumSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadPosts();
+                loadPosts(crit);
             }
         });
-        loadPosts();
+        loadPosts(crit);
         return view;
     }
 
-    public void loadPosts() {
+    public void loadPosts(final String cri) {
         forumList.clear();
-        forumList = new ArrayList<>();
         forumProgressBar.setVisibility(View.VISIBLE);
-        Query query = eventRef.orderBy("fdate", Query.Direction.DESCENDING).limit(5);
+        Query query = eventRef.orderBy(cri, Query.Direction.DESCENDING).limit(15);
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    forumList.add(documentSnapshot.toObject(ForumPostInfo.class));
+                    ForumPostInfo model = documentSnapshot.toObject(ForumPostInfo.class);
+                        forumList.add(model);
                 }
                 if (queryDocumentSnapshots.size() != 0) {
                     lastVisible = queryDocumentSnapshots.getDocuments()
@@ -100,29 +102,39 @@ public class FragmentForum extends Fragment {
                 doStuffListener.dismissSnackBar();
             }
         });
-
+        adapter.setHasStableIds(true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),1)
+        {
+            @Override
+            public boolean supportsPredictiveItemAnimations()
+            {
+                return true;
+            }
+        };
+        forumRecycler.setLayoutManager(gridLayoutManager);
         forumRecycler.setAdapter(adapter);
-        forumRecycler.setItemViewCacheSize(20);
-        forumRecycler.setDrawingCacheEnabled(true);
-        forumRecycler.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        forumRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         if (nestedScrollView != null) {
             nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                     if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                         forumProgressBar.setVisibility(View.VISIBLE);
-                        loadNextForum();
+                        loadNextForum(cri);
                     }
                 }
             });
         }
     }
-    public void loadNextForum()
+    public void added(ForumPostInfo forumPostInfo)
+    {
+        forumList.add(0,forumPostInfo);
+        adapter.notifyDataSetChanged();
+    }
+    public void loadNextForum(final String cri)
     {
         if(lastVisible!=null) {
             final int lastSize = forumList.size();
-            final Query query = eventRef.orderBy("fdate", Query.Direction.DESCENDING).startAfter(lastVisible)
+            final Query query = eventRef.orderBy(cri, Query.Direction.DESCENDING).startAfter(lastVisible)
                     .limit(10);
             query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
@@ -150,9 +162,25 @@ public class FragmentForum extends Fragment {
     }
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.addEventButton).setVisible(false);
+        //menu.findItem(R.id.addEventButton).setVisible(false);
         menu.findItem(R.id.addDeptEventButton).setVisible(false);
         menu.findItem(R.id.searchButton).setVisible(false);
+       menu.findItem(R.id.sortFresh).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+           @Override
+           public boolean onMenuItemClick(MenuItem menuItem) {
+               crit = "fdate";
+               loadPosts(crit);
+               return false;
+           }
+       });
+        menu.findItem(R.id.sortTrend).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                crit = "fupvote";
+                loadPosts(crit);
+                return false;
+            }
+        });
         super.onPrepareOptionsMenu(menu);
     }
 }

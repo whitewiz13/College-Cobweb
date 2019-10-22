@@ -1,6 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-</android.support.constraint.ConstraintLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/totalRating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10sp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_border_line"
+                android:elevation="5dp">
+                <TextView
+                    android:id="@+id/totalRatingNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/oswald"
+                    android:text="0.0"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="40sp" />
+                <ProgressBar
+                    android:id="@+id/deptSubjectProgress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:elevation="5sp"
+                    android:indeterminateTintMode="src_atop"
+                    android:indeterminateTint="@color/colorBlack"
+                    android:visibility="visible" />
+                <LinearLayout
+                    android:layout_below="@+id/totalRatingNumber"
+                    android:id="@+id/totalRatingStars"
+                    android:layout_marginTop="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/totalStarFirst"
+                        android:layout_width="50sp"
+                        android:scaleType="fitCenter"
+                        android:layout_height="50sp"
+                        android:tint="@color/colorGold"
+                        android:src="@drawable/ic_star"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+                    <ImageButton
+                        android:id="@+id/totalStarSecond"
+                        android:layout_width="50sp"
+                        android:layout_height="50sp"
+                        android:scaleType="fitCenter"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                    <ImageButton
+                        android:id="@+id/totalStarThird"
+                        android:layout_width="50sp"
+                        android:layout_height="50sp"
+                        android:scaleType="fitCenter"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                    <ImageButton
+                        android:id="@+id/totalStarFourth"
+                        android:layout_width="50sp"
+                        android:scaleType="fitCenter"
+                        android:layout_height="50sp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                    <ImageButton
+                        android:id="@+id/totalStarFifth"
+                        android:layout_width="50sp"
+                        android:layout_height="50sp"
+                        android:scaleType="fitCenter"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/colorGrey" />
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_below="@+id/totalRatingStars"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/oswald"
+                        android:text="Based on "
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/numberOfReviews"
+                        android:layout_width="wrap_content"
+                        android:layout_toEndOf="@id/textView1"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/oswald"
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/oswald"
+                        android:layout_toEndOf="@+id/numberOfReviews"
+                        android:text=" reviews"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/reviewMain"
+                android:layout_below="@+id/totalRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.RecyclerView
+                    android:padding="10sp"
+                    android:id="@+id/reviewList"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

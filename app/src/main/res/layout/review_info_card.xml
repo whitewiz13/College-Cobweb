@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_margin="5sp"
+    android:padding="10sp"
+    android:elevation="3sp"
+    android:background="@drawable/background_border"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userProfilePic"
+        android:src="@drawable/defaultpic"
+        android:layout_width="40sp"
+        android:layout_marginTop="7sp"
+        android:layout_height="40sp">
+    </de.hdodenhof.circleimageview.CircleImageView>
+    <TextView
+        android:layout_marginStart="20sp"
+        android:layout_toEndOf="@+id/userProfilePic"
+        android:id="@+id/reviewAuthor"
+        android:layout_marginTop="7sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="User Name" />
+    <TextView
+        android:id="@+id/reviewText"
+        android:layout_marginTop="5sp"
+        android:layout_toEndOf="@+id/userProfilePic"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:fontFamily="@font/josefina"
+        android:layout_marginStart="20sp"
+        android:layout_below="@+id/reviewAuthor"
+        android:layout_marginBottom="7sp"
+        android:layout_width="match_parent"
+        android:text="'Everything is awesome in this world! Except not that good'"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:id="@+id/starsRating"
+        android:layout_marginStart="20sp"
+        android:layout_marginBottom="7sp"
+        android:layout_marginTop="5sp"
+        android:layout_toEndOf="@+id/userProfilePic"
+        android:layout_below="@id/reviewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/realReviewStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/RStarFirst"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:clickable="false"
+                android:tint="@color/colorGold"
+                android:src="@drawable/ic_star"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+            <ImageButton
+                android:id="@+id/RStarSecond"
+                android:clickable="false"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_star"
+                android:tint="@color/colorGold" />
+            <ImageButton
+                android:id="@+id/RStarThird"
+                android:layout_width="30sp"
+                android:clickable="false"
+                android:layout_height="30sp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_star"
+                android:tint="@color/colorGold" />
+            <ImageButton
+                android:id="@+id/RStarFourth"
+                android:layout_width="30sp"
+                android:clickable="false"
+                android:layout_height="30sp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_star"
+                android:tint="@color/colorGold" />
+            <ImageButton
+                android:id="@+id/RStarFifth"
+                android:layout_width="30sp"
+                android:clickable="false"
+                android:layout_height="30sp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_star"
+                android:tint="@color/colorGold" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

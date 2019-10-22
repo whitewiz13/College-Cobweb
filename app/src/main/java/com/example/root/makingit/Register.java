@@ -8,12 +8,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
+
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,6 +61,20 @@ public class Register extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        InputFilter filterName = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    int type = Character.getType(source.charAt(i));
+                    //System.out.println("Type : " + type);
+                    if (type == Character.SURROGATE || type == Character.OTHER_SYMBOL || type == Character.MATH_SYMBOL || type ==
+                    Character.CURRENCY_SYMBOL) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
         overridePendingTransition(R.anim.item_fall_down, R.anim.slide_out);
         setContentView(R.layout.register);
         storage = FirebaseStorage.getInstance();
@@ -67,6 +87,10 @@ public class Register extends AppCompatActivity {
         password= findViewById(R.id.rpass);
         btnreg= findViewById(R.id.reg);
         progressBar = findViewById(R.id.progressBBar);
+        email.setFilters(new InputFilter[]{filterName});
+        rollnumber.setFilters(new InputFilter[]{filterName});
+        password.setFilters(new InputFilter[]{filterName});
+        fname.setFilters(new InputFilter[]{filterName});
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,33 +100,65 @@ public class Register extends AppCompatActivity {
         btnreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputMethodManager inputManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                assert inputManager != null;
-                inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
-                String eemail = email.getText().toString().trim();
-                String ppass = password.getText().toString().trim();
-                if (TextUtils.isEmpty(eemail)) {
-                    showToast("Enter Email address!");
-                    btnreg.setEnabled(true);
-                    return;
-                }
-                if (TextUtils.isEmpty(ppass)) {
-                    showToast("Enter Password!");
-                    btnreg.setEnabled(true);
-                    return;
-                }
-                if (ppass.length() < 6) {
-                    showToast("Password too short, enter minimum 6 characters!");
-                    btnreg.setEnabled(true);
-                    return;
-                }
-                rno=rollnumber.getText().toString();
-                checkRNumTakenAndSave(rno,eemail,ppass);
-
+     startRegister();
             }
         });
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    startRegister();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+    }
+    public void startRegister()
+    {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert inputManager != null;
+        inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        String eemail = email.getText().toString().trim();
+        String ppass = password.getText().toString().trim();
+        if(TextUtils.isEmpty(fname.getText().toString()))
+        {
+            showToast("Enter Name!");
+            btnreg.setEnabled(true);
+            return;
+        }
+        if(TextUtils.isEmpty(rollnumber.getText().toString()))
+        {
+            showToast("Enter Username!");
+            btnreg.setEnabled(true);
+            return;
+        }
+        if(rollnumber.getText().toString().contains(" "))
+        {
+            showToast("No spaces allowed in Username!");
+            btnreg.setEnabled(true);
+            return;
+        }
+        if (TextUtils.isEmpty(eemail)) {
+            showToast("Enter Email address!");
+            btnreg.setEnabled(true);
+            return;
+        }
+        if (TextUtils.isEmpty(ppass)) {
+            showToast("Enter Password!");
+            btnreg.setEnabled(true);
+            return;
+        }
+        if (ppass.length() < 6) {
+            showToast("Password too short, enter minimum 6 characters!");
+            btnreg.setEnabled(true);
+            return;
+        }
+        rno=rollnumber.getText().toString().trim();
+        checkRNumTakenAndSave(rno,eemail,ppass);
     }
     public void checkRNumTakenAndSave(String rnoo,final String eemail,final String ppass)
     {
@@ -253,6 +309,7 @@ public class Register extends AppCompatActivity {
         firebaseMessagingService.unsubscribeFromTopic("pushMSCZOOLOGYEvent");
         firebaseMessagingService.subscribeToTopic("push"+dept+"Event");
     }*/
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

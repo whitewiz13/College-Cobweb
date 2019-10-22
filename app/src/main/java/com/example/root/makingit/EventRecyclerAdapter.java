@@ -88,10 +88,6 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
         holder.ename.setText(model.getEname());
         holder.edetail.setText(model.getEdetail());
         holder.edate.setText(creationDate);
-        if(FirebaseStorage.getInstance().getReference(model.getEid())==null)
-        {
-            Toast.makeText(mContext,"SomethingBad", Toast.LENGTH_LONG).show();
-        }
         if(model.eventImage != null)
         {
 
@@ -171,7 +167,7 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
                                                     mListener.showSnackBar("Successfully Deleted!");
                                                     eventList.remove(position);
                                                     notifyItemRemoved(position);
-                                                    notifyItemRangeChanged(position, eventList.size());
+                                                    notifyDataSetChanged();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -192,7 +188,7 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
                                             mListener.showSnackBar("Successfully Deleted!");
                                             eventList.remove(position);
                                             notifyItemRemoved(position);
-                                            notifyItemRangeChanged(position, eventList.size());
+                                            notifyDataSetChanged();
                                         }
                                     });
                         }
@@ -203,7 +199,7 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
                     mListener.showSnackBar("Successfully Deleted!");
                     eventList.remove(position);
                     notifyItemRemoved(position);
-                    notifyItemRangeChanged(position,eventList.size());
+                    notifyDataSetChanged();
                     db.collection("events").document(album.getEid())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -220,7 +216,11 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
             }
         });
     }
-    public void getUserInfo(final MyViewHolder holder,String eauthor)
+    @Override
+    public long getItemId(int position) {
+        return eventList.get(position).hashCode();
+    }
+    public void getUserInfo(final MyViewHolder holder, String eauthor)
     {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(eauthor);

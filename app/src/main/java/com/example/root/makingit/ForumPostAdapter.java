@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,12 +16,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,6 +25,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Date;
@@ -46,6 +44,7 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
     private Context mContext;
     public FirebaseAuth auth = FirebaseAuth.getInstance();
     public FirebaseFirestore db= FirebaseFirestore.getInstance();
+    String uid = auth.getCurrentUser().getUid();
     List<ForumPostInfo> forumList;
     public ForumPostAdapter(List<ForumPostInfo> forumList,Context mContext, OnActionListener mListener) {
         this.forumList = forumList;
@@ -59,14 +58,14 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
     }
     @Override
     public void onBindViewHolder(@NonNull final ForumPostAdapter.MyViewHolder holder, int position) {
+        holder.upVote.setEnabled(false);
         final ForumPostInfo model = forumList.get(position);
+        loadUpvoteCommentData(model,holder);
         loadAuthorInfo(holder,model);
         setUpDateAndTime(model.getFdate(),holder);
         setUpCommentButton(holder,model.getFid());
         doDeleteButton(holder,model,position);
-        doUpVoteButton(holder,model);
         checkForUserPost(model,holder);
-        trackUpVotes(model,holder);
         holder.fname.setText(model.getFname());
         holder.fdetail.setText(model.getFdetail());
         holder.fcomments.setText(model.getFcomment());
@@ -85,11 +84,94 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
         holder.upVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkAlreadyUpvoted(model,holder);
+                if(!model.getUpvoted())
+                {
+                    model.setCount(Integer.parseInt(holder.fupvotes.getText().toString()));
+                    holder.upVote.setImageTintList(ColorStateList.valueOf(Color.BLUE));
+                    model.setUpvoted(true);
+                    model.setCount(model.getCount()+1);
+                    model.setFupvote(String.valueOf(model.getCount()));
+                    holder.fupvotes.setText(String.valueOf(model.getCount()));
+                    writeToDb(model,model.getUpvoted());
+                }
+                else
+                {
+                    model.setCount(Integer.parseInt(holder.fupvotes.getText().toString()));
+                    holder.upVote.setImageTintList(ColorStateList.valueOf(Color.GRAY));
+                    model.setUpvoted(false);
+                    model.setCount(model.getCount()-1);
+                    model.setFupvote(String.valueOf(model.getCount()));
+                    holder.fupvotes.setText(String.valueOf(model.getCount()));
+                    writeToDb(model,model.getUpvoted());
+                }
             }
         });
     }
+    public void writeToDb(final ForumPostInfo model,Boolean added)
+    {
+        if(added) {
+            Map<String, Object> myMap = new HashMap<>();
+            myMap.put("more_stuff", "blank");
+            db.collection("forum_posts").document(model.getFid()).collection("upvotes")
+                    .document(uid).set(myMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    countUpvotes(model);
+                }
+            });
+        }
+        else
+        {
+            db.collection("forum_posts").document(model.getFid()).collection("upvotes")
+                    .document(uid).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    countUpvotes(model);
+                }
+            });
+        }
+    }
+    public void countUpvotes(final ForumPostInfo model)
+    {
 
+        db.collection("forum_posts").document(model.getFid()).collection("upvotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int count = 0;
+                        for (DocumentSnapshot ignored : queryDocumentSnapshots) {
+                            count++;
+                        }
+                        model.setCount(count);
+                        db.collection("forum_posts").document(model.getFid()).update("fupvote",String.valueOf(count));
+                    }
+                });
+    }
+    @Override
+    public long getItemId(int position) {
+        return forumList.get(position).hashCode();
+    }
+    public void loadUpvoteCommentData(final ForumPostInfo model, final MyViewHolder holder)
+    {
+        db.collection("forum_posts").document(model.getFid()).collection("upvotes")
+                .document(uid).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot != null) {
+                            if (documentSnapshot.exists()) {
+                                model.setUpvoted(true);
+                                holder.upVote.setImageTintList(ColorStateList.valueOf(Color.BLUE));
+                                holder.upVote.setEnabled(true);
+                            } else {
+                                model.setUpvoted(false);
+                                holder.upVote.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorGrey)));
+                                holder.upVote.setEnabled(true);
+                            }
+                        }
+                    }
+                });
+    }
     @Override
     public int getItemCount() {
         return forumList.size();
@@ -126,109 +208,28 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot!=null) {
-                    holder.authorName.setText(documentSnapshot.getString("name"));
-                    holder.authorRno.setText(documentSnapshot.getString("rno"));
+                    final UserInfo model = documentSnapshot.toObject(UserInfo.class);
+                    holder.authorName.setText(model.getName());
+                    holder.authorRno.setText(model.getRno());
                     GlideApp.with(mContext)
-                            .load(documentSnapshot.getString("uimage"))
+                            .load(model.getUimage())
                             .placeholder(R.drawable.loadme)
                             .into(holder.forumProfilePic);
+                    holder.forumProfilePic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(mContext, UserProfileOpenActivity.class);
+                            i.putExtra("userId",model.getUid());
+                            mContext.startActivity(i);
+                        }
+                    });
                 }
             }
         });
     }
-    public void trackUpVotes(final ForumPostInfo model,final MyViewHolder holder)
-    {
-        db.collection("forum_posts").document(model.getFid()).collection("upvotes")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int count = 0;
-                            for (DocumentSnapshot ignored : Objects.requireNonNull(task.getResult())) {
-                                count++;
-                            }
-                            holder.fupvotes.setText(String.valueOf(count));
-                            HashMap<String,Object> newData = new HashMap<>();
-                            newData.put("fupvote", String.valueOf(count));
-                            DocumentReference docRef = db.collection("forum_posts").document(Objects.requireNonNull(model.getFid()));
-                            docRef.update(newData);
-                        }
-                    }
-                });
-        db.collection("forum_posts").document(model.getFid()).collection("comments")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int count = 0;
-                            for (DocumentSnapshot ignored : Objects.requireNonNull(task.getResult())) {
-                                count++;
-                            }
-                            holder.fcomments.setText(String.valueOf(count));
-                            HashMap<String,Object> newData = new HashMap<>();
-                            newData.put("fcomment", String.valueOf(count));
-                            DocumentReference docRef = db.collection("forum_posts").document(Objects.requireNonNull(model.getFid()));
-                            docRef.update(newData);
-                        }
-                    }
-                });
-    }
-    public void doUpVoteButton(final MyViewHolder holder, final ForumPostInfo model)
-    {
-        if(auth.getCurrentUser()!=null) {
-            db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid())
-                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    try {
-                        DocumentSnapshot docSnap = task.getResult();
-                        if (docSnap != null)
-                            if (docSnap.exists()) {
-                                holder.upVote.setImageTintList(ColorStateList.valueOf(Color.BLUE));
-                            } else {
-                                holder.upVote.setImageTintList(ColorStateList.valueOf(Color.BLACK));
-                            }
-                    }catch (Exception e)
-                    {
-                        Toast.makeText(mContext,"Turn on network connection!",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-    }
-    public void checkAlreadyUpvoted(final ForumPostInfo model,final MyViewHolder holder)
-    {
-        db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(Objects.requireNonNull(auth.getCurrentUser()).getUid())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        try {
-                            DocumentSnapshot document = task.getResult();
-                            assert document != null;
-                            if (document.exists()) {
-                                mListener.showSnackBar("You removed your vote!");
-                                db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).delete();
-                                trackUpVotes(model, holder);
-                            } else {
-                                mListener.showSnackBar("You upvoted this post!");
-                                Map<String, Object> myMap = new HashMap<>();
-                                myMap.put("more_stuff", "blank");
-                                db.collection("forum_posts").document(model.getFid()).collection("upvotes").document(auth.getCurrentUser().getUid()).set(myMap);
-                                trackUpVotes(model, holder);
-                            }
-                            doUpVoteButton(holder, model);
-                        }catch (Exception e)
-                        {
-                            Toast.makeText(mContext,e.getMessage(),Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
     public void checkForUserPost(ForumPostInfo model,MyViewHolder holder)
     {
-        if(Objects.requireNonNull(auth.getCurrentUser()).getUid().equals(model.getFauthor()) && model.getFauthor()!=null)
+        if(uid.equals(model.getFauthor()) && model.getFauthor()!=null)
         { holder.deletePost.setVisibility(View.VISIBLE); }
         else
         { holder.deletePost.setVisibility(View.GONE); }
@@ -268,7 +269,7 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
                                             mListener.showSnackBar("Successfully Deleted!");
                                             forumList.remove(position);
                                             notifyItemRemoved(position);
-                                            notifyItemRangeChanged(position, forumList.size());
+                                            notifyDataSetChanged();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -289,7 +290,7 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
                                     mListener.showSnackBar("Successfully Deleted!");
                                     forumList.remove(position);
                                     notifyItemRemoved(position);
-                                    notifyItemRangeChanged(position, forumList.size());
+                                    notifyDataSetChanged();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -304,19 +305,20 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.MyVi
                     .delete();
             forumList.remove(position);
             notifyItemRemoved(position);
-            notifyItemRangeChanged(position, forumList.size());
+            notifyDataSetChanged();
             mListener.showSnackBar("Post deleted!");
         }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView fname,fdetail,fdate,fupvotes,fcomments,authorName,authorRno;
+        public TextView fname,fdetail,fdate,fupvotes,fcomments,authorName,authorRno,commentLable;
         CircleImageView forumProfilePic;
         ImageView forumImageView;
         public Button deletePost;
         ImageButton upVote,commentButton;
         public MyViewHolder(View view) {
             super(view);
+            commentLable = view.findViewById(R.id.textView6);
             forumImageView = view.findViewById(R.id.forumImageView);
             forumProfilePic = view.findViewById(R.id.forumPostUserProfile);
             upVote = view.findViewById(R.id.upVoteButton);

@@ -17,9 +17,10 @@
                 android:id="@+id/chatUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/chatMainTime"
-                android:layout_alignStart="@+id/chatLastMessage"
-
+                android:layout_toEndOf="@id/chatProfilePic"
+                android:maxLength="20"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:fontFamily="@font/josefina"
                 android:text="Author Text"
                 android:textColor="@color/colorBlack"
@@ -36,18 +37,31 @@
                 android:text="UserID"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp" />
-
+            <ImageButton
+                android:id="@+id/sentProof"
+                android:layout_width="18sp"
+                android:layout_below="@+id/chatUserId"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="11sp"
+                android:fontFamily="@font/oswald"
+                android:scaleType="fitCenter"
+                android:textStyle="bold"
+                android:layout_toEndOf="@id/chatProfilePic"
+                android:layout_height="18sp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_check"
+                android:tint="@color/colorGrey" />
             <TextView
                 android:id="@+id/chatLastMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/chatUserId"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5sp"
                 android:fontFamily="@font/oswald"
                 android:textStyle="bold"
-                android:layout_toEndOf="@id/chatProfilePic"
-                android:text="Author Rno"
+                android:layout_toEndOf="@id/sentProof"
+                android:text="Loading"
                 android:textSize="15sp" />
 
 

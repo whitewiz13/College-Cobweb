@@ -49,7 +49,7 @@ public class FragmentBrowseInstitute extends Fragment {
     }
     public void loadInstituteList(String sort,Query.Direction direction)
     {
-        Query query = instRef.orderBy(sort, direction).limit(5);
+        Query query = instRef.orderBy(sort, direction);
         collegeInfoList.clear();
         insProgress.setVisibility(View.VISIBLE);
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -73,9 +73,11 @@ public class FragmentBrowseInstitute extends Fragment {
     }
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if(menu.findItem(R.id.addEventButton)!=null) {
-            menu.findItem(R.id.addEventButton).setVisible(false);
-        }
+        if(menu.findItem(R.id.sortElements)!=null)
+            menu.findItem(R.id.sortElements).setVisible(false);
+        //if(menu.findItem(R.id.addEventButton)!=null) {
+        //    menu.findItem(R.id.addEventButton).setVisible(false);
+        //}
         if(menu.findItem(R.id.addForumPostButton)!=null) {
             menu.findItem(R.id.addForumPostButton).setVisible(false);
         }

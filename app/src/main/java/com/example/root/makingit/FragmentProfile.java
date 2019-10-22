@@ -127,7 +127,7 @@ public class FragmentProfile extends Fragment {
                             if (uinfo != null) {
                                 name.setText(uinfo.getName());
                                 rno.setText(uinfo.getRno());
-                                dept.setText(uinfo.getDept());
+                                dept.setText(uinfo.getDept_name());
                                 about.setText(uinfo.getAbout());
                                 email.setText(uinfo.getEmail());
                                 address.setText(uinfo.getAddress());
@@ -236,7 +236,7 @@ public class FragmentProfile extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
-        menu.findItem(R.id.addEventButton).setVisible(false);
+        menu.findItem(R.id.sortElements).setVisible(false);
         menu.findItem(R.id.addDeptEventButton).setVisible(false);
         menu.findItem(R.id.addForumPostButton).setVisible(false);
         menu.findItem(R.id.searchButton).setVisible(false);

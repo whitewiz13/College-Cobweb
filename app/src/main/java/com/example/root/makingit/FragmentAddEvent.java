@@ -49,7 +49,7 @@ public class FragmentAddEvent extends DialogFragment {
         void makeSnackB(String msg);
         void makeLoadingSnackBar(String msg);
         void dismissSnackBar();
-        void tellAboutAddition();
+        void tellAboutAddition(EventInfo eventInfo);
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState)
     {
@@ -130,7 +130,7 @@ public class FragmentAddEvent extends DialogFragment {
                                  public void onSuccess(Void aVoid) {
                                      listner.dismissSnackBar();
                                      listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
-                                     listner.tellAboutAddition();
+                                     listner.tellAboutAddition(event);
                                  }
                              });
                          }
@@ -145,7 +145,7 @@ public class FragmentAddEvent extends DialogFragment {
             docRef.set(event);
             listner.dismissSnackBar();
             listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
-            listner.tellAboutAddition();
+            listner.tellAboutAddition(event);
         }
     }
     @Override

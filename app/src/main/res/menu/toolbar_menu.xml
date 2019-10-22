@@ -19,11 +19,33 @@
         android:icon="@drawable/ic_add"
         />
     <item
+        android:id="@+id/sortElements"
+        android:title="Sort By"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_sort"
+        >
+        <menu>
+            <group>
+
+                <item
+                    android:id="@+id/sortFresh"
+                    android:title="Fresh" />
+
+                <item
+                    android:id="@+id/sortTrend"
+                    android:title="Trending" />
+
+
+            </group>
+        </menu>
+    </item>
+    <!---
+    <item
         android:id="@+id/addEventButton"
         android:title="Add Global Event"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_add"
-        />
+        />-->
     <item android:id="@+id/helpButton"
         android:title="Help"
         app:showAsAction="never"/>

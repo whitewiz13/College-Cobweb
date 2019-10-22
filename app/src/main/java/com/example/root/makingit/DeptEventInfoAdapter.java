@@ -10,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,17 +21,19 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo, DeptEventInfoAdapter.MyViewHolder> {
+public class DeptEventInfoAdapter extends RecyclerView.Adapter<DeptEventInfoAdapter.MyViewHolder> {
     private OnActionListener mListener;
     private Context mContext;
     private FirebaseAuth auth;
-    public DeptEventInfoAdapter(@NonNull FirestoreRecyclerOptions<DeptEventInfo> options, Context mContext, DeptEventInfoAdapter.OnActionListener mListener) {
-        super(options);
+    List<DeptEventInfo> deptEventList;
+    public DeptEventInfoAdapter(List<DeptEventInfo> deptEventList ,Context mContext, DeptEventInfoAdapter.OnActionListener mListener) {
+        this.deptEventList = deptEventList;
         this.mListener = mListener;
         this.mContext = mContext;
     }
@@ -69,20 +68,35 @@ public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull DeptEventInfo model) {
-        doButton(holder);
-        Date date = model.getEdate();
-        doDeleteButton(holder,model);
-        String creationDate = "Loading..";
-        if (date != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a", Locale.ENGLISH);
-            creationDate = dateFormat.format(date);
+    public int getItemCount() {
+        return deptEventList.size();
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        try {
+            DeptEventInfo model = deptEventList.get(position);
+            doButton(holder);
+            Date date = model.getEdate();
+            doDeleteButton(holder, model, position);
+            String creationDate = "Just now";
+            if (date != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a", Locale.ENGLISH);
+                creationDate = dateFormat.format(date);
+            }
+            holder.ename.setText(model.getEname());
+            holder.edetail.setText(model.getEdetail());
+            holder.edate.setText(creationDate);
+            getUserInfo(holder, model.getEauthor());
+            checkForUserPost(model, holder);
+        }catch (Exception e)
+        {
+            //Maybe
         }
-        holder.ename.setText(model.getEname());
-        holder.edetail.setText(model.getEdetail());
-        holder.edate.setText(creationDate);
-        getUserInfo(holder, model.getEauthor());
-        checkForUserPost(model,holder);
+    }
+    @Override
+    public long getItemId(int position) {
+        return deptEventList.get(position).hashCode();
     }
     public void doButton(final MyViewHolder holder)
     {
@@ -139,13 +153,15 @@ public class DeptEventInfoAdapter extends FirestoreRecyclerAdapter<DeptEventInfo
             }
         });
     }
-    public void doDeleteButton(final MyViewHolder holder, final DeptEventInfo album)
+    public void doDeleteButton(final MyViewHolder holder, final DeptEventInfo album,final int position)
     {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.showSnackBar("Successfully Deleted!");
+                deptEventList.remove(position);
+                notifyDataSetChanged();
                 DocumentReference mydb = db.collection("users").document(album.getEauthor());
                 mydb.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override

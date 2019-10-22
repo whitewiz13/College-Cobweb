@@ -11,6 +11,7 @@ public class ChatMainModel {
     private String message;
     private String uid;
     private String usernameid;
+    private Boolean sender;
 
     public ChatMainModel() { }
     public ChatMainModel(String uname,String message,String uid,String usernameid)
@@ -20,14 +21,24 @@ public class ChatMainModel {
         this.uid = uid;
         this.usernameid = usernameid;
     }
-    public ChatMainModel(String message,Date chattime,String uid,String uname,String usernameid)
+    public ChatMainModel(String message,Date chattime,String uid,String uname,String usernameid,Boolean sender)
     {
+        this.sender = sender;
         this.uname=uname;
         this.uid = uid;
         this.message=message;
         this.chattime=chattime;
         this.usernameid = usernameid;
     }
+
+    public Boolean getSender() {
+        return sender;
+    }
+
+    public void setSender(Boolean sender) {
+        this.sender = sender;
+    }
+
     public String getUname() {
         return uname;
     }

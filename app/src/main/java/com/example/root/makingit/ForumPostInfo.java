@@ -1,5 +1,6 @@
 package com.example.root.makingit;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -15,6 +16,26 @@ public class ForumPostInfo {
     String fupvote;
     String forumImage;
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public Boolean getUpvoted() {
+        return upvoted;
+    }
+
+    public void setUpvoted(Boolean upvoted) {
+        this.upvoted = upvoted;
+    }
+
+    @Exclude
+    int count;
+    @Exclude
+    Boolean upvoted;
     public  ForumPostInfo()
     {
 

@@ -43,7 +43,7 @@ public class FragmentAddForum extends FragmentAddEvent {
                 .getAttributes().windowAnimations = R.style.DialogAnimation;
     }
     interface onForumAdded{
-        void addedForumPost();
+        void addedForumPost(ForumPostInfo forumPostInfo);
 
     }
     @Nullable
@@ -77,7 +77,6 @@ public class FragmentAddForum extends FragmentAddEvent {
                 }
                 saveForumData(evname,evdetail);
                 listner.dismissMe(frag);
-
             }
         });
         return view;
@@ -134,13 +133,13 @@ public class FragmentAddForum extends FragmentAddEvent {
                         public void onSuccess(final Uri uri) {
                             String evauthor;
                             evauthor =  Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-                            ForumPostInfo forumpost = new ForumPostInfo(docRef.getId(),evname,evdetail,evauthor,"0","0",uri.toString());
+                            final ForumPostInfo forumpost = new ForumPostInfo(docRef.getId(),evname,evdetail,evauthor,"0","0",uri.toString());
                             docRef.set(forumpost).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     listner.dismissSnackBar();
                                     listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
-                                    mListener.addedForumPost();
+                                    mListener.addedForumPost(forumpost);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -159,7 +158,7 @@ public class FragmentAddForum extends FragmentAddEvent {
             ForumPostInfo forumpost = new ForumPostInfo(docRef.getId(),evname,evdetail,evauthor,"0","0",null);
             docRef.set(forumpost);
             listner.makeSnackB("Event (".concat(evname).concat(") Created Successfully!"));
-            mListener.addedForumPost();
+            mListener.addedForumPost(forumpost);
         }
     }
 }
